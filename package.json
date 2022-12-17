@@ -44,10 +44,10 @@
   },
   "lint-staged": {
     "src/**/*.{js,ts,jsx,tsx}": [
-      "eslint --config ./.eslintrc.json --ext js --ext ts --ext jsx --ext tsx --fix"
+      "eslint --config ./.eslintrc.js --ext js --ext ts --ext jsx --ext tsx --fix"
     ],
     "config/**/*.{js,ts,jsx,tsx}": [
-      "eslint --config ./.eslintrc.json --ext js --ext ts --ext jsx --ext tsx --fix"
+      "eslint --config ./.eslintrc.js --ext js --ext ts --ext jsx --ext tsx --fix"
     ]
   }
 }
