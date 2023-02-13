@@ -12,8 +12,8 @@ require('dotenv').config();
 
 const { initRouter } = require('./src/routes.init');
 const ApiError = require('./src/utils/ApiError');
-const passport = require("passport");
-const {jwtStrategy} = require("./config/passport");
+const passport = require('passport');
+const { jwtStrategy } = require('./config/passport');
 
 const app = express();
 
