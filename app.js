@@ -10,20 +10,34 @@ const xss = require('xss-clean');
 const httpStatus = require('http-status');
 require('dotenv').config();
 
-const { initRouter } = require('./src/route.init');
+const { initRouter } = require('./src/routes.init');
 const ApiError = require('./src/utils/ApiError');
+const passport = require("passport");
+const {jwtStrategy} = require("./config/passport");
 
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// set security HTTP headers
 app.use(helmet());
+
+// gzip compression
 app.use(compression());
+
+// sanitize request data
 app.use(xss());
+app.use(mongoSanitize());
+
+// jwt authentication
+app.use(passport.initialize());
+passport.use('jwt', jwtStrategy);
+
+// enable cors
 app.use(
   cors({
     origin: '*',
