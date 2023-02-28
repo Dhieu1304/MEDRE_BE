@@ -1,4 +1,4 @@
-const config = require('../../config');
+const config = require('../config');
 const moment = require('moment');
 const { TOKEN_TYPES } = require('./auth.constant');
 const jwt = require('jsonwebtoken');

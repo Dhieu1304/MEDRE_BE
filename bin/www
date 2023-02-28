@@ -46,11 +46,7 @@ function onListening() {
 (async () => {
   try {
     await sequelize.authenticate();
-    const createQuery = `CREATE DATABASE IF NOT EXISTS Medre ;`
-    sequelize.query(createQuery)
-        .then(() => console.log("DB created"))
-        .catch(err => console.log("error creating DB", err))
-    logger.info('Connection has been established successfully.');
+    logger.info('Connection Postgres database successfully.');
 
     server.listen(config.port, () => {
       logger.info(`Server is running on the port: http://localhost:${config.port}`);

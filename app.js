@@ -14,6 +14,8 @@ const ApiError = require('./src/utils/ApiError');
 const passport = require('passport');
 const { jwtStrategy } = require('./src/config/passport');
 
+require('./src/models/mockup-data');
+
 const app = express();
 
 app.use(logger('dev'));

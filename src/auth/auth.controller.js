@@ -1,11 +1,10 @@
+/*
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const userService = require('../user/user.service');
 const authService = require('./auth.service');
 const { responseData } = require('../utils/responseFormat');
 const { historyLoginService } = require('../services.init');
-const { Types } = require('mongoose');
-const { HISTORY_LOGIN } = require('../history-login/history-login.constant');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -49,3 +48,4 @@ module.exports = {
   loginPhonePassword,
   refreshTokens,
 };
+*/
