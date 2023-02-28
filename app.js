@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
 const xss = require('xss-clean');
 const httpStatus = require('http-status');
@@ -13,7 +12,7 @@ require('dotenv').config();
 const { initRouter } = require('./src/routes.init');
 const ApiError = require('./src/utils/ApiError');
 const passport = require('passport');
-const { jwtStrategy } = require('./config/passport');
+const { jwtStrategy } = require('./src/config/passport');
 
 const app = express();
 
@@ -31,7 +30,6 @@ app.use(compression());
 
 // sanitize request data
 app.use(xss());
-app.use(mongoSanitize());
 
 // jwt authentication
 app.use(passport.initialize());

@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    'user',
+    'staff',
     {
       id: {
         type: DataTypes.UUID,
@@ -55,15 +55,27 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(10),
         allowNull: true,
       },
+      description: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      education: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      certificate: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
     },
     {
       sequelize,
-      tableName: 'user',
+      tableName: 'staff',
       schema: 'public',
       timestamps: true,
       indexes: [
         {
-          name: 'user_pkey',
+          name: 'staff_pkey',
           unique: true,
           fields: [{ name: 'id' }],
         },
