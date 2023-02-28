@@ -2,21 +2,26 @@ const config = require('../config');
 const moment = require('moment');
 const { TOKEN_TYPES } = require('./auth.constant');
 const jwt = require('jsonwebtoken');
-const { userService, historyLoginService } = require('../services.init');
+const userService = require('../user/user.service');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
+const bcrypt = require('bcryptjs');
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
-    sub: user._id,
+    sub: user.id,
     email: user.email,
-    phoneNumber: user.phoneNumber,
-    role: user.role,
+    phone_number: user.phone_number,
+    role: user.role || 'user',
     iat: moment().unix(),
     exp: expires.unix(),
     type,
   };
   return jwt.sign(payload, secret);
+};
+
+const comparePassword = async (password, hashPassword) => {
+  return bcrypt.compare(password, hashPassword);
 };
 
 const generateAuthTokens = async (user) => {
@@ -38,30 +43,44 @@ const generateAuthTokens = async (user) => {
   };
 };
 
-const loginUserWithPhoneNumberAndPassword = async (phoneNumber, password) => {
-  const user = await userService.findOneByFilter({ phoneNumber });
-  if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
+  // check user
+  const user = await userService.findOneByFilter({ phone_number });
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect phone number');
   }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, user.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
   return user;
 };
 
 const loginUserWithEmailAndPassword = async (email, password) => {
+  // check user
   const user = await userService.findOneByFilter({ email });
-  if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email');
   }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, user.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
   return user;
 };
 
-const refreshAuth = async (refreshToken) => {
-  try {
-    const refreshTokenDoc = await historyLoginService.verifyToken(refreshToken);
-    const user = await userService.findOneByFilter({ _id: refreshTokenDoc.userId });
-    return generateAuthTokens(user);
-  } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+const refreshAuth = async (refresh_token) => {
+  const user = await userService.findOneByFilter({ refresh_token });
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect refresh token');
   }
+  return generateAuthTokens(user);
 };
 
 module.exports = {
@@ -69,4 +88,5 @@ module.exports = {
   loginUserWithPhoneNumberAndPassword,
   loginUserWithEmailAndPassword,
   refreshAuth,
+  comparePassword,
 };

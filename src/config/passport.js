@@ -15,7 +15,7 @@ const jwtVerify = async (payload, done) => {
     const user = {
       id: payload.sub,
       email: payload.email,
-      phoneNumber: payload.phoneNumber,
+      phone_number: payload.phone_number,
       role: payload.role,
     };
     done(null, user);

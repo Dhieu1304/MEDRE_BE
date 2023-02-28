@@ -1,3 +1,4 @@
+const { USER_STATUS, GENDERS } = require('../user/user.constant');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'staff',
@@ -33,7 +34,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       gender: {
         type: DataTypes.STRING(10),
-        allowNull: true,
+        defaultValue: GENDERS.OTHER,
       },
       dob: {
         type: DataTypes.DATEONLY,
@@ -41,11 +42,11 @@ module.exports = function (sequelize, DataTypes) {
       },
       email_verified: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        defaultValue: false,
       },
       phone_verified: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        defaultValue: false,
       },
       health_insurance: {
         type: DataTypes.STRING(100),
@@ -53,7 +54,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       status: {
         type: DataTypes.STRING(10),
-        allowNull: true,
+        defaultValue: USER_STATUS.OK,
       },
       description: {
         type: DataTypes.STRING(500),
@@ -64,6 +65,10 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: true,
       },
       certificate: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      refresh_token: {
         type: DataTypes.STRING(500),
         allowNull: true,
       },

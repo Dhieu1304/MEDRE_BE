@@ -4,7 +4,7 @@ const { GENDERS } = require('../user/user.constant');
 
 const register = {
   body: Joi.object().keys({
-    phoneNumber: Joi.string().required(),
+    phone_number: Joi.string().required(),
     email: Joi.string().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
@@ -23,14 +23,14 @@ const loginByEmail = {
 
 const loginByPhoneNumber = {
   body: Joi.object().keys({
-    phoneNumber: Joi.string().required(),
+    phone_number: Joi.string().required(),
     password: Joi.string().required(),
   }),
 };
 
 const refreshTokens = {
   body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
+    refresh_token: Joi.string().required(),
   }),
 };
 
