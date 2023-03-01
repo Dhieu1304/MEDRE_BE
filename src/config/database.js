@@ -10,8 +10,4 @@ const sequelize = new Sequelize(postgresql.database, postgresql.username, postgr
   logging: postgresql.logging,
 });
 
-if (postgresql.db_sync === '1') {
-  // await db.sync({ force: true });
-}
-
 module.exports = sequelize;
