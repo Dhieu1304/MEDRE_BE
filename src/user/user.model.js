@@ -12,10 +12,12 @@ module.exports = function (sequelize, DataTypes) {
       phone_number: {
         type: DataTypes.STRING(20),
         allowNull: true,
+        unique: 'user_phone_number_key',
       },
       email: {
         type: DataTypes.STRING(50),
         allowNull: true,
+        unique: 'user_email_key',
       },
       password: {
         type: DataTypes.STRING(500),
@@ -72,6 +74,16 @@ module.exports = function (sequelize, DataTypes) {
           name: 'user_pkey',
           unique: true,
           fields: [{ name: 'id' }],
+        },
+        {
+          name: 'user_email_key',
+          unique: true,
+          fields: [{ name: 'email' }],
+        },
+        {
+          name: 'user_phone_number_key',
+          unique: true,
+          fields: [{ name: 'phone_number' }],
         },
       ],
     }
