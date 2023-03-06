@@ -50,6 +50,11 @@ const refreshTokens = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(tokens, 'Refresh token successfully'));
 });
 
+const staffRefreshTokens = catchAsync(async (req, res) => {
+  const tokens = await authService.staffRefreshAuth(req.body.refresh_token);
+  return res.status(httpStatus.OK).json(responseData(tokens, 'Refresh token successfully'));
+});
+
 module.exports = {
   register,
   loginEmailPassword,
@@ -59,4 +64,5 @@ module.exports = {
   // staff
   adminLoginEmailPassword,
   adminLoginPhonePassword,
+  staffRefreshTokens,
 };

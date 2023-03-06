@@ -17,5 +17,6 @@ router.post(
   validate(authValidation.loginByPhoneNumber),
   authController.adminLoginPhonePassword
 );
+router.post('/staff/refresh-tokens', validate(authValidation.refreshTokens), authController.staffRefreshTokens);
 
 module.exports = router;

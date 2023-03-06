@@ -116,6 +116,14 @@ const refreshAuth = async (refresh_token) => {
   return generateAuthTokens(user);
 };
 
+const staffRefreshAuth = async (refresh_token) => {
+  const staff = await staffService.findOneByFilter({ refresh_token });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect refresh token');
+  }
+  return generateAuthTokens(staff);
+};
+
 module.exports = {
   generateAuthTokens,
   loginUserWithPhoneNumberAndPassword,
@@ -126,4 +134,5 @@ module.exports = {
   // admin
   staffLoginUserWithEmailAndPassword,
   staffLoginUserWithPhoneNumberAndPassword,
+  staffRefreshAuth,
 };

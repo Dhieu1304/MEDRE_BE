@@ -7,8 +7,12 @@ module.exports.createMockData = (data) => {
     const row = {};
     row.id = uuidv4();
     for (let j = 0; j < data[0].length; j++) {
-      if (data[i][j]) row[keys[j]] = data[i][j];
-      else row[keys[j]] = null;
+      if (data[i][j]) {
+        if (row[keys[j]] === 'dob') {
+          row[keys[j]] = new Date(data[i][j]);
+        }
+        row[keys[j]] = data[i][j];
+      } else row[keys[j]] = null;
     }
     result.push(row);
   }
