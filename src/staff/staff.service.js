@@ -1,18 +1,34 @@
-const User = require('./user.model');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
-const logger = require('../../config/logger');
+const models = require('../models');
+const logger = require('../config/logger');
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
-const createUser = async (data) => {
-  if (await User.isEmailTaken(data.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+const createStaff = async (data) => {
+  // check email is exist
+  if (data.email) {
+    const staff = await findOneByFilter({ email: data.email });
+    if (staff) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
   }
-  return User.create(data);
+
+  // hash password
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+  }
+
+  // generate uuid
+  data.id = uuidv4();
+
+  // create new user
+  return models.staff.create(data);
 };
 
 const findOneByFilter = async (filter) => {
   try {
-    return await User.findOne(filter);
+    return await models.staff.findOne({ where: filter });
   } catch (e) {
     logger.error(e.message);
   }
@@ -20,14 +36,14 @@ const findOneByFilter = async (filter) => {
 
 const findAllByFilter = async (filter) => {
   try {
-    return await User.find(filter);
+    return await models.staff.findAll({ where: filter });
   } catch (e) {
     logger.error(e.message);
   }
 };
 
 module.exports = {
-  createUser,
+  createStaff,
   findOneByFilter,
   findAllByFilter,
 };

@@ -18,6 +18,15 @@ const loginEmailPassword = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData({ user, tokens }, 'Login successfully'));
 });
 
+const adminLoginEmailPassword = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+  const staff = await authService.adminLoginUserWithEmailAndPassword(email, password);
+  const tokens = await authService.generateAuthTokens(staff);
+  staff.refresh_token = tokens.refresh.token;
+  await staff.save();
+  return res.status(httpStatus.OK).json(responseData({ staff, tokens }, 'Login successfully'));
+});
+
 const loginPhonePassword = catchAsync(async (req, res) => {
   const { phone_number, password } = req.body;
   const user = await authService.loginUserWithPhoneNumberAndPassword(phone_number, password);
@@ -37,4 +46,5 @@ module.exports = {
   loginEmailPassword,
   loginPhonePassword,
   refreshTokens,
+  adminLoginEmailPassword,
 };

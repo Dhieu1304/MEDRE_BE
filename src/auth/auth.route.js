@@ -10,4 +10,7 @@ router.post('/login-by-email', validate(authValidation.loginByEmail), authContro
 router.post('/login-by-phone-number', validate(authValidation.loginByPhoneNumber), authController.loginPhonePassword);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 
+// -------------------------------- ADMIN ROUTE ------------------------------------
+router.post('/admin/login-by-email', validate(authValidation.loginByEmail), authController.adminLoginEmailPassword);
+
 module.exports = router;

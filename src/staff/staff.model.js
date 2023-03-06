@@ -1,4 +1,5 @@
 const { USER_STATUS, GENDERS } = require('../user/user.constant');
+const { STAFF_ROLES } = require('./staff.constant');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'staff',
@@ -49,6 +50,10 @@ module.exports = function (sequelize, DataTypes) {
       phone_verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      role: {
+        type: DataTypes.STRING(10),
+        defaultValue: STAFF_ROLES.NURSE,
       },
       health_insurance: {
         type: DataTypes.STRING(100),

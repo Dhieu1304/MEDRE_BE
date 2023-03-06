@@ -6,6 +6,7 @@ const userService = require('../user/user.service');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+const staffService = require('../staff/staff.service');
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
@@ -75,6 +76,22 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return user;
 };
 
+const adminLoginUserWithEmailAndPassword = async (email, password) => {
+  // check staff
+  const staff = await staffService.findOneByFilter({ email });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email');
+  }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, staff.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  return staff;
+};
+
 const refreshAuth = async (refresh_token) => {
   const user = await userService.findOneByFilter({ refresh_token });
   if (!user) {
@@ -89,4 +106,7 @@ module.exports = {
   loginUserWithEmailAndPassword,
   refreshAuth,
   comparePassword,
+
+  // admin
+  adminLoginUserWithEmailAndPassword,
 };

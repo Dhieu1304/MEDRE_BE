@@ -18,8 +18,11 @@ const { createMockData } = require('../utils/createMockData');
 
       console.log('----------------------- INIT TIME SCHEDULE -----------------------');
       const timeSchedule = xlsx.parse(__dirname + '/data/time_schedule.xlsx');
-      console.log(timeSchedule[0].data);
       await models.time_schedule.bulkCreate(createMockData(timeSchedule[0].data));
+
+      console.log('--------------------------- INIT STAFF ---------------------------');
+      const staff = xlsx.parse(__dirname + '/data/staff.xlsx');
+      await models.staff.bulkCreate(createMockData(staff[0].data));
 
       console.log('----------------------- END SYNC DATABASE -----------------------');
     }
