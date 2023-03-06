@@ -60,6 +60,22 @@ const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
   return user;
 };
 
+const staffLoginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
+  // check user
+  const staff = await staffService.findOneByFilter({ phone_number });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect phone number');
+  }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, staff.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  return staff;
+};
+
 const loginUserWithEmailAndPassword = async (email, password) => {
   // check user
   const user = await userService.findOneByFilter({ email });
@@ -76,7 +92,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return user;
 };
 
-const adminLoginUserWithEmailAndPassword = async (email, password) => {
+const staffLoginUserWithEmailAndPassword = async (email, password) => {
   // check staff
   const staff = await staffService.findOneByFilter({ email });
   if (!staff) {
@@ -108,5 +124,6 @@ module.exports = {
   comparePassword,
 
   // admin
-  adminLoginUserWithEmailAndPassword,
+  staffLoginUserWithEmailAndPassword,
+  staffLoginUserWithPhoneNumberAndPassword,
 };
