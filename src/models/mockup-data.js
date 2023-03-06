@@ -21,6 +21,16 @@ const { createMockData } = require('../utils/createMockData');
       console.log(timeSchedule[0].data);
       await models.time_schedule.bulkCreate(createMockData(timeSchedule[0].data));
 
+      console.log('----------------------- INIT STAFF -----------------------');
+      const staff = xlsx.parse(__dirname + '/data/staff.xlsx');
+      console.log(staff[0].data);
+      await models.staff.bulkCreate(createMockData(staff[0].data));
+
+      console.log('----------------------- INIT EXPERTISE -----------------------');
+      const expertise = xlsx.parse(__dirname + '/data/expertise.xlsx');
+      console.log(expertise[0].data);
+      await models.expertise.bulkCreate(createMockData(expertise[0].data));
+
       console.log('----------------------- END SYNC DATABASE -----------------------');
     }
   } catch (e) {

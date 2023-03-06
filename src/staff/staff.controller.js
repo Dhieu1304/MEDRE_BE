@@ -1,17 +1,33 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
 const { responseData, responseMessage } = require('../utils/responseFormat');
-const { userService } = require('../services.init');
-const { Types } = require('mongoose');
+const staffService = require('./staff.service');
 
 const getInfo = catchAsync(async (req, res) => {
-  const user = await userService.findOneByFilter({ _id: new Types.ObjectId(req.user.id) });
-  if (!user) {
-    return res.status(httpStatus.OK).json(responseMessage('User not found', false));
+  const staff = await staffService.findOneByFilter({ id: req.params.id });
+  if (!staff) {
+    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
   }
-  return res.status(httpStatus.OK).json(responseData(user));
+  const staffId = staff.id;
+  const expertise = await staffService.findExpertise({ staffId });
+  return res.status(httpStatus.OK).json(responseData({ staff, expertise }));
+});
+
+const getAll = catchAsync(async (req, res) => {
+  const staffs = await staffService.findAllByFilter();
+  return res.status(httpStatus.OK).json(responseData(staffs));
+});
+
+const getAllDoctor = catchAsync(async (req, res) => {
+  const drs = await staffService.findAllByFilter({ role: 'Doctor' });
+  if (!drs) {
+    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
+  }
+  return res.status(httpStatus.OK).json(responseData(drs));
 });
 
 module.exports = {
   getInfo,
+  getAll,
+  getAllDoctor,
 };

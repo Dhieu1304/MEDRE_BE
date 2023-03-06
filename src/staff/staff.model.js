@@ -1,4 +1,5 @@
 const { USER_STATUS, GENDERS } = require('../user/user.constant');
+const { STAFF_ROLES } = require('./staff.constant');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'staff',
@@ -7,6 +8,11 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+      },
+      username: {
+        type: DataTypes.STRING(20),
+        allowNull: true,
+        unique: 'staff_username_key',
       },
       phone_number: {
         type: DataTypes.STRING(20),
@@ -42,6 +48,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.DATEONLY,
         allowNull: true,
       },
+      role: {
+        type: DataTypes.STRING(10),
+        defaultValue: STAFF_ROLES.ADMIN,
+      },
       email_verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -49,10 +59,6 @@ module.exports = function (sequelize, DataTypes) {
       phone_verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-      },
-      health_insurance: {
-        type: DataTypes.STRING(100),
-        allowNull: true,
       },
       status: {
         type: DataTypes.STRING(10),
@@ -85,6 +91,11 @@ module.exports = function (sequelize, DataTypes) {
           name: 'staff_pkey',
           unique: true,
           fields: [{ name: 'id' }],
+        },
+        {
+          name: 'staff_username_key',
+          unique: true,
+          fields: [{ name: 'username' }],
         },
         {
           name: 'staff_email_key',
