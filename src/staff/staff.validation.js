@@ -2,6 +2,20 @@ const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 
+const getAllStaff = {
+  query: Joi.object().keys({
+    username: Joi.string(),
+    phone_number: Joi.string(),
+    email: Joi.string(),
+    name: Joi.string(),
+    address: Joi.string(),
+    gender: Joi.string().valid(...Object.values(GENDERS)),
+    role: Joi.string().valid(...Object.values(STAFF_ROLES)),
+    page: Joi.number().default(1),
+    limit: Joi.number().default(10),
+  }),
+};
+
 const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
@@ -26,6 +40,8 @@ const createStaff = {
 };
 
 module.exports = {
+  getAllStaff,
+
   // admin
   createStaff,
 };

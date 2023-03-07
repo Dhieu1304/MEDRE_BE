@@ -9,8 +9,8 @@ const staffValidation = require('./staff.validation');
 const router = express.Router();
 
 router.get('/info', auth(), staffController.getInfo);
-router.get('/all', staffController.getAll);
-router.get('/doctors', staffController.getAllDoctor);
+router.get('/all', validate(staffValidation.getAllStaff), staffController.getAll);
+router.get('/detail/:id', staffController.getDetailStaff);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 router.post(

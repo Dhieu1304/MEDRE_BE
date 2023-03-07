@@ -11,6 +11,15 @@ const getInfo = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(user));
 });
 
+const getDetailUser = catchAsync(async (req, res) => {
+  const user = await userService.findOneByFilter({ id: req.params.id });
+  if (!user) {
+    return res.status(httpStatus.OK).json(responseMessage('User not found', false));
+  }
+  return res.status(httpStatus.OK).json(responseData(user));
+});
+
 module.exports = {
   getInfo,
+  getDetailUser,
 };

@@ -48,6 +48,14 @@ const findAllByFilter = async (filter) => {
   }
 };
 
+const findAndCountAllByCondition = async (condition) => {
+  try {
+    return await models.staff.findAndCountAll(condition);
+  } catch (e) {
+    logger.error(e.message);
+  }
+};
+
 const findExpertise = async (data) => {
   try {
     return await models.staff_expertise.findAll({
@@ -65,4 +73,5 @@ module.exports = {
   findOneByFilter,
   findAllByFilter,
   findExpertise,
+  findAndCountAllByCondition,
 };

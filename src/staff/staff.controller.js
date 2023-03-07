@@ -2,6 +2,8 @@ const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const staffService = require('./staff.service');
+const pick = require('../utils/pick');
+const { Op } = require('sequelize');
 
 const getInfo = catchAsync(async (req, res) => {
   // check staff
@@ -17,12 +19,28 @@ const getInfo = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const staffs = await staffService.findAllByFilter();
+  const filter = pick(req.query, ['username', 'phone_number', 'email', 'name', 'address', 'gender', 'role']);
+  const filterLike = ['username', 'phone_number', 'email', 'name', 'address'];
+  for (let i = 0; i < filterLike.length; i++) {
+    if (filter[filterLike[i]]) {
+      filter[filterLike[i]] = {
+        [Op.like]: `%${filter[filterLike[i]]}%`,
+      };
+    }
+  }
+  const condition = {
+    where: filter,
+    limit: req.query.limit,
+    offset: (req.query.page - 1) * req.query.limit,
+  };
+
+  const staffs = await staffService.findAndCountAllByCondition(condition);
+  console.log(staffs);
   return res.status(httpStatus.OK).json(responseData(staffs));
 });
 
-const getAllDoctor = catchAsync(async (req, res) => {
-  const drs = await staffService.findAllByFilter({ role: 'Doctor' });
+const getDetailStaff = catchAsync(async (req, res) => {
+  const drs = await staffService.findOneByFilter({ id: req.params.id });
   if (!drs) {
     return res.status(httpStatus.OK).json(responseMessage('Not found', false));
   }
@@ -37,7 +55,7 @@ const createStaff = catchAsync(async (req, res) => {
 module.exports = {
   getInfo,
   getAll,
-  getAllDoctor,
+  getDetailStaff,
 
   // admin
   createStaff,
