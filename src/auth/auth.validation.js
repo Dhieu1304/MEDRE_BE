@@ -28,6 +28,13 @@ const loginByPhoneNumber = {
   }),
 };
 
+const loginByUsername = {
+  body: Joi.object().keys({
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+  }),
+};
+
 const refreshTokens = {
   body: Joi.object().keys({
     refresh_token: Joi.string().required(),
@@ -38,5 +45,6 @@ module.exports = {
   register,
   loginByEmail,
   loginByPhoneNumber,
+  loginByUsername,
   refreshTokens,
 };

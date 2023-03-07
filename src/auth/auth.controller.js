@@ -18,7 +18,7 @@ const loginEmailPassword = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData({ user, tokens }, 'Login successfully'));
 });
 
-const adminLoginEmailPassword = catchAsync(async (req, res) => {
+const staffLoginEmailPassword = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const staff = await authService.staffLoginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(staff);
@@ -36,9 +36,18 @@ const loginPhonePassword = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData({ user, tokens }, 'Login successfully'));
 });
 
-const adminLoginPhonePassword = catchAsync(async (req, res) => {
+const staffLoginPhonePassword = catchAsync(async (req, res) => {
   const { phone_number, password } = req.body;
   const staff = await authService.staffLoginUserWithPhoneNumberAndPassword(phone_number, password);
+  const tokens = await authService.generateAuthTokens(staff);
+  staff.refresh_token = tokens.refresh.token;
+  await staff.save();
+  return res.status(httpStatus.OK).json(responseData({ staff, tokens }, 'Login successfully'));
+});
+
+const staffLoginUsernamePassword = catchAsync(async (req, res) => {
+  const { username, password } = req.body;
+  const staff = await authService.staffLoginUserWithUsernameAndPassword(username, password);
   const tokens = await authService.generateAuthTokens(staff);
   staff.refresh_token = tokens.refresh.token;
   await staff.save();
@@ -62,7 +71,8 @@ module.exports = {
   refreshTokens,
 
   // staff
-  adminLoginEmailPassword,
-  adminLoginPhonePassword,
+  staffLoginEmailPassword,
+  staffLoginPhonePassword,
+  staffLoginUsernamePassword,
   staffRefreshTokens,
 };

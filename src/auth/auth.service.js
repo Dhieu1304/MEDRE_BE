@@ -108,6 +108,22 @@ const staffLoginUserWithEmailAndPassword = async (email, password) => {
   return staff;
 };
 
+const staffLoginUserWithUsernameAndPassword = async (username, password) => {
+  // check staff
+  const staff = await staffService.findOneByFilter({ username });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect username');
+  }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, staff.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  return staff;
+};
+
 const refreshAuth = async (refresh_token) => {
   const user = await userService.findOneByFilter({ refresh_token });
   if (!user) {
@@ -134,5 +150,6 @@ module.exports = {
   // admin
   staffLoginUserWithEmailAndPassword,
   staffLoginUserWithPhoneNumberAndPassword,
+  staffLoginUserWithUsernameAndPassword,
   staffRefreshAuth,
 };

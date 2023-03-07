@@ -11,12 +11,13 @@ router.post('/login-by-phone-number', validate(authValidation.loginByPhoneNumber
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 
 // -------------------------------- STAFF ROUTE ------------------------------------
-router.post('/staff/login-by-email', validate(authValidation.loginByEmail), authController.adminLoginEmailPassword);
+router.post('/staff/login-by-email', validate(authValidation.loginByEmail), authController.staffLoginEmailPassword);
 router.post(
   '/staff/login-by-phone-number',
   validate(authValidation.loginByPhoneNumber),
-  authController.adminLoginPhonePassword
+  authController.staffLoginPhonePassword
 );
+router.post('/staff/login-by-username', validate(authValidation.loginByUsername), authController.staffLoginUsernamePassword);
 router.post('/staff/refresh-tokens', validate(authValidation.refreshTokens), authController.staffRefreshTokens);
 
 module.exports = router;
