@@ -32,6 +32,14 @@ const { createMockData } = require('../utils/createMockData');
       const staff_expertise = xlsx.parse(__dirname + '/data/staff_expertise.xlsx');
       await models.staff_expertise.bulkCreate(createMockData(staff_expertise[0].data));
 
+      logger.info('---------------------- INIT SCHEDULE ----------------------');
+      const schedule = xlsx.parse(__dirname + '/data/schedule.xlsx');
+      const schedule_data = createMockData(schedule[0].data);
+      for (let i = 0; i < schedule_data.length; i++) {
+        schedule_data[i].date = new Date();
+      }
+      await models.schedule.bulkCreate(schedule_data);
+
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
   } catch (e) {
