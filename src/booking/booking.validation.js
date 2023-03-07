@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { BOOKING_STATUS } = require('./booking.constant');
 
 const booking = {
   body: Joi.object().keys({
@@ -8,6 +9,15 @@ const booking = {
   }),
 };
 
+const historyBooking = {
+  query: Joi.object().keys({
+    booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
+    is_payment: Joi.boolean(),
+    id_patient: Joi.string().uuid(),
+  }),
+};
+
 module.exports = {
   booking,
+  historyBooking,
 };
