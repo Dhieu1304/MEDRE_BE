@@ -15,11 +15,9 @@ const createStaff = async (data) => {
   }
 
   // check username is exists
-  if (data.username) {
-    const staff1 = await findOneByFilter({ username: data.username });
-    if (staff1) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
-    }
+  const staff = await findOneByFilter({ username: data.username });
+  if (staff) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
   }
 
   // hash password
@@ -52,12 +50,11 @@ const findAllByFilter = async (filter) => {
 
 const findExpertise = async (data) => {
   try {
-    const staffExpertise = await models.staff_expertise.findAll({
+    return await models.staff_expertise.findAll({
       where: { id_staff: data.staffId },
       attributes: ['id_expertise'],
       include: [{ model: models.expertise, as: 'id_expertise_expertise', attributes: ['name'] }],
     });
-    return staffExpertise;
   } catch (e) {
     logger.error(e.message);
   }

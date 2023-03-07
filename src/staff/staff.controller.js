@@ -26,8 +26,16 @@ const getAllDoctor = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(drs));
 });
 
+const createStaff = catchAsync(async (req, res) => {
+  const staff = await staffService.createStaff(req.body);
+  return res.status(httpStatus.OK).json(responseData(staff, 'Create new staff successfully'));
+});
+
 module.exports = {
   getInfo,
   getAll,
   getAllDoctor,
+
+  // admin
+  createStaff,
 };
