@@ -1,12 +1,36 @@
-const models = require('../models');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
+const models = require('../models');
 const logger = require('../config/logger');
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
 const createStaff = async (data) => {
-  if (await models.staff.findOne(data.username)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
+  // check email is exists
+  if (data.email) {
+    const staff = await findOneByFilter({ email: data.email });
+    if (staff) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
   }
+
+  // check username is exists
+  if (data.username) {
+    const staff1 = await findOneByFilter({ username: data.username });
+    if (staff1) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
+    }
+  }
+
+  // hash password
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+  }
+
+  // generate uuid
+  data.id = uuidv4();
+
+  // create new user
   return models.staff.create(data);
 };
 
@@ -28,7 +52,6 @@ const findAllByFilter = async (filter) => {
 
 const findExpertise = async (data) => {
   try {
-    console.log('d', data);
     const staffExpertise = await models.staff_expertise.findAll({
       where: { id_staff: data.staffId },
       attributes: ['id_expertise'],

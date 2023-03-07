@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       phone_number: {
         type: DataTypes.STRING(20),
-        allowNull: true,
+        allowNull: false,
         unique: 'staff_phone_number_key',
       },
       email: {
@@ -59,6 +59,10 @@ module.exports = function (sequelize, DataTypes) {
       phone_verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      health_insurance: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
       },
       status: {
         type: DataTypes.STRING(10),

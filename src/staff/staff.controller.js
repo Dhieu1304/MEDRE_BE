@@ -6,7 +6,7 @@ const staffService = require('./staff.service');
 const getInfo = catchAsync(async (req, res) => {
   const staff = await staffService.findOneByFilter({ id: req.params.id });
   if (!staff) {
-    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
+    return res.status(httpStatus.OK).json(responseMessage('Staff not found', false));
   }
   const staffId = staff.id;
   const expertise = await staffService.findExpertise({ staffId });

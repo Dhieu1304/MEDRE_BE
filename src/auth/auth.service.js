@@ -6,6 +6,7 @@ const userService = require('../user/user.service');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+const staffService = require('../staff/staff.service');
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
@@ -59,6 +60,22 @@ const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
   return user;
 };
 
+const staffLoginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
+  // check user
+  const staff = await staffService.findOneByFilter({ phone_number });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect phone number');
+  }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, staff.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  return staff;
+};
+
 const loginUserWithEmailAndPassword = async (email, password) => {
   // check user
   const user = await userService.findOneByFilter({ email });
@@ -75,6 +92,22 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return user;
 };
 
+const staffLoginUserWithEmailAndPassword = async (email, password) => {
+  // check staff
+  const staff = await staffService.findOneByFilter({ email });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email');
+  }
+
+  // check password
+  const isPasswordMatch = await comparePassword(password, staff.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  return staff;
+};
+
 const refreshAuth = async (refresh_token) => {
   const user = await userService.findOneByFilter({ refresh_token });
   if (!user) {
@@ -83,10 +116,23 @@ const refreshAuth = async (refresh_token) => {
   return generateAuthTokens(user);
 };
 
+const staffRefreshAuth = async (refresh_token) => {
+  const staff = await staffService.findOneByFilter({ refresh_token });
+  if (!staff) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect refresh token');
+  }
+  return generateAuthTokens(staff);
+};
+
 module.exports = {
   generateAuthTokens,
   loginUserWithPhoneNumberAndPassword,
   loginUserWithEmailAndPassword,
   refreshAuth,
   comparePassword,
+
+  // admin
+  staffLoginUserWithEmailAndPassword,
+  staffLoginUserWithPhoneNumberAndPassword,
+  staffRefreshAuth,
 };
