@@ -8,7 +8,7 @@ const staffValidation = require('./staff.validation');
 
 const router = express.Router();
 
-router.get('/info/:id', staffController.getInfo);
+router.get('/info', auth(), staffController.getInfo);
 router.get('/all', staffController.getAll);
 router.get('/doctors', staffController.getAllDoctor);
 

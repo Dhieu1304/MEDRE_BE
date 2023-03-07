@@ -20,12 +20,17 @@ const { createMockData } = require('../utils/createMockData');
       const timeSchedule = xlsx.parse(__dirname + '/data/time_schedule.xlsx');
       await models.time_schedule.bulkCreate(createMockData(timeSchedule[0].data));
 
-      logger.info('--------------------------- INIT STAFF ---------------------------');
+      logger.info('-------------------------- INIT STAFF ----------------------------');
       const staff = xlsx.parse(__dirname + '/data/staff.xlsx');
       await models.staff.bulkCreate(createMockData(staff[0].data));
 
+      logger.info('------------------------- INIT EXPERTISE -------------------------');
       const expertise = xlsx.parse(__dirname + '/data/expertise.xlsx');
       await models.expertise.bulkCreate(createMockData(expertise[0].data));
+
+      logger.info('---------------------- INIT STAFF_EXPERTISE ----------------------');
+      const staff_expertise = xlsx.parse(__dirname + '/data/staff_expertise.xlsx');
+      await models.staff_expertise.bulkCreate(createMockData(staff_expertise[0].data));
 
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }

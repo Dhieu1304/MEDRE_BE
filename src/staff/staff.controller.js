@@ -4,10 +4,13 @@ const { responseData, responseMessage } = require('../utils/responseFormat');
 const staffService = require('./staff.service');
 
 const getInfo = catchAsync(async (req, res) => {
-  const staff = await staffService.findOneByFilter({ id: req.params.id });
+  // check staff
+  const staff = await staffService.findOneByFilter({ id: req.user.id });
   if (!staff) {
-    return res.status(httpStatus.OK).json(responseMessage('Staff not found', false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Staff not found', false));
   }
+
+  // find expertise of staff
   const staffId = staff.id;
   const expertise = await staffService.findExpertise({ staffId });
   return res.status(httpStatus.OK).json(responseData({ staff, expertise }));
