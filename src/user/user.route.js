@@ -9,6 +9,6 @@ const router = express.Router();
 router.get('/info', auth(), userController.getInfo);
 
 // staff permission to call
-router.get('/detail/:id', staffPermission(ALL_STAFF_ROLES), userController.getDetailUser);
+router.get('/detail/:id', auth(), staffPermission(ALL_STAFF_ROLES), userController.getDetailUser);
 
 module.exports = router;
