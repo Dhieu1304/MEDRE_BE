@@ -8,7 +8,7 @@
     "_lint": "eslint --config ./.eslintrc.js --ext js --ext ts",
     "lint": "npm run _lint -- ./src/",
     "lint:fix": "npm run _lint -- --fix ./src/",
-    "format": "prettier --write \"./**/*.{js,ts,json}\" --config ./.prettierrc",
+    "format": "prettier --write \"./**/*.{js,ts,json}\" --config ./.prettierrc"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
