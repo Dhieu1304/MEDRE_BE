@@ -4,6 +4,7 @@ const { responseData, responseMessage } = require('../utils/responseFormat');
 const staffService = require('./staff.service');
 const pick = require('../utils/pick');
 const { Op } = require('sequelize');
+const scheduleService = require('../schedule/schedule.service');
 
 const getInfo = catchAsync(async (req, res) => {
   // check staff
@@ -41,10 +42,15 @@ const getAll = catchAsync(async (req, res) => {
 
 const getDetailStaff = catchAsync(async (req, res) => {
   const { from, to } = req.query;
-  const drs = await staffService.findDetailStaff(req.params.id, from, to);
+  let drs = await staffService.findDetailStaff({ id: req.params.id });
   if (!drs) {
     return res.status(httpStatus.OK).json(responseMessage('Not found', false));
   }
+  drs = drs.toJSON();
+  drs.schedules = await scheduleService.findAllByFilter({
+    id_doctor: req.params.id,
+    [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
+  });
   return res.status(httpStatus.OK).json(responseData(drs));
 });
 

@@ -4,7 +4,6 @@ const models = require('../models');
 const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
-const { Op } = require('sequelize');
 
 const createStaff = async (data) => {
   // check email is exists
@@ -69,18 +68,11 @@ const findExpertise = async (data) => {
   }
 };
 
-const findDetailStaff = async (id, from, to) => {
+const findDetailStaff = async (filter) => {
   try {
     return await models.staff.findOne({
-      where: { id },
-      include: [
-        { model: models.expertise, as: 'id_expertise_expertises' },
-        {
-          model: models.schedule,
-          as: 'schedules',
-          where: { [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }] },
-        },
-      ],
+      where: filter,
+      include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
     });
   } catch (e) {
     logger.error(e.message);
