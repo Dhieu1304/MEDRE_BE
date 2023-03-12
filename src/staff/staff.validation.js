@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
+const moment = require('moment');
 
 const getAllStaff = {
   query: Joi.object().keys({
@@ -39,8 +40,19 @@ const createStaff = {
   }),
 };
 
+const getDetailStaff = {
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+  query: Joi.object().keys({
+    from: Joi.date().default(moment().startOf('date')),
+    to: Joi.date().default(moment().endOf('date')),
+  }),
+};
+
 module.exports = {
   getAllStaff,
+  getDetailStaff,
 
   // admin
   createStaff,

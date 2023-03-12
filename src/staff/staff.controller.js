@@ -40,7 +40,8 @@ const getAll = catchAsync(async (req, res) => {
 });
 
 const getDetailStaff = catchAsync(async (req, res) => {
-  const drs = await staffService.findOneByFilter({ id: req.params.id });
+  const { from, to } = req.query;
+  const drs = await staffService.findDetailStaff(req.params.id, from, to);
   if (!drs) {
     return res.status(httpStatus.OK).json(responseMessage('Not found', false));
   }
