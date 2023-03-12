@@ -47,7 +47,7 @@ const getDetailStaff = catchAsync(async (req, res) => {
     return res.status(httpStatus.OK).json(responseMessage('Not found', false));
   }
   drs = drs.toJSON();
-  drs.schedules = await scheduleService.findAllByFilter({
+  drs.schedules = await scheduleService.findAllByFilterBookingDetail({
     id_doctor: req.params.id,
     [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
   });
