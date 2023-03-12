@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage } = require('../utils/responseFormat');
+const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
 const staffService = require('./staff.service');
 const pick = require('../utils/pick');
 const { Op } = require('sequelize');
@@ -20,6 +20,7 @@ const getInfo = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
+  const { page, limit } = req.query;
   const filter = pick(req.query, ['username', 'phone_number', 'email', 'name', 'address', 'gender', 'role']);
   const filterLike = ['username', 'phone_number', 'email', 'name', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
@@ -31,13 +32,11 @@ const getAll = catchAsync(async (req, res) => {
   }
   const condition = {
     where: filter,
-    limit: req.query.limit,
-    offset: (req.query.page - 1) * req.query.limit,
+    limit,
+    offset: (page - 1) * limit,
   };
-
   const staffs = await staffService.findAndCountAllByCondition(condition);
-  console.log(staffs);
-  return res.status(httpStatus.OK).json(responseData(staffs));
+  return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
 const getDetailStaff = catchAsync(async (req, res) => {

@@ -47,7 +47,7 @@ const findAllByFilterBookingDetail = async (filter) => {
       where: filter,
       include: [
         { model: models.time_schedule, as: 'time_schedule' },
-        { model: models.booking, as: 'bookings', include: [{ model: models.user, as: 'id_patient_user' }] },
+        { model: models.booking, as: 'bookings', include: [{ model: models.user, as: 'patient' }] },
       ],
     });
   } catch (e) {
