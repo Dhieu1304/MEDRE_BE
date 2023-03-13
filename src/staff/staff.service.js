@@ -68,10 +68,22 @@ const findExpertise = async (data) => {
   }
 };
 
+const findDetailStaff = async (filter) => {
+  try {
+    return await models.staff.findOne({
+      where: filter,
+      include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
+    });
+  } catch (e) {
+    logger.error(e.message);
+  }
+};
+
 module.exports = {
   createStaff,
   findOneByFilter,
   findAllByFilter,
   findExpertise,
   findAndCountAllByCondition,
+  findDetailStaff,
 };
