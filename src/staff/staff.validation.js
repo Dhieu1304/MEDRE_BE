@@ -2,6 +2,7 @@ const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 const moment = require('moment');
+const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 
 const getAllStaff = {
   query: Joi.object().keys({
@@ -12,6 +13,10 @@ const getAllStaff = {
     address: Joi.string(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     role: Joi.string().valid(...Object.values(STAFF_ROLES)),
+    type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),
+    from: Joi.date(),
+    to: Joi.date(),
+    expertise: Joi.array().items(Joi.string().uuid()),
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
   }),
