@@ -70,8 +70,10 @@ const getAll = catchAsync(async (req, res) => {
 
   if (filter.expertise) {
     include.push({ model: models.expertise, as: 'id_expertise_expertises', where: { id: filter.expertise } });
+    delete filter.expertise;
+  } else {
+    include.push({ model: models.expertise, as: 'id_expertise_expertises' });
   }
-  delete filter.expertise;
 
   const condition = {
     where: filter,
