@@ -40,7 +40,7 @@ const getAll = catchAsync(async (req, res) => {
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {
       filter[filterLike[i]] = {
-        [Op.like]: `%${filter[filterLike[i]]}%`,
+        [Op.substring]: `${filter[filterLike[i]]}`,
       };
     }
   }
