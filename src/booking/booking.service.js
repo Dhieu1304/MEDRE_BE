@@ -35,8 +35,19 @@ const findAllByFilter = async (filter) => {
   return await models.booking.findAll({ where: filter });
 };
 
+const updateStatus = async (data) => {
+  const booking = await findOneByFilter({ id: data.id });
+  if (!booking) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
+  }
+  booking.booking_status = data.booking_status;
+  await booking.save();
+  return booking;
+};
+
 module.exports = {
   create,
   findOneByFilter,
   findAllByFilter,
+  updateStatus,
 };

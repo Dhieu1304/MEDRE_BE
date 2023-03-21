@@ -17,7 +17,15 @@ const historyBooking = {
   }),
 };
 
+const updateBookingStatus = {
+  body: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+    booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
+  }),
+};
+
 module.exports = {
   booking,
   historyBooking,
+  updateBookingStatus,
 };
