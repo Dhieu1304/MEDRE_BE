@@ -21,4 +21,6 @@ router.post(
   staffController.createStaff
 );
 
+router.post('/confirm-blocking', validate(staffValidation.blockingAccount), staffController.blockingAccount);
+
 module.exports = router;
