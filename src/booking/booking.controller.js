@@ -1,8 +1,21 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData } = require('../utils/responseFormat');
+const { responseData, responseMessage } = require('../utils/responseFormat');
 const pick = require('../utils/pick');
 const bookingService = require('./booking.service');
+
+const listBookings = catchAsync(async (req, res) => {
+  const listBooking = await bookingService.findAllByFilter();
+  return res.status(httpStatus.OK).json(responseData(listBooking, 'Successful'));
+});
+
+const getDetailBooking = catchAsync(async (req, res) => {
+  const booking = await bookingService.findOneByFilter({ id: req.params.id });
+  if (!booking) {
+    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
+  }
+  return res.status(httpStatus.OK).json(responseData(booking, 'Successful'));
+});
 
 const booking = catchAsync(async (req, res) => {
   const data = pick(req.body, ['id_schedule', 'reason', 'id_patient']);
@@ -18,7 +31,16 @@ const historyBooking = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(historyBooking, 'Successful'));
 });
 
+const updateBookingStatus = catchAsync(async (req, res) => {
+  const data = pick(req.body, ['id', 'booking_status']);
+  const updateBooking = await bookingService.updateStatus(data);
+  return res.status(httpStatus.OK).json(responseData(updateBooking, 'Successful'));
+});
+
 module.exports = {
   booking,
   historyBooking,
+  updateBookingStatus,
+  listBookings,
+  getDetailBooking,
 };
