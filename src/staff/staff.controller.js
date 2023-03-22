@@ -11,7 +11,7 @@ const getInfo = catchAsync(async (req, res) => {
   // check staff
   const staff = await staffService.findOneByFilter({ id: req.user.id });
   if (!staff) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Staff not found', false));
+    return res.status(httpStatus.OK).json(responseMessage('Staff not found', false));
   }
 
   // find expertise of staff
@@ -106,6 +106,14 @@ const createStaff = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(staff, 'Create new staff successfully'));
 });
 
+const blockingAccount = catchAsync(async (req, res) => {
+  const staffId = req.user.id;
+  //const staffId = "353066b6-4bb7-4df8-8f46-88f71bf6a182";
+  const data = pick(req.body, ['id_account', 'reason']);
+  await staffService.blockingAccount(staffId, data);
+  return res.status(httpStatus.OK).json(responseMessage('Blocked account', true));
+});
+
 module.exports = {
   getInfo,
   getAll,
@@ -113,4 +121,5 @@ module.exports = {
 
   // admin
   createStaff,
+  blockingAccount,
 };

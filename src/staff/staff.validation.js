@@ -55,10 +55,18 @@ const getDetailStaff = {
   }),
 };
 
+const blockingAccount = {
+  body: Joi.object().keys({
+    id_account: Joi.string().required(),
+    reason: Joi.string(),
+  }),
+};
+
 module.exports = {
   getAllStaff,
   getDetailStaff,
 
   // admin
   createStaff,
+  blockingAccount,
 };
