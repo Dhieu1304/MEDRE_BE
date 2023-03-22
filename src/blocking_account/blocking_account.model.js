@@ -1,3 +1,5 @@
+const { ACCOUNT_ROLES } = require('./blocking_account.constant');
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'blocking_account',
@@ -15,13 +17,13 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
-      id_user: {
+      id_account: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {
-          model: 'user',
-          key: 'id',
-        },
+      },
+      role: {
+        type: DataTypes.STRING(10),
+        defaultValue: ACCOUNT_ROLES.USER,
       },
       reason: {
         type: DataTypes.STRING(200),
