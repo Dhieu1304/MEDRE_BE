@@ -19,6 +19,10 @@ const findAllByFilter = async (filter) => {
   }
 };
 
+const findAllByOption = async (options) => {
+  return await models.schedule.findAll(options);
+};
+
 const findByDayOrGenerate = async (filter) => {
   try {
     const data = await findAllByFilter(filter);
@@ -41,8 +45,24 @@ const findByDayOrGenerate = async (filter) => {
   }
 };
 
+const findAllByFilterBookingDetail = async (filter) => {
+  try {
+    return await models.schedule.findAll({
+      where: filter,
+      include: [
+        { model: models.time_schedule, as: 'time_schedule' },
+        { model: models.booking, as: 'bookings', include: [{ model: models.user, as: 'patient' }] },
+      ],
+    });
+  } catch (e) {
+    logger.error(e.message);
+  }
+};
+
 module.exports = {
   findOneByFilter,
   findAllByFilter,
   findByDayOrGenerate,
+  findAllByFilterBookingDetail,
+  findAllByOption,
 };

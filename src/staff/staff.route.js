@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/info', auth(), staffController.getInfo);
 router.get('/all', validate(staffValidation.getAllStaff), staffController.getAll);
-router.get('/detail/:id', staffController.getDetailStaff);
+router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffController.getDetailStaff);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 router.post(

@@ -83,7 +83,7 @@ const getRole = async (data) => {
 };
 
 const blockingAccount = async (staffId, data) => {
-  //get staff's role
+  // get staff's role
   const staffRole = await getRole(staffId);
 
   //Check if staff id and block account id are the same
@@ -91,8 +91,9 @@ const blockingAccount = async (staffId, data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Cannot block your own account.');
   }
 
-  //Get role and data of block account
+  // Get role and data of block account
   const blockingAccountRole = await getRole(data.id_account);
+  console.log('2: ', blockingAccountRole);
   var account;
   if (blockingAccountRole === 'User') {
     account = await userService.findOneByFilter({ id: data.id_account });
@@ -100,7 +101,7 @@ const blockingAccount = async (staffId, data) => {
     account = await findOneByFilter({ id: data.id_account });
   }
 
-  //Check the current status of the account
+  // Check the current status of the account
   if (account.status != 'Ok') {
     throw new ApiError(httpStatus.BAD_REQUEST, 'The account has already blocked or deleted.');
   }
@@ -108,21 +109,21 @@ const blockingAccount = async (staffId, data) => {
   // generate uuid
   const id = uuidv4();
 
-  //Nurse can block User
+  // Nurse can block User
   if (staffRole === 'Nurse') {
     if (blockingAccountRole != 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
-  //Doctor can block Nurse, User
+  // Doctor can block Nurse, User
   else if (staffRole === 'Doctor') {
     if (blockingAccountRole != 'Nurse' && blockingAccountRole != 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
-  //Block the account and write into block_account table
+  // Block the account and write into block_account table
   account.status = 'Block';
   await account.save();
   return models.blocking_account.create({
@@ -166,6 +167,32 @@ const unblockingAccount = async (staffId, data) => {
   });
 };
 
+const findDetailStaff = async (filter) => {
+  try {
+    return await models.staff.findOne({
+      where: filter,
+      include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
+    });
+  } catch (e) {
+    logger.error(e.message);
+  }
+};
+
+const getListStaff = async (listId) => {
+  return await models.staff.findAll({
+    where: { id: listId },
+    include: [
+      {
+        model: models.expertise,
+        as: 'id_expertise_expertises',
+        attributes: { exclude: ['staff_expertise', 'createdAt', 'updatedAt'] },
+      },
+      { model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+    ],
+    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
+  });
+};
+
 module.exports = {
   createStaff,
   findOneByFilter,
@@ -175,4 +202,6 @@ module.exports = {
   getRole,
   blockingAccount,
   unblockingAccount,
+  findDetailStaff,
+  getListStaff,
 };
