@@ -85,7 +85,7 @@ const getRole = async (data) => {
 const blockingAccount = async (staffId, data) => {
   //get staff's role
   const staffRole = await getRole(staffId);
-  console.log('2: ', staffRole);
+
   //Check if staff id and block account id are the same
   if (staffId === data.id_account) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Cannot block your own account.');
@@ -93,7 +93,6 @@ const blockingAccount = async (staffId, data) => {
 
   //Get role and data of block account
   const blockingAccountRole = await getRole(data.id_account);
-  console.log('2: ', blockingAccountRole);
   var account;
   if (blockingAccountRole === 'User') {
     account = await userService.findOneByFilter({ id: data.id_account });
@@ -112,14 +111,14 @@ const blockingAccount = async (staffId, data) => {
   //Nurse can block User
   if (staffRole === 'Nurse') {
     if (blockingAccountRole != 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'You have no right to block the account.');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   //Doctor can block Nurse, User
   else if (staffRole === 'Doctor') {
     if (blockingAccountRole != 'Nurse' && blockingAccountRole != 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'You have no right to block the account.');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
@@ -131,6 +130,38 @@ const blockingAccount = async (staffId, data) => {
     id_staff: staffId,
     id_account: data.id_account,
     role: blockingAccountRole,
+    type: 'Block',
+    reason: data.reason,
+  });
+};
+
+const unblockingAccount = async (staffId, data) => {
+  //Get role and data of block account
+  const unblockingAccountRole = await getRole(data.id_account);
+  var account;
+  if (unblockingAccountRole === 'User') {
+    account = await userService.findOneByFilter({ id: data.id_account });
+  } else {
+    account = await findOneByFilter({ id: data.id_account });
+  }
+
+  //Check the current status of the account
+  if (account.status === 'Ok') {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Don't need to unblock the account.");
+  }
+
+  // generate uuid
+  const id = uuidv4();
+
+  //Unblock the account and write into block_account table
+  account.status = 'Ok';
+  await account.save();
+  return models.blocking_account.create({
+    id: id,
+    id_staff: staffId,
+    id_account: data.id_account,
+    role: unblockingAccountRole,
+    type: 'Unblock',
     reason: data.reason,
   });
 };
@@ -143,4 +174,5 @@ module.exports = {
   findAndCountAllByCondition,
   getRole,
   blockingAccount,
+  unblockingAccount,
 };

@@ -22,5 +22,11 @@ router.post(
 );
 
 router.post('/confirm-blocking', validate(staffValidation.blockingAccount), staffController.blockingAccount);
+router.post(
+  '/confirm-unblocking',
+  validate(staffValidation.blockingAccount),
+  staffPermission([STAFF_ROLES.ADMIN]),
+  staffController.unblockingAccount
+);
 
 module.exports = router;
