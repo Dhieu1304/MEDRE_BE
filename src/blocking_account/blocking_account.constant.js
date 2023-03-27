@@ -5,6 +5,12 @@ const ACCOUNT_ROLES = Object.freeze({
   USER: 'User',
 });
 
+const TYPE = Object.freeze({
+  BLOCK: 'Block',
+  UNBLOCK: 'Unblock',
+});
+
 module.exports = {
   ACCOUNT_ROLES,
+  TYPE,
 };

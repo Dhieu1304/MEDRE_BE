@@ -122,6 +122,13 @@ const blockingAccount = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage('Blocked account', true));
 });
 
+const unblockingAccount = catchAsync(async (req, res) => {
+  const staffId = req.user.id;
+  const data = pick(req.body, ['id_account', 'reason']);
+  await staffService.unblockingAccount(staffId, data);
+  return res.status(httpStatus.OK).json(responseMessage('Unblocked account', true));
+});
+
 module.exports = {
   getInfo,
   getAll,
@@ -130,4 +137,5 @@ module.exports = {
   // admin
   createStaff,
   blockingAccount,
+  unblockingAccount,
 };
