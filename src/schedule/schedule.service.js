@@ -19,6 +19,10 @@ const findAllByFilter = async (filter) => {
   }
 };
 
+const findAllByOption = async (options) => {
+  return await models.schedule.findAll(options);
+};
+
 const findByDayOrGenerate = async (filter) => {
   try {
     const data = await findAllByFilter(filter);
@@ -60,4 +64,5 @@ module.exports = {
   findAllByFilter,
   findByDayOrGenerate,
   findAllByFilterBookingDetail,
+  findAllByOption,
 };

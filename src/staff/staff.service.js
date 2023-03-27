@@ -145,6 +145,21 @@ const findDetailStaff = async (filter) => {
   }
 };
 
+const getListStaff = async (listId) => {
+  return await models.staff.findAll({
+    where: { id: listId },
+    include: [
+      {
+        model: models.expertise,
+        as: 'id_expertise_expertises',
+        attributes: { exclude: ['staff_expertise', 'createdAt', 'updatedAt'] },
+      },
+      { model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+    ],
+    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
+  });
+};
+
 module.exports = {
   createStaff,
   findOneByFilter,
@@ -154,4 +169,5 @@ module.exports = {
   getRole,
   blockingAccount,
   findDetailStaff,
+  getListStaff,
 };
