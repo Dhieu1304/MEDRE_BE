@@ -72,7 +72,7 @@ const getAll = catchAsync(async (req, res) => {
     include.push({ model: models.expertise, as: 'id_expertise_expertises', where: { id: filter.expertise } });
     delete filter.expertise;
   } else {
-    include.push({ model: models.expertise, as: 'id_expertise_expertises' });
+    // include.push({ model: models.expertise, as: 'id_expertise_expertises' });
   }
 
   const condition = {
@@ -81,9 +81,17 @@ const getAll = catchAsync(async (req, res) => {
     distinct: true,
     limit,
     offset: (page - 1) * limit,
+    attributes: ['id'],
+    raw: true,
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
+  const listId = staffs.rows.map((item) => {
+    return item.id;
+  });
+
+  // find by format
+  staffs.rows = await staffService.getListStaff(listId);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
@@ -114,6 +122,13 @@ const blockingAccount = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage('Blocked account', true));
 });
 
+const unblockingAccount = catchAsync(async (req, res) => {
+  const staffId = req.user.id;
+  const data = pick(req.body, ['id_account', 'reason']);
+  await staffService.unblockingAccount(staffId, data);
+  return res.status(httpStatus.OK).json(responseMessage('Unblocked account', true));
+});
+
 module.exports = {
   getInfo,
   getAll,
@@ -122,4 +137,5 @@ module.exports = {
   // admin
   createStaff,
   blockingAccount,
+  unblockingAccount,
 };

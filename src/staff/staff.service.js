@@ -111,14 +111,14 @@ const blockingAccount = async (staffId, data) => {
   // Nurse can block User
   if (staffRole === 'Nurse') {
     if (blockingAccountRole != 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'You have no right to block the account.');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   // Doctor can block Nurse, User
   else if (staffRole === 'Doctor') {
     if (blockingAccountRole != 'Nurse' && blockingAccountRole != 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'You have no right to block the account.');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
@@ -130,6 +130,38 @@ const blockingAccount = async (staffId, data) => {
     id_staff: staffId,
     id_account: data.id_account,
     role: blockingAccountRole,
+    type: 'Block',
+    reason: data.reason,
+  });
+};
+
+const unblockingAccount = async (staffId, data) => {
+  //Get role and data of block account
+  const unblockingAccountRole = await getRole(data.id_account);
+  var account;
+  if (unblockingAccountRole === 'User') {
+    account = await userService.findOneByFilter({ id: data.id_account });
+  } else {
+    account = await findOneByFilter({ id: data.id_account });
+  }
+
+  //Check the current status of the account
+  if (account.status === 'Ok') {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Don't need to unblock the account.");
+  }
+
+  // generate uuid
+  const id = uuidv4();
+
+  //Unblock the account and write into block_account table
+  account.status = 'Ok';
+  await account.save();
+  return models.blocking_account.create({
+    id: id,
+    id_staff: staffId,
+    id_account: data.id_account,
+    role: unblockingAccountRole,
+    type: 'Unblock',
     reason: data.reason,
   });
 };
@@ -145,6 +177,21 @@ const findDetailStaff = async (filter) => {
   }
 };
 
+const getListStaff = async (listId) => {
+  return await models.staff.findAll({
+    where: { id: listId },
+    include: [
+      {
+        model: models.expertise,
+        as: 'id_expertise_expertises',
+        attributes: { exclude: ['staff_expertise', 'createdAt', 'updatedAt'] },
+      },
+      { model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+    ],
+    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
+  });
+};
+
 module.exports = {
   createStaff,
   findOneByFilter,
@@ -154,4 +201,6 @@ module.exports = {
   getRole,
   blockingAccount,
   findDetailStaff,
+  getListStaff,
+  unblockingAccount,
 };
