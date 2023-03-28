@@ -5,6 +5,7 @@ const staffService = require('./staff.service');
 const pick = require('../utils/pick');
 const { Op } = require('sequelize');
 const scheduleService = require('../schedule/schedule.service');
+const userService = require('../user/user.service');
 const models = require('../models');
 
 const getInfo = catchAsync(async (req, res) => {
@@ -129,6 +130,18 @@ const unblockingAccount = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage('Unblocked account', true));
 });
 
+const editAccountInfo = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const role = await staffService.getRole(id);
+  var account;
+  if (role === 'User') {
+    account = await userService.editUser(id, req.body);
+  } else {
+    account = await staffService.editStaff(id, req.body);
+  }
+  return res.status(httpStatus.OK).json(responseData(account, 'Update account successfully'));
+});
+
 module.exports = {
   getInfo,
   getAll,
@@ -138,4 +151,5 @@ module.exports = {
   createStaff,
   blockingAccount,
   unblockingAccount,
+  editAccountInfo,
 };
