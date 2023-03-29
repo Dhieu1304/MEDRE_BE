@@ -42,8 +42,54 @@ const findAllByFilter = async (filter) => {
   }
 };
 
+const editUser = async (id, data) => {
+  // check phone number is exists
+  if (data.phone_number) {
+    const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
+    if (checkPhone && checkPhone.id != id) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already taken.');
+    }
+  }
+
+  // check email is exists
+  if (data.email) {
+    const checkEmail = await findOneByFilter({ email: data.email });
+    if (checkEmail && checkEmail.id != id) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken.');
+    }
+  }
+
+  //find user and update
+  const user = await findOneByFilter({ id: id });
+  if (data.phone_number) {
+    await user.update({ phone_number: data.phone_number });
+  }
+  if (data.email) {
+    await user.update({ email: data.email });
+  }
+  if (data.name) {
+    await user.update({ name: data.name });
+  }
+  if (data.image) {
+    await user.update({ image: data.image });
+  }
+  if (data.address) {
+    await user.update({ address: data.address });
+  }
+  if (data.gender) {
+    await user.update({ gender: data.gender });
+  }
+  if (data.dob) {
+    await user.update({ dob: data.dob });
+  }
+  if (data.health_insurance) {
+    await user.update({ health_insurance: data.health_insurance });
+  }
+};
+
 module.exports = {
   createUser,
   findOneByFilter,
   findAllByFilter,
+  editUser,
 };

@@ -6,9 +6,7 @@ const expertiseValidation = require('./expertise.validation');
 
 const router = express.Router();
 
-router.get('/list', expertiseController.listExpertise);
-
-router.get('/all', auth(), validate(expertiseValidation.getAllExpertise), expertiseController.getAll);
+router.get('/list', auth(), validate(expertiseValidation.getAllExpertise), expertiseController.getAll);
 
 router.post('/create-expertise', auth(), validate(expertiseValidation.createExpertise), expertiseController.createExpertise);
 

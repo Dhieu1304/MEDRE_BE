@@ -19,7 +19,13 @@ const getDetailUser = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(user));
 });
 
+const getAll = catchAsync(async (req, res) => {
+  const users = await userService.findAllByFilter();
+  return res.status(httpStatus.OK).json(responseData(users));
+});
+
 module.exports = {
   getInfo,
   getDetailUser,
+  getAll,
 };

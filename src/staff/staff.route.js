@@ -21,13 +21,22 @@ router.post(
   staffController.createStaff
 );
 
-router.post('/confirm-blocking', validate(staffValidation.blockAccount), staffController.blockingAccount);
+router.post('/confirm-blocking', auth(), validate(staffValidation.blockAccount), staffController.blockingAccount);
 
 router.post(
   '/confirm-unblocking',
+  auth(),
   validate(staffValidation.blockAccount),
   staffPermission([STAFF_ROLES.ADMIN]),
   staffController.unblockingAccount
+);
+
+router.post(
+  '/edit/:id',
+  auth(),
+  validate(staffValidation.editStaff),
+  staffPermission([STAFF_ROLES.ADMIN]),
+  staffController.editAccountInfo
 );
 
 module.exports = router;
