@@ -62,6 +62,24 @@ const blockAccount = {
   }),
 };
 
+const editStaff = {
+  body: Joi.object().keys({
+    username: Joi.string(),
+    phone_number: Joi.string(),
+    email: Joi.string(),
+    name: Joi.string(),
+    image: Joi.string(),
+    address: Joi.string(),
+    gender: Joi.string().valid(...Object.values(GENDERS)),
+    dob: Joi.date(),
+    role: Joi.string().valid(...Object.values(STAFF_ROLES)),
+    health_insurance: Joi.string(),
+    description: Joi.string(),
+    education: Joi.string(),
+    certificate: Joi.string(),
+  }),
+};
+
 module.exports = {
   getAllStaff,
   getDetailStaff,
@@ -69,4 +87,5 @@ module.exports = {
   // admin
   createStaff,
   blockAccount,
+  editStaff,
 };
