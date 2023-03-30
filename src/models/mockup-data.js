@@ -34,11 +34,12 @@ const { createMockData } = require('../utils/createMockData');
 
       logger.info('---------------------- INIT SCHEDULE ----------------------');
       const schedule = xlsx.parse(__dirname + '/data/schedule.xlsx');
-      const schedule_data = createMockData(schedule[0].data);
-      for (let i = 0; i < schedule_data.length; i++) {
-        schedule_data[i].date = new Date();
-      }
-      await models.schedule.bulkCreate(schedule_data);
+      await models.schedule.bulkCreate(createMockData(schedule[0].data));
+
+      logger.info('---------------------- INIT BOOKING ----------------------');
+      const booking = xlsx.parse(__dirname + '/data/booking.xlsx');
+      console.log(booking[0].data)
+      await models.booking.bulkCreate(createMockData(booking[0].data));
 
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }

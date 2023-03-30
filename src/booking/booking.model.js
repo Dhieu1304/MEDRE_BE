@@ -44,7 +44,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       id_patient: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'user',
           key: 'id',
