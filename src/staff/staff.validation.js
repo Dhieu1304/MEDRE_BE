@@ -22,6 +22,15 @@ const getAllStaff = {
   }),
 };
 
+const getListStaffSchedule = {
+  query: Joi.object().keys({
+    from: Joi.date().default(moment().startOf('date')),
+    to: Joi.date().default(moment().endOf('date')),
+    page: Joi.number().default(1),
+    limit: Joi.number().default(10),
+  }),
+};
+
 const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
@@ -83,6 +92,7 @@ const editStaff = {
 module.exports = {
   getAllStaff,
   getDetailStaff,
+  getListStaffSchedule,
 
   // admin
   createStaff,
