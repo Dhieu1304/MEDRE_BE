@@ -99,6 +99,7 @@ const getAll = catchAsync(async (req, res) => {
 const getListStaffSchedule = catchAsync(async (req, res) => {
   const { page, limit, from, to } = req.query;
 
+  // todo: no generate schedule -> query all
   const condition = {
     include: [{ model: models.schedule, as: 'staff_schedules', where: {
         [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to }}]
