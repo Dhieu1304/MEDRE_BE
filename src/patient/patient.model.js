@@ -1,5 +1,4 @@
 const { USER_STATUS, GENDERS } = require('../user/user.constant');
-
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'patient',
@@ -50,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
       indexes: [
         {
           name: 'patient_pkey',
-          unique: true,
+          unique: true, 
           fields: [{ name: 'id' }],
         },
       ],

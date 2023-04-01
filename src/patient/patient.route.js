@@ -5,14 +5,14 @@ const validate = require('../middlewares/validate');
 const patientValidation = require('./patient.validation');
 const { staffPermission } = require('../middlewares/staffPermission');
 const { ALL_STAFF_ROLES, STAFF_ROLES } = require('../staff/staff.constant');
+const staffController = require('../staff/staff.controller');
 
 const router = express.Router();
 
-router.get('/info', auth(), patientController.getInfo);
 router.get('/all', patientController.getAll);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
-router.get('/detail/:id', auth(), staffPermission(ALL_STAFF_ROLES), patientController.getDetailUser);
+router.get('/detail/:id', auth(), staffPermission(ALL_STAFF_ROLES), patientController.getDetailPatient);
 router.post(
   '/edit/:id',
   auth(),

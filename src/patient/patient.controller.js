@@ -12,8 +12,8 @@ const getDetailPatient = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const users = await patientService.findAllByFilter();
-  return res.status(httpStatus.OK).json(responseData(users));
+  const patients = await patientService.findAllByFilter();
+  return res.status(httpStatus.OK).json(responseData(patients));
 });
 
 module.exports = {

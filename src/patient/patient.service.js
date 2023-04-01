@@ -8,7 +8,7 @@ const createPatient = async (data) => {
   // generate uuid
   data.id = uuidv4();
 
-  // create new user
+  // create new patient
   return models.patient.create(data);
 };
 
