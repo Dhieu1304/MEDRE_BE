@@ -93,7 +93,32 @@ const getAll = catchAsync(async (req, res) => {
   });
 
   // find by format
-  staffs.rows = await staffService.getListStaff(listId);
+  staffs.rows = await staffService.getListStaff([...new Set(listId)]);
+  return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
+});
+
+const getListStaffSchedule = catchAsync(async (req, res) => {
+  const { page, limit, from, to } = req.query;
+
+  // todo: no generate schedule -> query all
+  const condition = {
+    include: [{ model: models.schedule, as: 'staff_schedules', where: {
+        [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to }}]
+      } }],
+    distinct: true,
+    limit,
+    offset: (page - 1) * limit,
+    attributes: ['id'],
+    raw: true,
+  };
+
+  const staffs = await staffService.findAndCountAllByCondition(condition);
+  const listId = staffs.rows.map((item) => {
+    return item.id;
+  });
+
+  // find by format
+  staffs.rows = await staffService.getListStaffSchedule([...new Set(listId)]);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
@@ -150,6 +175,7 @@ module.exports = {
   getInfo,
   getAll,
   getDetailStaff,
+  getListStaffSchedule,
 
   // admin
   createStaff,

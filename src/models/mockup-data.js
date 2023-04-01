@@ -38,7 +38,6 @@ const { createMockData } = require('../utils/createMockData');
 
       logger.info('---------------------- INIT BOOKING ----------------------');
       const booking = xlsx.parse(__dirname + '/data/booking.xlsx');
-      console.log(booking[0].data)
       await models.booking.bulkCreate(createMockData(booking[0].data));
 
       logger.info('----------------------- END SYNC DATABASE -----------------------');
