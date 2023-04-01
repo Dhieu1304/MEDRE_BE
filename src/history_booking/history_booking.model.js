@@ -1,4 +1,5 @@
-const { BOOKING_STATUS } = require('./booking.constant');
+const {BOOKING_STATUS} = require("./history_booking.constant");
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'booking',
@@ -27,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
       booking_status: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        defaultValue: BOOKING_STATUS.WAITING,
+        defaultValue: BOOKING_STATUS.BOOKED,
       },
       code: {
         type: DataTypes.STRING,

@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { BOOKING_STATUS } = require('./booking.constant');
+const {BOOKING_STATUS} = require("./history_booking.constant");
 
 const booking = {
   body: Joi.object().keys({

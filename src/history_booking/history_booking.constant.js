@@ -1,5 +1,4 @@
 const BOOKING_STATUS = Object.freeze({
-  WAITING: 'Waiting',
   BOOKED: 'Booked',
   CANCEL: 'Cancel',
 });
