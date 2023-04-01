@@ -59,6 +59,14 @@ const editUser = async (id, data) => {
     }
   }
 
+    // check health insurance is exists
+    if (data.health_insurance) {
+      const checkHealth = await findOneByFilter({ health_insurance: data.health_insurance });
+      if (checkHealth && checkHealth.id != id) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Health insurance already existed.');
+      }
+    }
+
   //find user and update
   const user = await findOneByFilter({ id: id });
   if (data.phone_number) {

@@ -7,6 +7,7 @@ const _schedule = require('../schedule/schedule.model');
 const _booking = require('../booking/booking.model');
 const _time_schedule = require('../time_schedule/time_schedule.model');
 const _blocking_account = require('../blocking_account/blocking_account.model');
+const _patient = require('../patient/patient.model');
 
 function initModels(sequelize) {
   const staff = _staff(sequelize, DataTypes);
@@ -17,6 +18,7 @@ function initModels(sequelize) {
   const schedule = _schedule(sequelize, DataTypes);
   const booking = _booking(sequelize, DataTypes);
   const blocking_account = _blocking_account(sequelize, DataTypes);
+  const patient = _patient(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -54,6 +56,7 @@ function initModels(sequelize) {
     booking,
     time_schedule,
     blocking_account,
+    patient,
   };
 }
 

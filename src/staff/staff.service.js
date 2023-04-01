@@ -4,6 +4,7 @@ const models = require('../models');
 const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const userService = require('../user/user.service');
+const patientService = require('../patient/patient.service');
 const { v4: uuidv4 } = require('uuid');
 
 const createStaff = async (data) => {
@@ -72,11 +73,17 @@ const findExpertise = async (data) => {
 const getRole = async (data) => {
   const staff = await findOneByFilter({ id: data });
   const user = await userService.findOneByFilter({ id: data });
-  if (staff != null) {
+  const patient = await patientService.findOneByFilter({ id: data });
+  if (staff) {
     return staff.role;
   }
   if (user) {
     const role = 'User';
+    return role;
+  }
+  if(patient)
+  {
+    const role = 'Patient';
     return role;
   }
   throw new ApiError(httpStatus.BAD_REQUEST, 'Account not found');

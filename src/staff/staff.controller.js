@@ -6,6 +6,7 @@ const pick = require('../utils/pick');
 const { Op } = require('sequelize');
 const scheduleService = require('../schedule/schedule.service');
 const userService = require('../user/user.service');
+const patientService = require('../patient/patient.service');
 const models = require('../models');
 
 const getInfo = catchAsync(async (req, res) => {
@@ -136,7 +137,10 @@ const editAccountInfo = catchAsync(async (req, res) => {
   var account;
   if (role === 'User') {
     account = await userService.editUser(id, req.body);
-  } else {
+  } else if (role === 'Patient') {
+    account = await patientService.editPatient(id, req.body);
+  }
+  else {
     account = await staffService.editStaff(id, req.body);
   }
   return res.status(httpStatus.OK).json(responseData(account, 'Update account successfully'));
