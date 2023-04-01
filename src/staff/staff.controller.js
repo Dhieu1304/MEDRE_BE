@@ -102,9 +102,15 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
 
   // todo: no generate schedule -> query all
   const condition = {
-    include: [{ model: models.schedule, as: 'staff_schedules', where: {
-        [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to }}]
-      } }],
+    include: [
+      {
+        model: models.schedule,
+        as: 'staff_schedules',
+        where: {
+          [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
+        },
+      },
+    ],
     distinct: true,
     limit,
     offset: (page - 1) * limit,
@@ -164,8 +170,7 @@ const editAccountInfo = catchAsync(async (req, res) => {
     account = await userService.editUser(id, req.body);
   } else if (role === 'Patient') {
     account = await patientService.editPatient(id, req.body);
-  }
-  else {
+  } else {
     account = await staffService.editStaff(id, req.body);
   }
   return res.status(httpStatus.OK).json(responseData(account, 'Update account successfully'));

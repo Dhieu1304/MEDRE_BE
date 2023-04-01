@@ -49,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
       indexes: [
         {
           name: 'patient_pkey',
-          unique: true, 
+          unique: true,
           fields: [{ name: 'id' }],
         },
       ],

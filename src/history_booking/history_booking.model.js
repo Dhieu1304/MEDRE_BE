@@ -1,4 +1,4 @@
-const {BOOKING_STATUS} = require("./history_booking.constant");
+const { BOOKING_STATUS } = require('./history_booking.constant');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(

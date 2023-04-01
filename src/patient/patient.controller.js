@@ -17,6 +17,6 @@ const getAll = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  getDetailPatient ,
+  getDetailPatient,
   getAll,
 };

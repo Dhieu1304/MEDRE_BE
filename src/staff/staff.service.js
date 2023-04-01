@@ -81,8 +81,7 @@ const getRole = async (data) => {
     const role = 'User';
     return role;
   }
-  if(patient)
-  {
+  if (patient) {
     const role = 'Patient';
     return role;
   }
@@ -202,9 +201,7 @@ const getListStaff = async (listId) => {
 const getListStaffSchedule = async (listId) => {
   return await models.staff.findAll({
     where: { id: listId },
-    include: [
-      { model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
-    ],
+    include: [{ model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } }],
     attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
   });
 };
