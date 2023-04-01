@@ -24,6 +24,14 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
+      id_patient: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'patient',
+          key: 'id',
+        },
+      },
       booking_status: {
         type: DataTypes.STRING(10),
         allowNull: false,
@@ -41,14 +49,6 @@ module.exports = function (sequelize, DataTypes) {
       reason: {
         type: DataTypes.STRING(500),
         allowNull: true,
-      },
-      id_patient: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-          model: 'patient',
-          key: 'id',
-        },
       },
     },
     {

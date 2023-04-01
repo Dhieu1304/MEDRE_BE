@@ -4,10 +4,10 @@ const _user = require('../user/user.model');
 const _expertise = require('../expertise/expertise.model');
 const _staff_expertise = require('../staff_expertise/staff_expertise.model');
 const _schedule = require('../schedule/schedule.model');
+const _patient = require('../patient/patient.model');
 const _booking = require('../booking/booking.model');
 const _time_schedule = require('../time_schedule/time_schedule.model');
 const _blocking_account = require('../blocking_account/blocking_account.model');
-const _patient = require('../patient/patient.model');
 const _history_booking = require('../history_booking/history_booking.model');
 
 function initModels(sequelize) {
@@ -17,9 +17,9 @@ function initModels(sequelize) {
   const staff_expertise = _staff_expertise(sequelize, DataTypes);
   const time_schedule = _time_schedule(sequelize, DataTypes);
   const schedule = _schedule(sequelize, DataTypes);
+  const patient = _patient(sequelize, DataTypes);
   const booking = _booking(sequelize, DataTypes);
   const blocking_account = _blocking_account(sequelize, DataTypes);
-  const patient = _patient(sequelize, DataTypes);
   const history_booking = _history_booking(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
@@ -50,12 +50,10 @@ function initModels(sequelize) {
   staff.hasMany(schedule, { as: 'staff_schedules', foreignKey: 'id_doctor' });
   history_booking.belongsTo(schedule, { as: 'id_schedule_schedule', foreignKey: 'id_schedule' });
   schedule.hasMany(history_booking, { as: 'history_bookings', foreignKey: 'id_schedule' });
-  history_booking.belongsTo(patient, { as: 'patient', foreignKey: 'id_patient' });
+  history_booking.belongsTo(patient, { as: 'id_patient_patient', foreignKey: 'id_patient' });
   patient.hasMany(history_booking, { as: 'history_bookings', foreignKey: 'id_patient' });
   history_booking.belongsTo(user, { as: 'id_user_user', foreignKey: 'id_user' });
   user.hasMany(history_booking, { as: 'id_user_history_bookings', foreignKey: 'id_user' });
-  history_booking.belongsTo(booking, { as: 'id_booking_booking', foreignKey: 'id_booking' });
-  booking.hasOne(history_booking, { as: 'history_bookings', foreignKey: 'id_booking' });
 
   return {
     staff,
@@ -63,10 +61,10 @@ function initModels(sequelize) {
     expertise,
     staff_expertise,
     schedule,
-    booking,
     time_schedule,
     blocking_account,
     patient,
+    booking,
     history_booking,
   };
 }

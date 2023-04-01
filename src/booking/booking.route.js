@@ -3,12 +3,17 @@ const bookingController = require('./booking.controller');
 const validate = require('../middlewares/validate');
 const bookingValidation = require('./booking.validation');
 const auth = require('../middlewares/auth');
+const { staffPermission } = require('../middlewares/staffPermission');
+const { ALL_STAFF_ROLES } = require('../staff/staff.constant');
 
 const router = express.Router();
 
 router.get('/list', auth(), bookingController.listBookings);
-router.post('/new-booking', auth(), validate(bookingValidation.booking), bookingController.booking);
-router.get('/history-booking', auth(), validate(bookingValidation.historyBooking), bookingController.historyBooking);
+router.post(
+  '/new-booking',
+  //auth(),
+  validate(bookingValidation.booking), 
+  bookingController.booking);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 
@@ -19,5 +24,11 @@ router.post(
   validate(bookingValidation.updateBookingStatus),
   bookingController.updateBookingStatus
 );
+router.post(
+  '/cancel',
+  //auth(),
+  validate(bookingValidation.cancelBooking), 
+  bookingController.cancelBooking);
+
 
 module.exports = router;
