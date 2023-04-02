@@ -16,14 +16,6 @@ const booking = {
   }),
 };
 
-const historyBooking = {
-  query: Joi.object().keys({
-    booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
-    is_payment: Joi.boolean(),
-    id_patient: Joi.string().uuid(),
-  }),
-};
-
 const updateBookingStatus = {
   body: Joi.object().keys({
     id: Joi.string().uuid().required(),
@@ -40,7 +32,6 @@ const cancelBooking = {
 
 module.exports = {
   booking,
-  historyBooking,
   updateBookingStatus,
   cancelBooking,
 };

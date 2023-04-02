@@ -6,11 +6,22 @@ const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.get('/list', auth(), historyBookingController.listHistoryBookings);
-router.get('/history-booking', auth(), validate(historyBookingValidation.historyBooking), historyBookingController.historyBooking);
+router.get(
+    '/list', 
+    auth(), 
+    historyBookingController.listHistoryBookings);
+
+router.get(
+    '/', 
+    auth(), 
+    validate(historyBookingValidation.historyBooking), 
+    historyBookingController.historyBooking);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 
-router.get('/details/:id', auth(), historyBookingController.getDetailBooking);
+router.get(
+    '/details/:id', 
+    auth(), 
+    historyBookingController.getDetailBooking);
 
 module.exports = router;

@@ -3,15 +3,15 @@ const bookingController = require('./booking.controller');
 const validate = require('../middlewares/validate');
 const bookingValidation = require('./booking.validation');
 const auth = require('../middlewares/auth');
-const { staffPermission } = require('../middlewares/staffPermission');
-const { ALL_STAFF_ROLES } = require('../staff/staff.constant');
+//const { staffPermission } = require('../middlewares/staffPermission');
+//const { ALL_STAFF_ROLES } = require('../staff/staff.constant');
 
 const router = express.Router();
 
 router.get('/list', auth(), bookingController.listBookings);
 router.post(
   '/new-booking',
-  //auth(),
+  auth(),
   validate(bookingValidation.booking), 
   bookingController.booking);
 
@@ -26,7 +26,7 @@ router.post(
 );
 router.post(
   '/cancel',
-  //auth(),
+  auth(),
   validate(bookingValidation.cancelBooking), 
   bookingController.cancelBooking);
 
