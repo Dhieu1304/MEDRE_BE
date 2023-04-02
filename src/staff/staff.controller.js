@@ -8,6 +8,7 @@ const scheduleService = require('../schedule/schedule.service');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const models = require('../models');
+const sequelize = require("../config/database");
 
 const getInfo = catchAsync(async (req, res) => {
   // check staff
@@ -41,9 +42,8 @@ const getAll = catchAsync(async (req, res) => {
   const filterLike = ['username', 'phone_number', 'email', 'name', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {
-      filter[filterLike[i]] = {
-        [Op.substring]: `${filter[filterLike[i]]}`,
-      };
+      filter[filterLike[i]] = sequelize.where(sequelize.fn('LOWER', sequelize.col(filterLike[i])),
+          'LIKE', '%' + filter[filterLike[i]] + '%');
     }
   }
 
