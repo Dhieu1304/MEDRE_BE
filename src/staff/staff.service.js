@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const { v4: uuidv4 } = require('uuid');
+const { USER_STATUS } = require('../user/user.constant');
+const { STAFF_ROLES } = require('./staff.constant');
 
 const createStaff = async (data) => {
   // check email is exists
@@ -107,7 +109,7 @@ const blockingAccount = async (staffId, data) => {
   }
 
   // Check the current status of the account
-  if (account.status != 'Ok') {
+  if (account.status !== USER_STATUS.OK) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'The account has already blocked or deleted.');
   }
 
@@ -115,21 +117,21 @@ const blockingAccount = async (staffId, data) => {
   const id = uuidv4();
 
   // Nurse can block User
-  if (staffRole === 'Nurse') {
+  if (staffRole === STAFF_ROLES.NURSE) {
     if (blockingAccountRole != 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   // Doctor can block Nurse, User
-  else if (staffRole === 'Doctor') {
-    if (blockingAccountRole != 'Nurse' && blockingAccountRole != 'User') {
+  else if (staffRole === STAFF_ROLES.DOCTOR) {
+    if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole != 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   // Block the account and write into block_account table
-  account.status = 'Block';
+  account.status = USER_STATUS.BLOCK;
   await account.save();
   return models.blocking_account.create({
     id: id,
@@ -152,7 +154,7 @@ const unblockingAccount = async (staffId, data) => {
   }
 
   //Check the current status of the account
-  if (account.status === 'Ok') {
+  if (account.status === USER_STATUS.OK) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Don't need to unblock the account.");
   }
 
@@ -160,7 +162,7 @@ const unblockingAccount = async (staffId, data) => {
   const id = uuidv4();
 
   //Unblock the account and write into block_account table
-  account.status = 'Ok';
+  account.status = USER_STATUS.OK;
   await account.save();
   return models.blocking_account.create({
     id: id,

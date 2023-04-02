@@ -3,7 +3,6 @@ const { v4: uuidv4 } = require('uuid');
 const scheduleService = require('../schedule/schedule.service');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
-const userService = require('../user/user.service');
 const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
 
 const create = async (data) => {
@@ -11,11 +10,6 @@ const create = async (data) => {
   const schedule = await scheduleService.findOneByFilter({ id: data.id_schedule });
   if (!schedule || schedule.status !== SCHEDULE_STATUS.EMPTY) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid schedule id');
-  }
-
-  // check patient
-  if (!(await userService.findOneByFilter({ id: data.id_patient }))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid patient id');
   }
 
   data.id = uuidv4();
@@ -45,9 +39,20 @@ const updateStatus = async (data) => {
   return booking;
 };
 
+const cancelBooking = async (data) => {
+  const booking = await findOneByFilter({id: data.id});
+  if (!booking) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Booking not existed.');
+  }
+
+  //delete booking
+  return await models.booking.destroy({ where: { id: booking.id } });
+};
+
 module.exports = {
   create,
   findOneByFilter,
   findAllByFilter,
   updateStatus,
+  cancelBooking,
 };

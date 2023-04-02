@@ -1,8 +1,8 @@
-const BOOKING_STATUS = Object.freeze({
+const HISTORY_BOOKING_STATUS = Object.freeze({
   BOOKED: 'Booked',
-  CANCEL: 'Cancel',
+  CANCELLED: 'Cancelled',
 });
 
 module.exports = {
-  BOOKING_STATUS,
+  HISTORY_BOOKING_STATUS,
 };

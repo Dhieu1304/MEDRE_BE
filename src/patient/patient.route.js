@@ -9,10 +9,18 @@ const staffController = require('../staff/staff.controller');
 
 const router = express.Router();
 
-router.get('/all', patientController.getAll);
+router.get(
+  '/list',
+  auth(),
+  patientController.getAll);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
-router.get('/detail/:id', auth(), staffPermission(ALL_STAFF_ROLES), patientController.getDetailPatient);
+router.get(
+  '/detail/:id', 
+  auth(), 
+  staffPermission(ALL_STAFF_ROLES), 
+  patientController.getDetailPatient);
+
 router.post(
   '/edit/:id',
   auth(),

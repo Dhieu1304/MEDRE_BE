@@ -3,44 +3,30 @@ const { v4: uuidv4 } = require('uuid');
 const scheduleService = require('../schedule/schedule.service');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
-const userService = require('../user/user.service');
-const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
 
 const create = async (data) => {
-  // check schedule
-  const schedule = await scheduleService.findOneByFilter({ id: data.id_schedule });
-  if (!schedule || schedule.status !== SCHEDULE_STATUS.EMPTY) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid schedule id');
-  }
-
-  // check patient
-  if (!(await userService.findOneByFilter({ id: data.id_patient }))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid patient id');
-  }
-
   data.id = uuidv4();
-
-  // update status schedule
-  schedule.status = SCHEDULE_STATUS.WAITING;
-  await schedule.save();
-
-  return models.booking.create(data);
+  return models.history_booking.create(data);
 };
 
 const findOneByFilter = async (filter) => {
-  return await models.booking.findOne({ where: filter });
+  return await models.history_booking.findOne({ where: filter });
 };
 
 const findAllByFilter = async (filter) => {
-  return await models.booking.findAll({ where: filter });
+  return await models.history_booking.findAll({ where: filter });
 };
 
 const updateStatus = async (data) => {
-  const booking = await findOneByFilter({ id: data.id });
+  const booking = await findOneByFilter({ id_booking: data.id });
   if (!booking) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
   }
   booking.booking_status = data.booking_status;
+  if(data.note)
+  {
+    booking.note = data.note;
+  }
   await booking.save();
   return booking;
 };
