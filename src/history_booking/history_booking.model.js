@@ -1,12 +1,16 @@
-const { BOOKING_STATUS } = require('./booking.constant');
+const { HISTORY_BOOKING_STATUS } = require('./history_booking.constant');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    'booking',
+    'history_booking',
     {
       id: {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+      },
+      id_booking: {
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       id_schedule: {
         type: DataTypes.UUID,
@@ -27,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {
       booking_status: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        defaultValue: BOOKING_STATUS.WAITING,
+        defaultValue: HISTORY_BOOKING_STATUS.BOOKED,
       },
       code: {
         type: DataTypes.STRING,
@@ -42,23 +46,31 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(500),
         allowNull: true,
       },
+      note: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
+      conclusion: {
+        type: DataTypes.STRING(2000),
+        allowNull: true,
+      },
       id_patient: {
         type: DataTypes.UUID,
         allowNull: true,
         references: {
-          model: 'user',
+          model: 'patient',
           key: 'id',
         },
       },
     },
     {
       sequelize,
-      tableName: 'booking',
+      tableName: 'history_booking',
       schema: 'public',
       timestamps: true,
       indexes: [
         {
-          name: 'booking_pkey',
+          name: 'history_booking_pkey',
           unique: true,
           fields: [{ name: 'id' }],
         },
