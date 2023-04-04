@@ -95,9 +95,29 @@ const editUser = async (id, data) => {
   }
 };
 
+const changePassword = async (id, data) => {
+  const user = await findOneByFilter({id:id});
+
+  //check if password is correct
+  const isPasswordMatch = await bcrypt.compare(data.old_password, user.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect password.');
+  }
+
+  //check if new password and confirm password is match
+  if (data.new_password !== data.confirm_password) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'New password and confirm password do not match.');
+  }
+
+  const newPassword = await bcrypt.hash(data.new_password, 10);
+  await user.update({ password: newPassword});
+  return user;
+}
+
 module.exports = {
   createUser,
   findOneByFilter,
   findAllByFilter,
   editUser,
+  changePassword,
 };
