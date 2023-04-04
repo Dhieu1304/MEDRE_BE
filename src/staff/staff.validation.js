@@ -3,6 +3,7 @@ const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 const moment = require('moment');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
+const { password } = require('../utils/validateCustom');
 
 const getAllStaff = {
   query: Joi.object().keys({
@@ -89,10 +90,19 @@ const editStaff = {
   }),
 };
 
+const changePassword = {
+  body: Joi.object().keys({
+    old_password: Joi.string().required(),
+    new_password: Joi.string().required().custom(password),
+    confirm_password: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   getAllStaff,
   getDetailStaff,
   getListStaffSchedule,
+  changePassword,
 
   // admin
   createStaff,

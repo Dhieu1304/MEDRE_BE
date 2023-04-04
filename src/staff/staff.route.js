@@ -8,10 +8,27 @@ const staffValidation = require('./staff.validation');
 
 const router = express.Router();
 
-router.get('/info', auth(), staffController.getInfo);
 router.get('/all', validate(staffValidation.getAllStaff), staffController.getAll);
 router.get('/list-staff-schedule', validate(staffValidation.getListStaffSchedule), staffController.getListStaffSchedule);
 router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffController.getDetailStaff);
+
+router.get(
+  '/my-profile', 
+  auth(), 
+  staffController.getInfo);
+
+router.post(
+  '/my-profile/edit', 
+  //auth(),
+  validate(staffValidation.editStaff),
+  staffController.editProfile);
+
+  router.post(
+    '/my-profile/change-password', 
+    //auth(),
+    validate(staffValidation.changePassword),
+    staffController.changePassword);
+
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 router.post(
