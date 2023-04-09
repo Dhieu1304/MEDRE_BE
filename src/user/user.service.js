@@ -10,7 +10,21 @@ const createUser = async (data) => {
   if (data.email) {
     const user = await findOneByFilter({ email: data.email });
     if (user) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already existed.');
+    }
+  }
+
+  if (data.phone_number) {
+    const user = await findOneByFilter({ phone_number: data.phone_number });
+    if (user) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already existed.');
+    }
+  }
+
+  if (data.health_insurance) {
+    const checkHealth = await findOneByFilter({ health_insurance: data.health_insurance });
+    if (checkHealth && checkHealth.id != id) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Health insurance already existed.');
     }
   }
 
