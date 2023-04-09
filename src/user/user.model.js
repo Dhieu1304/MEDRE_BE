@@ -1,4 +1,4 @@
-const { USER_STATUS, GENDERS } = require('./user.constant');
+const { GENDERS } = require('./user.constant');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -55,9 +55,9 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(100),
         allowNull: true,
       },
-      status: {
-        type: DataTypes.STRING(10),
-        defaultValue: USER_STATUS.OK,
+      blocked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       refresh_token: {
         type: DataTypes.STRING(500),
@@ -69,6 +69,7 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'user',
       schema: 'public',
       timestamps: true,
+        paranoid: true,
       indexes: [
         {
           name: 'user_pkey',

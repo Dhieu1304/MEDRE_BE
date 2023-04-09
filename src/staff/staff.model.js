@@ -1,4 +1,4 @@
-const { USER_STATUS, GENDERS } = require('../user/user.constant');
+const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -49,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: true,
       },
       role: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.STRING(50),
         defaultValue: STAFF_ROLES.ADMIN,
       },
       email_verified: {
@@ -64,9 +64,9 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(100),
         allowNull: true,
       },
-      status: {
-        type: DataTypes.STRING(10),
-        defaultValue: USER_STATUS.OK,
+      blocked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       description: {
         type: DataTypes.STRING(500),
@@ -90,6 +90,7 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'staff',
       schema: 'public',
       timestamps: true,
+        paranoid: true,
       indexes: [
         {
           name: 'staff_pkey',

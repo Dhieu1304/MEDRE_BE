@@ -6,7 +6,6 @@ const scheduleRouter = require('./schedule/schedule.route');
 const timeScheduleRouter = require('./time_schedule/time_schedule.route');
 const bookingRouter = require('./booking/booking.route');
 const expertiseRouter = require('./expertise/expertise.route');
-const historyBookingRouter = require('./history_booking/history_booking.route');
 const patientRouter = require('./patient/patient.route');
 
 module.exports.initRouter = (app) => {
@@ -17,7 +16,6 @@ module.exports.initRouter = (app) => {
   app.use('/time-schedule', timeScheduleRouter);
   app.use('/booking', bookingRouter);
   app.use('/expertise', expertiseRouter);
-  app.use('/history-booking', historyBookingRouter);
   app.use('/patient', patientRouter);
 
   app.use(express.Router().get('/'), (req, res) => {

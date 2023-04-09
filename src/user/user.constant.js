@@ -14,3 +14,5 @@ module.exports = {
   GENDERS,
   USER_STATUS,
 };
+
+// todo: delete user_status

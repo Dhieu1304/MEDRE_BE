@@ -129,7 +129,10 @@ const refreshAuth = async (refresh_token) => {
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect refresh token');
   }
-  return generateAuthTokens(user);
+  const tokens = generateAuthTokens(user);
+  user.refresh_token = tokens.refresh.token;
+  await user.save();
+  return {user, tokens};
 };
 
 const staffRefreshAuth = async (refresh_token) => {
@@ -137,7 +140,10 @@ const staffRefreshAuth = async (refresh_token) => {
   if (!staff) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect refresh token');
   }
-  return generateAuthTokens(staff);
+  const tokens = generateAuthTokens(staff);
+  staff.refresh_token = tokens.refresh.token;
+  await staff.save();
+  return { staff, tokens };
 };
 
 module.exports = {

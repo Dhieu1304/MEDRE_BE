@@ -9,11 +9,7 @@ const auth = require('../middlewares/auth');
 const router = express.Router();
 
 router.get('/list', auth(), bookingController.listBookings);
-router.post(
-  '/new-booking',
-  auth(),
-  validate(bookingValidation.booking), 
-  bookingController.booking);
+router.post('/new-booking', auth(), validate(bookingValidation.booking), bookingController.booking);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 
@@ -24,11 +20,6 @@ router.post(
   validate(bookingValidation.updateBookingStatus),
   bookingController.updateBookingStatus
 );
-router.post(
-  '/cancel',
-  auth(),
-  validate(bookingValidation.cancelBooking), 
-  bookingController.cancelBooking);
-
+router.post('/cancel', auth(), validate(bookingValidation.cancelBooking), bookingController.cancelBooking);
 
 module.exports = router;

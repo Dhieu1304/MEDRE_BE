@@ -1,4 +1,4 @@
-const { USER_STATUS, GENDERS } = require('../user/user.constant');
+const { GENDERS } = require('../user/user.constant');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'patient',
@@ -28,13 +28,12 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(10),
         defaultValue: GENDERS.OTHER,
       },
+      address: {
+        type: DataTypes.STRING,
+      },
       dob: {
         type: DataTypes.DATEONLY,
         allowNull: true,
-      },
-      status: {
-        type: DataTypes.STRING(10),
-        defaultValue: USER_STATUS.OK,
       },
       health_insurance: {
         type: DataTypes.STRING(100),

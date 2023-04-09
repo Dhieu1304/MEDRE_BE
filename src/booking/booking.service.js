@@ -40,7 +40,7 @@ const updateStatus = async (data) => {
 };
 
 const cancelBooking = async (data) => {
-  const booking = await findOneByFilter({id: data.id});
+  const booking = await findOneByFilter({ id: data.id });
   if (!booking) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Booking not existed.');
   }

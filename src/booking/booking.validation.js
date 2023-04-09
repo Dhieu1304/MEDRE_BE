@@ -4,7 +4,7 @@ const { GENDERS } = require('../user/user.constant');
 
 const booking = {
   body: Joi.object().keys({
-    type: Joi.number().required(),  //Type: 1 - Self, 2 - Other
+    type: Joi.number().required(), //Type: 1 - Self, 2 - Other
     id_schedule: Joi.string().uuid().required(),
     reason: Joi.string().required(),
     id_patient: Joi.string().uuid(),
