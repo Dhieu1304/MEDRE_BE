@@ -4,22 +4,14 @@ const timeScheduleService = require('../time_schedule/time_schedule.service');
 const { v4: uuidv4 } = require('uuid');
 
 const findOneByFilter = async (filter) => {
-  try {
-    return await models.schedule.findOne({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
+  return await models.schedule.findOne({ where: filter });
 };
 
 const findAllByFilter = async (filter) => {
-  try {
-    return await models.schedule.findAll({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
+  return await models.schedule.findAll({ where: filter });
 };
 
-const findAllByOption = async (options) => {
+const findAllByOption = async (options = {}) => {
   return await models.schedule.findAll(options);
 };
 
@@ -59,10 +51,15 @@ const findAllByFilterBookingDetail = async (filter) => {
   }
 };
 
+const createSchedule = async (data) => {
+  return await models.schedule.bulkCreate(data);
+};
+
 module.exports = {
   findOneByFilter,
   findAllByFilter,
   findByDayOrGenerate,
   findAllByFilterBookingDetail,
   findAllByOption,
+  createSchedule,
 };
