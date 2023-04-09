@@ -7,18 +7,18 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         primaryKey: true,
       },
-        id_doctor: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'staff',
-                key: 'id',
-            },
+      id_doctor: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'staff',
+          key: 'id',
         },
-        date: {
-          type: DataTypes.DATEONLY,
-            allowNull: false,
-        },
+      },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
       time_start: {
         type: DataTypes.TIME,
         allowNull: false,
@@ -33,7 +33,7 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'doctor_time_off',
       schema: 'public',
       timestamps: true,
-        paranoid: true,
+      paranoid: true,
       indexes: [
         {
           name: 'doctor_time_off_pkey',

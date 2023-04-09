@@ -59,7 +59,7 @@ function initModels(sequelize) {
     blocking_account,
     patient,
     booking,
-    doctor_time_off
+    doctor_time_off,
   };
 }
 

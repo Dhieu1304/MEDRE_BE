@@ -32,7 +32,7 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
-        id_staff_booking: {
+      id_staff_booking: {
         type: DataTypes.UUID,
         allowNull: true,
         references: {
@@ -78,7 +78,7 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'booking',
       schema: 'public',
       timestamps: true,
-        paranoid: true,
+      paranoid: true,
       indexes: [
         {
           name: 'booking_pkey',

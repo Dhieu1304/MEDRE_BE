@@ -90,7 +90,7 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'staff',
       schema: 'public',
       timestamps: true,
-        paranoid: true,
+      paranoid: true,
       indexes: [
         {
           name: 'staff_pkey',

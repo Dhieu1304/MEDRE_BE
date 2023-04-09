@@ -132,7 +132,7 @@ const refreshAuth = async (refresh_token) => {
   const tokens = generateAuthTokens(user);
   user.refresh_token = tokens.refresh.token;
   await user.save();
-  return {user, tokens};
+  return { user, tokens };
 };
 
 const staffRefreshAuth = async (refresh_token) => {

@@ -1,5 +1,5 @@
 const { SCHEDULE_TYPE } = require('./schedule.constant');
-const moment = require("moment");
+const moment = require('moment');
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'schedule',
@@ -12,14 +12,14 @@ module.exports = function (sequelize, DataTypes) {
       id_doctor: {
         type: DataTypes.UUID,
         allowNull: false,
-          references: {
-              model: 'staff',
-              key: 'id',
-          },
+        references: {
+          model: 'staff',
+          key: 'id',
+        },
       },
-        day_of_week: {
+      day_of_week: {
         type: DataTypes.INTEGER,
-            allowNull: false,
+        allowNull: false,
       },
       id_time: {
         type: DataTypes.UUID,
@@ -34,21 +34,21 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         defaultValue: SCHEDULE_TYPE.ONLINE,
       },
-        apply_from: {
-          type: DataTypes.DATEONLY,
-            defaultValue: moment(),
-        },
-        apply_to: {
-          type: DataTypes.DATEONLY,
-            defaultValue: moment().add(1, 'years')
-        },
+      apply_from: {
+        type: DataTypes.DATEONLY,
+        defaultValue: moment(),
+      },
+      apply_to: {
+        type: DataTypes.DATEONLY,
+        defaultValue: moment().add(1, 'years'),
+      },
     },
     {
       sequelize,
       tableName: 'schedule',
       schema: 'public',
       timestamps: true,
-        paranoid: true,
+      paranoid: true,
       indexes: [
         {
           name: 'schedule_pkey',
