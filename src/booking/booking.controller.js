@@ -3,10 +3,28 @@ const httpStatus = require('http-status');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const pick = require('../utils/pick');
 const bookingService = require('./booking.service');
-const patientService = require('../patient/patient.service');
+const { Op } = require('sequelize');
 
 const listBookings = catchAsync(async (req, res) => {
-  const listBooking = await bookingService.findAllByFilter();
+  let filter = pick(req.query, ['type', 'booking_status', 'from', 'to']);
+  filter.id_user = req.user.id;
+  if (filter.from && filter.to) {
+    filter = Object.assign(filter, {
+      [Op.and]: [[{ date: { [Op.gte]: filter.from } }, { date: { [Op.lte]: filter.to } }]],
+    });
+    delete filter.from;
+    delete filter.to;
+  } else {
+    if (filter.from) {
+      filter.date = { [Op.gte]: filter.from };
+      delete filter.from;
+    }
+    if (filter.to) {
+      filter.date = { [Op.lte]: filter.to };
+      delete filter.to;
+    }
+  }
+  const listBooking = await bookingService.findAllByFilter(filter);
   return res.status(httpStatus.OK).json(responseData(listBooking, 'Successful'));
 });
 
@@ -19,24 +37,9 @@ const getDetailBooking = catchAsync(async (req, res) => {
 });
 
 const booking = catchAsync(async (req, res) => {
-  const type = pick(req.body, ['type']);
-  var newBooking;
-  const data = pick(req.body, ['id_schedule', 'reason']);
-  //data.id_user = req.user.id;
-  data.id_user = '04f4b75b-eced-4036-a76c-446b9f1acd5c';
-  if (type.type == 1) {
-    newBooking = await bookingService.create(data);
-    data.id_booking = newBooking.id;
-  } else {
-    const patient = pick(req.body, ['name', 'phone_number', 'gender', 'dob', 'health_insurance']);
-    //patient.id_user = req.user.id;
-    patient.id_user = '04f4b75b-eced-4036-a76c-446b9f1acd5c';
-    const newPatient = await patientService.createPatient(patient);
-    data.id_patient = newPatient.id;
-    newBooking = await bookingService.create(data);
-    data.id_booking = newBooking.id;
-  }
-
+  const data = req.body;
+  data.id_user = req.user.id;
+  const newBooking = await bookingService.createNewBooking(data);
   return res.status(httpStatus.OK).json(responseData(newBooking, 'Successful.'));
 });
 

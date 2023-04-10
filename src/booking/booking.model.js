@@ -40,6 +40,18 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
+      id_staff_cancel: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'staff',
+          key: 'id',
+        },
+      },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
       booking_status: {
         type: DataTypes.STRING(10),
         allowNull: false,

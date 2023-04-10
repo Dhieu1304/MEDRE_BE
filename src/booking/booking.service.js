@@ -4,6 +4,8 @@ const scheduleService = require('../schedule/schedule.service');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
+const { Op } = require('sequelize');
+const { BOOKING_STATUS } = require('./booking.constant');
 
 const create = async (data) => {
   // check schedule
@@ -18,6 +20,30 @@ const create = async (data) => {
   schedule.status = SCHEDULE_STATUS.WAITING;
   await schedule.save();
 
+  return models.booking.create(data);
+};
+
+const createNewBooking = async (data) => {
+  // check booking
+  if (data.id_patient) {
+    if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid patient');
+    }
+  }
+
+  // check is any booking at this time
+  const booking = await models.booking.findOne({
+    where: {
+      date: data.date,
+      id_schedule: data.id_schedule,
+      booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+    },
+  });
+  if (booking) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
+  }
+
+  data.id = uuidv4();
   return models.booking.create(data);
 };
 
@@ -55,4 +81,5 @@ module.exports = {
   findAllByFilter,
   updateStatus,
   cancelBooking,
+  createNewBooking,
 };
