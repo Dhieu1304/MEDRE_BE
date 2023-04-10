@@ -27,8 +27,22 @@ const getAll = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(users));
 });
 
+const editProfile = catchAsync(async (req, res) => {
+  const id = req.user.id;
+  const user = await userService.editUser(id, req.body);
+  return res.status(httpStatus.OK).json(responseData(user, "Change profile successfully."));
+});
+
+const changePassword = catchAsync(async (req, res) => {
+  const id = req.user.id;
+  const user = await userService.changePassword(id, req.body);
+  return res.status(httpStatus.OK).json(responseData(user, "Change password successfully."));
+});
+
 module.exports = {
   getInfo,
   getDetailUser,
   getAll,
+  editProfile,
+  changePassword,
 };

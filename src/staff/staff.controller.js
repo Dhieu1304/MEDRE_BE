@@ -178,11 +178,25 @@ const editAccountInfo = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(account, 'Update account successfully'));
 });
 
+const editProfile = catchAsync(async (req, res) => {
+  const id = req.user.id;
+  const staff = await staffService.editStaff(id, req.body);
+  return res.status(httpStatus.OK).json(responseData(staff, "Change profile successfully."));
+});
+
+const changePassword = catchAsync(async (req, res) => {
+  const id = req.user.id;
+  const staff = await staffService.changePassword(id, req.body);
+  return res.status(httpStatus.OK).json(responseData(staff, "Change password successfully."));
+});
+
 module.exports = {
   getInfo,
   getAll,
   getDetailStaff,
   getListStaffSchedule,
+  editProfile,
+  changePassword,
 
   // admin
   createStaff,
