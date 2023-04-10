@@ -4,10 +4,13 @@ const { responseData, responseMessage } = require('../utils/responseFormat');
 const userService = require('./user.service');
 
 const getInfo = catchAsync(async (req, res) => {
-  const user = await userService.findOneByFilter({ id: req.user.id });
+  let user = await userService.findOneByFilter({ id: req.user.id });
   if (!user) {
     return res.status(httpStatus.OK).json(responseMessage('User not found', false));
   }
+  user = user.toJSON();
+  delete user.password;
+  delete user.refresh_token;
   return res.status(httpStatus.OK).json(responseData(user));
 });
 

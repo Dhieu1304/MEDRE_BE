@@ -18,7 +18,7 @@ const { phoneNumberRegex } = require('../utils/validateCustom');
 const editPatient = {
   body: Joi.object().keys({
     id_user: Joi.string(),
-    phone_number: Joi.string(),
+    phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
     name: Joi.string(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     dob: Joi.date(),
