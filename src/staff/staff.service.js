@@ -1,7 +1,6 @@
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const models = require('../models');
-const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
@@ -37,23 +36,23 @@ const createStaff = async (data) => {
 };
 
 const findOneByFilter = async (filter) => {
-    return await models.staff.findOne({ where: filter });
+  return await models.staff.findOne({ where: filter });
 };
 
 const findAllByFilter = async (filter) => {
-    return await models.staff.findAll({ where: filter });
+  return await models.staff.findAll({ where: filter });
 };
 
 const findAndCountAllByCondition = async (condition) => {
-    return await models.staff.findAndCountAll(condition);
+  return await models.staff.findAndCountAll(condition);
 };
 
 const findExpertise = async (data) => {
-    return await models.staff_expertise.findAll({
-      where: { id_staff: data.staffId },
-      attributes: ['id_expertise'],
-      include: [{ model: models.expertise, as: 'id_expertise_expertise', attributes: ['name'] }],
-    });
+  return await models.staff_expertise.findAll({
+    where: { id_staff: data.staffId },
+    attributes: ['id_expertise'],
+    include: [{ model: models.expertise, as: 'id_expertise_expertise', attributes: ['name'] }],
+  });
 };
 
 const getRole = async (data) => {
@@ -157,10 +156,10 @@ const unblockingAccount = async (staffId, data) => {
 };
 
 const findDetailStaff = async (filter) => {
-    return await models.staff.findOne({
-      where: filter,
-      include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
-    });
+  return await models.staff.findOne({
+    where: filter,
+    include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
+  });
 };
 
 const getListStaff = async (listId) => {
@@ -257,10 +256,10 @@ const editStaff = async (id, data) => {
 };
 
 const changePassword = async (id, data) => {
-  const staff = await findOneByFilter({id:id});
+  const staff = await findOneByFilter({ id: id });
 
   //check if password is correct
-  const isPasswordMatch = await bcrypt.compare(data.old_password, user.password);
+  const isPasswordMatch = await bcrypt.compare(data.old_password, staff.password);
   if (!isPasswordMatch) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect password.');
   }
@@ -271,14 +270,16 @@ const changePassword = async (id, data) => {
   }
 
   const newPassword = await bcrypt.hash(data.new_password, 10);
-  await staff.update({ password: newPassword});
+  await staff.update({ password: newPassword });
   return staff;
 };
 
 // Find elements have in array left but not have in array right
 const findDifference = async (left, right) => {
-  return left.filter(ele => !right.includes(ele));
-}
+  return left.filter((ele) => {
+    return !right.includes(ele);
+  });
+};
 
 const editStaffExpertise = async (staffId, expertiseIds) => {
   try {
@@ -286,24 +287,26 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
       attributes: ['id_expertise'],
       where: {
         id_staff: staffId,
-      }
-    })
+      },
+    });
 
-    const currentStaffExpertiseExpertiseIds= currentStaffExpertises?.map((staffExpertise) =>
-      staffExpertise.id_expertise
-    );
+    const currentStaffExpertiseExpertiseIds = currentStaffExpertises?.map((staffExpertise) => {
+      return staffExpertise.id_expertise;
+    });
 
-    // Find id have staffExpertiseIds now but not have in expertiseIds 
+    // Find id have staffExpertiseIds now but not have in expertiseIds
     const removeStaffExpertiseIds = await findDifference(currentStaffExpertiseExpertiseIds, expertiseIds);
 
     // Find id do not have in staffExpertiseIds now but have in expertiseIds
     const newStaffExpertiseIds = await findDifference(expertiseIds, currentStaffExpertiseExpertiseIds);
 
     // Create StaffExpertises from staffId and newStaffExpertiseIds
-    const newStaffExpertises = newStaffExpertiseIds.map((expertiseId) => ({
-      id_staff: staffId,
-      id_expertise: expertiseId
-    }))
+    const newStaffExpertises = newStaffExpertiseIds.map((expertiseId) => {
+      return {
+        id_staff: staffId,
+        id_expertise: expertiseId,
+      };
+    });
 
     // console.log("expertiseIds: ", expertiseIds);
     // console.log("currentStaffExpertiseExpertiseIds: ", currentStaffExpertiseExpertiseIds);
@@ -311,22 +314,21 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
     // console.log("newStaffExpertiseIds: ", newStaffExpertiseIds);
     // console.log("newStaffExpertises: ", newStaffExpertises);
 
-
-    // Delete old expertises that no longer existed in staff_expertise 
-    const res1 = await models.staff_expertise.destroy({
+    // Delete old expertises that no longer existed in staff_expertise
+    await models.staff_expertise.destroy({
       where: {
         id_staff: staffId,
-        id_expertise: removeStaffExpertiseIds
-      }
-    })
+        id_expertise: removeStaffExpertiseIds,
+      },
+    });
 
-    // Add new expertises to staff_expertise 
-    const res2 = await models.staff_expertise.bulkCreate(newStaffExpertises)
-    return res2;
+    // Add new expertises to staff_expertise
+    const res = await models.staff_expertise.bulkCreate(newStaffExpertises);
+    return res;
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 module.exports = {
   createStaff,

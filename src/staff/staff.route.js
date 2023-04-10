@@ -12,23 +12,21 @@ router.get('/all', validate(staffValidation.getAllStaff), staffController.getAll
 router.get('/list-staff-schedule', validate(staffValidation.getListStaffSchedule), staffController.getListStaffSchedule);
 router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffController.getDetailStaff);
 
-router.get(
-  '/my-profile', 
-  auth(), 
-  staffController.getInfo);
+router.get('/my-profile', auth(), staffController.getInfo);
 
 router.post(
-  '/my-profile/edit', 
+  '/my-profile/edit',
   //auth(),
   validate(staffValidation.editStaff),
-  staffController.editProfile);
+  staffController.editProfile
+);
 
-  router.post(
-    '/my-profile/change-password', 
-    //auth(),
-    validate(staffValidation.changePassword),
-    staffController.changePassword);
-
+router.post(
+  '/my-profile/change-password',
+  //auth(),
+  validate(staffValidation.changePassword),
+  staffController.changePassword
+);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 router.post(

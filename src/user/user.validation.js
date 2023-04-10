@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
-const {phoneNumberRegex} = require("../utils/validateCustom");
+const { phoneNumberRegex } = require('../utils/validateCustom');
 const { password } = require('../utils/validateCustom');
 
 const editUser = {

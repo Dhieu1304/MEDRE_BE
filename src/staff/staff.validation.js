@@ -3,7 +3,7 @@ const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 const moment = require('moment');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
-const {phoneNumberRegex} = require("../utils/validateCustom");
+const { phoneNumberRegex } = require('../utils/validateCustom');
 const { password } = require('../utils/validateCustom');
 
 const getAllStaff = {

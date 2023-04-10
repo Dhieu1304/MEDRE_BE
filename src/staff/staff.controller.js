@@ -9,7 +9,7 @@ const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const models = require('../models');
 const sequelize = require('../config/database');
-const pageLimit2Offset = require("../utils/pageLimit2Offset");
+const pageLimit2Offset = require('../utils/pageLimit2Offset');
 
 const getInfo = catchAsync(async (req, res) => {
   // check staff
@@ -180,13 +180,13 @@ const editAccountInfo = catchAsync(async (req, res) => {
 const editProfile = catchAsync(async (req, res) => {
   const id = req.user.id;
   const staff = await staffService.editStaff(id, req.body);
-  return res.status(httpStatus.OK).json(responseData(staff, "Change profile successfully."));
+  return res.status(httpStatus.OK).json(responseData(staff, 'Change profile successfully.'));
 });
 
 const changePassword = catchAsync(async (req, res) => {
   const id = req.user.id;
   const staff = await staffService.changePassword(id, req.body);
-  return res.status(httpStatus.OK).json(responseData(staff, "Change password successfully."));
+  return res.status(httpStatus.OK).json(responseData(staff, 'Change password successfully.'));
 });
 
 module.exports = {
