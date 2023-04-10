@@ -38,10 +38,16 @@ const listUser = {
   }),
 };
 
+const detailUser = {
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+};
 
 module.exports = {
   // admin
   editUser,
   changePassword,
   listUser,
+  detailUser,
 };

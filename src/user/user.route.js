@@ -34,7 +34,8 @@ router.get(
 
 router.get(
   '/detail/:id',
-  staffPermission(ALL_STAFF_ROLES), 
+  staffPermission(ALL_STAFF_ROLES),
+    validate(userValidation.detailUser),
   userController.getDetailUser);
 
 router.post(
