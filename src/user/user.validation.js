@@ -2,19 +2,15 @@ const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
 const {phoneNumberRegex} = require("../utils/validateCustom");
 const { password } = require('../utils/validateCustom');
-const {STAFF_ROLES} = require("../staff/staff.constant");
-const {SCHEDULE_TYPE} = require("../schedule/schedule.constant");
 
 const editUser = {
   body: Joi.object().keys({
-    phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string(),
-    name: Joi.string(),
-    image: Joi.string(),
-    address: Joi.string(),
+    name: Joi.string().trim(),
+    image: Joi.string().trim(),
+    address: Joi.string().trim(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     dob: Joi.date(),
-    health_insurance: Joi.string(),
+    health_insurance: Joi.string().trim(),
   }),
 };
 

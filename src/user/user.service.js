@@ -54,56 +54,14 @@ const findAndCountAllByCondition = async (condition) => {
 };
 
 const editUser = async (id, data) => {
-  // check phone number is exists
-  if (data.phone_number) {
-    const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
-    if (checkPhone && checkPhone.id != id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already taken.');
-    }
+  // find user and update
+  const user = await findOneByFilter({ id });
+  if (!user) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user.');
   }
 
-  // check email is exists
-  if (data.email) {
-    const checkEmail = await findOneByFilter({ email: data.email });
-    if (checkEmail && checkEmail.id != id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken.');
-    }
-  }
-
-  // check health insurance is exists
-  if (data.health_insurance) {
-    const checkHealth = await findOneByFilter({ health_insurance: data.health_insurance });
-    if (checkHealth && checkHealth.id != id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Health insurance already existed.');
-    }
-  }
-
-  //find user and update
-  const user = await findOneByFilter({ id: id });
-  if (data.phone_number) {
-    await user.update({ phone_number: data.phone_number });
-  }
-  if (data.email) {
-    await user.update({ email: data.email });
-  }
-  if (data.name) {
-    await user.update({ name: data.name });
-  }
-  if (data.image) {
-    await user.update({ image: data.image });
-  }
-  if (data.address) {
-    await user.update({ address: data.address });
-  }
-  if (data.gender) {
-    await user.update({ gender: data.gender });
-  }
-  if (data.dob) {
-    await user.update({ dob: data.dob });
-  }
-  if (data.health_insurance) {
-    await user.update({ health_insurance: data.health_insurance });
-  }
+  const result = Object.assign(user, data);
+  return await result.save();
 };
 
 const changePassword = async (id, data) => {
@@ -130,10 +88,7 @@ const getUserInfo = async (options) => {
   if (!user) {
     throw new ApiError(httpStatus.OK, 'User not found');
   }
-  const result = user.toJSON();
-  delete result.password;
-  delete result.refresh_token;
-  return result;
+  return user;
 }
 
 module.exports = {

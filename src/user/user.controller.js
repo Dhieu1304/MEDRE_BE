@@ -7,14 +7,26 @@ const pageLimit2Offset = require("../utils/pageLimit2Offset");
 const pick = require("../utils/pick");
 const sequelize = require("../config/database");
 
+const toResponseObject = (user) => {
+  const result = user.toJSON();
+  delete result.password;
+  delete result.refresh_token;
+  return result;
+}
+
 const getInfo = catchAsync(async (req, res) => {
   const user = await userService.getUserInfo({where: {id: req.user.id}});
-  return res.status(httpStatus.OK).json(responseData(user));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(user)));
 });
 
 const getDetailUser = catchAsync(async (req, res) => {
   const user = await userService.getUserInfo({where: {id: req.params.id}});
-  return res.status(httpStatus.OK).json(responseData(user));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(user)));
+});
+
+const editUser = catchAsync(async (req, res) => {
+  const user = await userService.editUser(req.params.id, req.body);
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), 'Update user successfully'));
 });
 
 const getAll = catchAsync(async (req, res) => {
@@ -53,4 +65,5 @@ module.exports = {
   getAll,
   editProfile,
   changePassword,
+  editUser,
 };

@@ -37,19 +37,11 @@ const createStaff = async (data) => {
 };
 
 const findOneByFilter = async (filter) => {
-  try {
     return await models.staff.findOne({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
 };
 
 const findAllByFilter = async (filter) => {
-  try {
     return await models.staff.findAll({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
 };
 
 const findAndCountAllByCondition = async (condition) => {
@@ -57,31 +49,25 @@ const findAndCountAllByCondition = async (condition) => {
 };
 
 const findExpertise = async (data) => {
-  try {
     return await models.staff_expertise.findAll({
       where: { id_staff: data.staffId },
       attributes: ['id_expertise'],
       include: [{ model: models.expertise, as: 'id_expertise_expertise', attributes: ['name'] }],
     });
-  } catch (e) {
-    logger.error(e.message);
-  }
 };
 
 const getRole = async (data) => {
   const staff = await findOneByFilter({ id: data });
-  const user = await userService.findOneByFilter({ id: data });
-  const patient = await patientService.findOneByFilter({ id: data });
   if (staff) {
     return staff.role;
   }
+  const user = await userService.findOneByFilter({ id: data });
   if (user) {
-    const role = 'User';
-    return role;
+    return 'User';
   }
+  const patient = await patientService.findOneByFilter({ id: data });
   if (patient) {
-    const role = 'Patient';
-    return role;
+    return 'Patient';
   }
   throw new ApiError(httpStatus.BAD_REQUEST, 'Account not found');
 };
@@ -142,7 +128,7 @@ const blockingAccount = async (staffId, data) => {
 const unblockingAccount = async (staffId, data) => {
   //Get role and data of block account
   const unblockingAccountRole = await getRole(data.id_account);
-  var account;
+  let account;
   if (unblockingAccountRole === 'User') {
     account = await userService.findOneByFilter({ id: data.id_account });
   } else {
@@ -171,14 +157,10 @@ const unblockingAccount = async (staffId, data) => {
 };
 
 const findDetailStaff = async (filter) => {
-  try {
     return await models.staff.findOne({
       where: filter,
       include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
     });
-  } catch (e) {
-    logger.error(e.message);
-  }
 };
 
 const getListStaff = async (listId) => {
