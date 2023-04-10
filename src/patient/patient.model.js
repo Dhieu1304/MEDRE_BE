@@ -1,4 +1,5 @@
 const { GENDERS } = require('../user/user.constant');
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'patient',
@@ -26,6 +27,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       gender: {
         type: DataTypes.STRING(10),
+        enum: GENDERS,
         defaultValue: GENDERS.OTHER,
       },
       address: {

@@ -6,7 +6,6 @@ const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 
 const getAllStaff = {
   query: Joi.object().keys({
-    username: Joi.string(),
     phone_number: Joi.string(),
     email: Joi.string(),
     name: Joi.string(),

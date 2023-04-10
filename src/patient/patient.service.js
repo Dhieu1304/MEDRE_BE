@@ -21,11 +21,7 @@ const findOneByFilter = async (filter) => {
 };
 
 const findAllByFilter = async (filter) => {
-  try {
-    return await models.patient.findAll({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
+  return await models.patient.findAll({ where: filter });
 };
 
 const editPatient = async (id, data) => {
@@ -48,9 +44,14 @@ const editPatient = async (id, data) => {
   }
 };
 
+const create = async (data) => {
+  return await models.patient.create(data);
+};
+
 module.exports = {
   createPatient,
   findOneByFilter,
   findAllByFilter,
   editPatient,
+  create,
 };

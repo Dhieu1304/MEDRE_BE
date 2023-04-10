@@ -26,7 +26,6 @@ const getInfo = catchAsync(async (req, res) => {
 const getAll = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
   const filter = pick(req.query, [
-    'username',
     'phone_number',
     'email',
     'name',
@@ -39,7 +38,7 @@ const getAll = catchAsync(async (req, res) => {
     'expertise',
   ]);
 
-  const filterLike = ['username', 'phone_number', 'email', 'name', 'address'];
+  const filterLike = ['phone_number', 'email', 'name', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {
       filter[filterLike[i]] = sequelize.where(
