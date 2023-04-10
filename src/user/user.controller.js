@@ -8,21 +8,12 @@ const pick = require("../utils/pick");
 const sequelize = require("../config/database");
 
 const getInfo = catchAsync(async (req, res) => {
-  let user = await userService.findOneByFilter({ id: req.user.id });
-  if (!user) {
-    return res.status(httpStatus.OK).json(responseMessage('User not found', false));
-  }
-  user = user.toJSON();
-  delete user.password;
-  delete user.refresh_token;
+  const user = await userService.getUserInfo({where: {id: req.user.id}});
   return res.status(httpStatus.OK).json(responseData(user));
 });
 
 const getDetailUser = catchAsync(async (req, res) => {
-  const user = await userService.findOneByFilter({ id: req.params.id });
-  if (!user) {
-    return res.status(httpStatus.OK).json(responseMessage('User not found', false));
-  }
+  const user = await userService.getUserInfo({where: {id: req.params.id}});
   return res.status(httpStatus.OK).json(responseData(user));
 });
 

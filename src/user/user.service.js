@@ -4,6 +4,7 @@ const logger = require('../config/logger');
 const { v4: uuidv4 } = require('uuid');
 const models = require('../models');
 const bcrypt = require('bcryptjs');
+const {raw} = require("express");
 
 const createUser = async (data) => {
   // check email is exist
@@ -124,6 +125,17 @@ const changePassword = async (id, data) => {
   return user;
 }
 
+const getUserInfo = async (options) => {
+  const user = await models.user.findOne(options);
+  if (!user) {
+    throw new ApiError(httpStatus.OK, 'User not found');
+  }
+  const result = user.toJSON();
+  delete result.password;
+  delete result.refresh_token;
+  return result;
+}
+
 module.exports = {
   createUser,
   findOneByFilter,
@@ -131,4 +143,5 @@ module.exports = {
   editUser,
   changePassword,
   findAndCountAllByCondition,
+  getUserInfo,
 };
