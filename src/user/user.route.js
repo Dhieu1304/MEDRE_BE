@@ -6,42 +6,39 @@ const userValidation = require('./user.validation');
 const { staffPermission } = require('../middlewares/staffPermission');
 const { ALL_STAFF_ROLES, STAFF_ROLES } = require('../staff/staff.constant');
 const staffController = require('../staff/staff.controller');
-const { editUser } = require('./user.service');
 
 const router = express.Router();
+router.use(auth());
 
 router.get(
-  '/list', 
-  //auth(),
-  userController.getAll);
-
-router.get(
-  '/my-profile', 
-  auth(), 
+  '/my-profile',
   userController.getInfo);
 
 router.post(
-  '/my-profile/edit', 
-  auth(),
+  '/my-profile/edit',
   validate(userValidation.editUser),
   userController.editProfile);
 
   router.post(
-    '/my-profile/change-password', 
-    auth(),
+    '/my-profile/change-password',
     validate(userValidation.changePassword),
     userController.changePassword);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
+
 router.get(
-  '/detail/:id', 
-  auth(), 
+    '/list',
+    staffPermission(ALL_STAFF_ROLES),
+    validate(userValidation.listUser),
+    userController.getAll);
+
+router.get(
+  '/detail/:id',
   staffPermission(ALL_STAFF_ROLES), 
   userController.getDetailUser);
 
 router.post(
   '/edit/:id',
-  auth(),
   validate(userValidation.editUser),
   staffPermission([STAFF_ROLES.ADMIN]),
   staffController.editAccountInfo

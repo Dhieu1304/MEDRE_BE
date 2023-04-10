@@ -41,19 +41,15 @@ const createUser = async (data) => {
 };
 
 const findOneByFilter = async (filter) => {
-  try {
     return await models.user.findOne({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
 };
 
 const findAllByFilter = async (filter) => {
-  try {
     return await models.user.findAll({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
+};
+
+const findAndCountAllByCondition = async (condition) => {
+    return await models.user.findAndCountAll(condition);
 };
 
 const editUser = async (id, data) => {
@@ -134,4 +130,5 @@ module.exports = {
   findAllByFilter,
   editUser,
   changePassword,
+  findAndCountAllByCondition,
 };

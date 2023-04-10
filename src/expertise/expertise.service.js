@@ -60,11 +60,7 @@ const findAllByFilter = async (filter) => {
 };
 
 const findAndCountAllByCondition = async (condition) => {
-  try {
     return await models.staff.findAndCountAll(condition);
-  } catch (e) {
-    logger.error(e.message);
-  }
 };
 
 module.exports = {

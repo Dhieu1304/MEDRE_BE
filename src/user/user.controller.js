@@ -1,7 +1,11 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage } = require('../utils/responseFormat');
+const { responseData, responseMessage, paginationFormat} = require('../utils/responseFormat');
 const userService = require('./user.service');
+const Joi = require("joi");
+const pageLimit2Offset = require("../utils/pageLimit2Offset");
+const pick = require("../utils/pick");
+const sequelize = require("../config/database");
 
 const getInfo = catchAsync(async (req, res) => {
   let user = await userService.findOneByFilter({ id: req.user.id });
@@ -23,8 +27,21 @@ const getDetailUser = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const users = await userService.findAllByFilter();
-  return res.status(httpStatus.OK).json(responseData(users));
+  const { gender, page, limit } = req.query;
+  const filter = pick(req.query, ["phone_number","email","name","address"]);
+  for (let key in filter) {
+    filter[key] = sequelize.where(
+        sequelize.fn('LOWER', sequelize.col(key)), 'LIKE', '%' + filter[key] + '%');
+  }
+  if (gender) {
+    filter.gender = gender;
+  }
+  const condition = {
+    where: filter,
+    ...pageLimit2Offset(page, limit)
+  }
+  const users = await userService.findAndCountAllByCondition(condition);
+  return res.status(httpStatus.OK).json(responseData(paginationFormat(users, page, limit)));
 });
 
 const editProfile = catchAsync(async (req, res) => {

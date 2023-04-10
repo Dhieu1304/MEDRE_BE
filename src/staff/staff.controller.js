@@ -9,6 +9,7 @@ const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const models = require('../models');
 const sequelize = require('../config/database');
+const pageLimit2Offset = require("../utils/pageLimit2Offset");
 
 const getInfo = catchAsync(async (req, res) => {
   // check staff
@@ -83,8 +84,7 @@ const getAll = catchAsync(async (req, res) => {
     where: filter,
     include,
     distinct: true,
-    limit,
-    offset: (page - 1) * limit,
+    ...pageLimit2Offset(page, limit),
     attributes: ['id'],
     raw: true,
   };
@@ -114,8 +114,7 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
       },
     ],
     distinct: true,
-    limit,
-    offset: (page - 1) * limit,
+    ...pageLimit2Offset(page, limit),
     attributes: ['id'],
     raw: true,
   };
