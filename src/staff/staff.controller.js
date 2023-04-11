@@ -75,11 +75,11 @@ const getAll = catchAsync(async (req, res) => {
   delete filter.to;
   delete filter.type;
 
+  include.push({ model: models.expertise, as: 'expertises', required: false, where: { } });
   if (filter.expertise) {
-    include.push({ model: models.expertise, as: 'id_expertise_expertises', where: { id: filter.expertise } });
+    include[include.length - 1].where.id = filter.expertise;
+    include[include.length - 1].required = true;
     delete filter.expertise;
-  } else {
-    // include.push({ model: models.expertise, as: 'id_expertise_expertises' });
   }
 
   const condition = {
@@ -87,17 +87,9 @@ const getAll = catchAsync(async (req, res) => {
     include,
     distinct: true,
     ...pageLimit2Offset(page, limit),
-    attributes: ['id'],
-    raw: true,
+    attributes: { exclude: ['password', 'refresh_token'] },
   };
-
   const staffs = await staffService.findAndCountAllByCondition(condition);
-  const listId = staffs.rows.map((item) => {
-    return item.id;
-  });
-
-  // find by format
-  staffs.rows = await staffService.getListStaff([...new Set(listId)]);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
