@@ -11,10 +11,10 @@ const objectId = (value, helpers) => {
 
 const password = (value, helpers) => {
   if (value.length < 8) {
-    return helpers.message(i18next.t('register.password8'));
+    return helpers.message(i18next.t('password.password8'));
   }
   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-    return helpers.message(i18next.t('register.passwordLetterNumber'));
+    return helpers.message(i18next.t('password.passwordLetterNumber'));
   }
   return value;
 };

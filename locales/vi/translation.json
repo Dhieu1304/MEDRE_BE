@@ -1,6 +1,26 @@
 {
-    "register": {
+    "password": {
         "password8": "Mật khẩu phải có ít nhất 8 ký tự.",
-        "passwordLetterNumber": "Mật khẩu phải chứa ít nhất 1 chữ và 1 số."
+        "passwordLetterNumber": "Mật khẩu phải chứa ít nhất 1 chữ cái và 1 số.",
+        "passwordIncorrect": "Sai mật khẩu."
+    },
+    "email": {
+        "emailIncorrect": "Sai địa chỉ email."
+    },
+    "phoneNumber": {
+        "phoneFormatInvalid": "Định dạng số điện thoại không hợp lệ.",
+        "phoneIncorrect": "Sai số điện thoại."
+    },
+    "refreshToken": {
+        "refreshTokenSuccess": "Làm mới mã refresh token thành công.",
+        "refreshTokenIncorrect": "Sai mã refresh token."
+    },
+    "username": {
+        "usernameIncorrect": "Sai tên đăng nhập."
+    },
+    "auth": {
+        "registerSuccess": "Đăng ký tài khoản thành công.",
+        "loginSuccess": "Đăng nhập thành công.",
+        "blockAccount": "Tài khoản của bạn đã bị khóa."
     }
 }

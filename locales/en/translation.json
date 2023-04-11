@@ -1,6 +1,26 @@
 {
-    "register": {
-        "password8": "Password must be at least 8 characters",
-        "passwordLetterNumber": "Password must contain at least 1 letter and 1 number"
+    "password": {
+        "password8": "Password must be at least 8 characters.",
+        "passwordLetterNumber": "Password must contain at least 1 letter and 1 number.",
+        "passwordIncorrect": "Incorrect password."
+    },
+    "email": {
+        "emailIncorrect": "Incorrect email address."
+    },
+    "phoneNumber": {
+        "phoneFormatInvalid": "Invalid phone number format.",
+        "phoneIncorrect": "Incorrect phone number."
+    },
+    "refreshToken": {
+        "refreshTokenSuccess": "Refresh token successfully.",
+        "refreshTokenIncorrect": "Incorrect refresh token."
+    },
+    "username": {
+        "usernameIncorrect": "Incorrect username."
+    },
+    "auth": {
+        "registerSuccess": "Register successfully.",
+        "loginSuccess": "Login successfully.",
+        "blockAccount": "Your account is blocked."
     }
 }
