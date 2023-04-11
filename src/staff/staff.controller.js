@@ -10,8 +10,8 @@ const patientService = require('../patient/patient.service');
 const models = require('../models');
 const sequelize = require('../config/database');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
-const moment = require("moment");
-const {BOOKING_STATUS} = require("../booking/booking.constant");
+const moment = require('moment');
+const { BOOKING_STATUS } = require('../booking/booking.constant');
 
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
@@ -23,7 +23,7 @@ const toResponseObject = (staff) => {
 const getInfo = catchAsync(async (req, res) => {
   const staff = await staffService.getStaffInfo({
     where: { id: req.user.id },
-    include: [{model: models.expertise, as: 'expertises' }],
+    include: [{ model: models.expertise, as: 'expertises' }],
   });
   return res.status(httpStatus.OK).json(responseData(toResponseObject(staff)));
 });
@@ -77,7 +77,7 @@ const getAll = catchAsync(async (req, res) => {
   delete filter.to;
   delete filter.type;
 
-  include.push({ model: models.expertise, as: 'expertises', required: false, where: { } });
+  include.push({ model: models.expertise, as: 'expertises', required: false, where: {} });
   if (filter.expertise) {
     include[include.length - 1].where.id = filter.expertise;
     include[include.length - 1].required = true;
@@ -103,28 +103,29 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
         model: models.schedule,
         as: 'staff_schedules',
         where: { day_of_week: moment(date).day(), apply_to: { [Op.gte]: date } },
-        include: [{
-          model: models.booking,
-          as: 'bookings',
-          required: false,
-          where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED } }
-        },
+        include: [
+          {
+            model: models.booking,
+            as: 'bookings',
+            required: false,
+            where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date },
+          },
           {
             model: models.time_schedule,
             as: 'time_schedule',
-          }
-        ]
+          },
+        ],
       },
       {
         model: models.doctor_time_off,
         as: 'time_offs',
         required: false,
-        where: { date }
-      }
+        where: { date },
+      },
     ],
     distinct: true,
     ...pageLimit2Offset(page, limit),
-    attributes: { exclude: ['password', 'refresh_token'] }
+    attributes: { exclude: ['password', 'refresh_token'] },
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
@@ -133,16 +134,37 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
 
 const getDetailStaff = catchAsync(async (req, res) => {
   const { from, to } = req.query;
-  let drs = await staffService.findDetailStaff({ id: req.params.id });
-  if (!drs) {
-    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
+  const options = {
+    where: { id: req.params.id },
+    include: [{
+      model: models.schedule,
+      as: 'staff_schedules',
+      where: { apply_to: { [Op.gte]: to } },
+      include: [
+        {
+          model: models.booking,
+          as: 'bookings',
+          required: false,
+          where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+            [Op.and]: [{date: {[Op.gte]: from}}, { date: {[Op.lte]: to }}]},
+        },
+        {
+          model: models.time_schedule,
+          as: 'time_schedule',
+        },
+      ],
+    },
+      {
+        model: models.doctor_time_off,
+        as: 'time_offs',
+        required: false,
+        where: { [Op.and]: [{date: {[Op.gte]: from}}, { date: {[Op.lte]: to }}] },
+      },
+    ],
+    attributes: { exclude: ['password', 'refresh_token'] },
   }
-  drs = drs.toJSON();
-  drs.schedules = await scheduleService.findAllByFilterBookingDetail({
-    id_doctor: req.params.id,
-    [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
-  });
-  return res.status(httpStatus.OK).json(responseData(drs));
+  const staff = await staffService.findOneByOption(options);
+  return res.status(httpStatus.OK).json(responseData(staff));
 });
 
 const createStaff = catchAsync(async (req, res) => {

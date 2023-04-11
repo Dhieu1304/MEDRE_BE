@@ -20,7 +20,7 @@ const listByDay = catchAsync(async (req, res) => {
         model: models.booking,
         as: 'bookings',
         required: false,
-        where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED } },
+        where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date },
       },
     ],
   };
@@ -29,6 +29,7 @@ const listByDay = catchAsync(async (req, res) => {
 });
 
 const listAll = catchAsync(async (req, res) => {
+  // todo: add from -> list booking, day_off
   const { id_doctor, to } = req.query;
   const filter = { id_doctor, apply_to: { [Op.gte]: to } };
   const options = {

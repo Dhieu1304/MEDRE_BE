@@ -39,20 +39,16 @@ const findOneByFilter = async (filter) => {
   return await models.staff.findOne({ where: filter });
 };
 
+const findOneByOption = async (options) => {
+  return await models.staff.findOne(options);
+};
+
 const findAllByFilter = async (filter) => {
   return await models.staff.findAll({ where: filter });
 };
 
 const findAndCountAllByCondition = async (condition) => {
   return await models.staff.findAndCountAll(condition);
-};
-
-const findExpertise = async (data) => {
-  return await models.staff_expertise.findAll({
-    where: { id_staff: data.staffId },
-    attributes: ['id_expertise'],
-    include: [{ model: models.expertise, as: 'id_expertise_expertise', attributes: ['name'] }],
-  });
 };
 
 const getRole = async (data) => {
@@ -99,14 +95,14 @@ const blockingAccount = async (staffId, data) => {
 
   // Nurse can block User
   if (staffRole === STAFF_ROLES.NURSE) {
-    if (blockingAccountRole != 'User') {
+    if (blockingAccountRole !== 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   // Doctor can block Nurse, User
   else if (staffRole === STAFF_ROLES.DOCTOR) {
-    if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole != 'User') {
+    if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole !== 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
@@ -159,29 +155,6 @@ const findDetailStaff = async (filter) => {
   return await models.staff.findOne({
     where: filter,
     include: [{ model: models.expertise, as: 'id_expertise_expertises' }],
-  });
-};
-
-const getListStaff = async (listId) => {
-  return await models.staff.findAll({
-    where: { id: listId },
-    include: [
-      {
-        model: models.expertise,
-        as: 'id_expertise_expertises',
-        attributes: { exclude: ['staff_expertise', 'createdAt', 'updatedAt'] },
-      },
-      // { model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
-    ],
-    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
-  });
-};
-
-const getListStaffSchedule = async (listId) => {
-  return await models.staff.findAll({
-    where: { id: listId },
-    include: [{ model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } }],
-    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
   });
 };
 
@@ -341,14 +314,12 @@ const getStaffInfo = async (options) => {
 module.exports = {
   createStaff,
   findOneByFilter,
+  findOneByOption,
   findAllByFilter,
-  findExpertise,
   findAndCountAllByCondition,
   getRole,
   blockingAccount,
   findDetailStaff,
-  getListStaff,
-  getListStaffSchedule,
   unblockingAccount,
   editStaff,
   changePassword,
