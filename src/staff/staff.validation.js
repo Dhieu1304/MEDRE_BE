@@ -90,6 +90,20 @@ const editStaff = {
   }),
 };
 
+const editProfile = {
+  body: Joi.object().keys({
+    name: Joi.string(),
+    image: Joi.string(),
+    address: Joi.string(),
+    gender: Joi.string().valid(...Object.values(GENDERS)),
+    dob: Joi.date(),
+    health_insurance: Joi.string(),
+    description: Joi.string(),
+    education: Joi.string(),
+    certificate: Joi.string(),
+  }),
+};
+
 const changePassword = {
   body: Joi.object().keys({
     old_password: Joi.string().required(),
@@ -101,6 +115,7 @@ const changePassword = {
 module.exports = {
   getAllStaff,
   getDetailStaff,
+  editProfile,
   getListStaffSchedule,
   changePassword,
 

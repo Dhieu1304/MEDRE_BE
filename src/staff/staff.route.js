@@ -14,7 +14,7 @@ router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffControl
 
 router.get('/my-profile', auth(), staffController.getInfo);
 
-router.post('/my-profile/edit', auth(), validate(staffValidation.editStaff), staffController.editProfile);
+router.post('/my-profile/edit', auth(), validate(staffValidation.editProfile), staffController.editProfile);
 
 router.post('/my-profile/change-password', auth(), validate(staffValidation.changePassword), staffController.changePassword);
 
