@@ -5,7 +5,7 @@ const { GENDERS } = require('../user/user.constant');
 const register = {
   body: Joi.object().keys({
     phone_number: Joi.string().required().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string().email(),
+    email: Joi.string().email().lowercase(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     gender: Joi.string().valid(...Object.values(GENDERS)),

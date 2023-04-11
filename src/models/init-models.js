@@ -29,7 +29,7 @@ function initModels(sequelize) {
     otherKey: 'id_staff',
   });
   staff.belongsToMany(expertise, {
-    as: 'id_expertise_expertises',
+    as: 'expertises',
     through: staff_expertise,
     foreignKey: 'id_staff',
     otherKey: 'id_expertise',
@@ -48,6 +48,10 @@ function initModels(sequelize) {
   time_schedule.hasMany(schedule, { as: 'schedules', foreignKey: 'id_time' });
   schedule.belongsTo(staff, { as: 'id_doctor_staff', foreignKey: 'id_doctor' });
   staff.hasMany(schedule, { as: 'staff_schedules', foreignKey: 'id_doctor' });
+  doctor_time_off.belongsTo(staff, { as: 'staff_doctor_time_offs', foreignKey: 'id_doctor' });
+  staff.hasMany(doctor_time_off, { as: 'time_offs', foreignKey: 'id_doctor' });
+  staff.hasMany(blocking_account, { as: 'blocking_accounts', foreignKey: 'id_staff' });
+  blocking_account.belongsTo(staff, { as: 'staff_blocking_account', foreignKey: 'id_staff' })
 
   return {
     staff,

@@ -9,8 +9,8 @@ const { password } = require('../utils/validateCustom');
 const getAllStaff = {
   query: Joi.object().keys({
     phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string(),
-    name: Joi.string(),
+    email: Joi.string().email(),
+    name: Joi.string().trim().lowercase(),
     address: Joi.string(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     role: Joi.string().valid(...Object.values(STAFF_ROLES)),
@@ -18,15 +18,14 @@ const getAllStaff = {
     from: Joi.date(),
     to: Joi.date(),
     expertise: Joi.array().items(Joi.string().uuid()),
-    page: Joi.number().default(1),
-    limit: Joi.number().default(10),
+    page: Joi.number().integer().default(1).min(1),
+    limit: Joi.number().integer().default(10).min(1),
   }),
 };
 
 const getListStaffSchedule = {
   query: Joi.object().keys({
-    from: Joi.date().default(moment().startOf('date')),
-    to: Joi.date().default(moment().endOf('date')),
+    date: Joi.date().default(moment().startOf('date')),
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
   }),
@@ -36,8 +35,8 @@ const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
     phone_number: Joi.string().required().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string(),
-    password: Joi.string().required(),
+    email: Joi.string().email(),
+    password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     image: Joi.string(),
     address: Joi.string(),
@@ -67,7 +66,7 @@ const getDetailStaff = {
 
 const blockAccount = {
   body: Joi.object().keys({
-    id_account: Joi.string().required(),
+    id_account: Joi.string().uuid().required(),
     reason: Joi.string(),
   }),
 };
@@ -76,7 +75,7 @@ const editStaff = {
   body: Joi.object().keys({
     username: Joi.string(),
     phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string(),
+    email: Joi.string().email(),
     name: Joi.string(),
     image: Joi.string(),
     address: Joi.string(),
@@ -87,7 +86,7 @@ const editStaff = {
     description: Joi.string(),
     education: Joi.string(),
     certificate: Joi.string(),
-    expertise: Joi.array(),
+    expertise: Joi.array().items(Joi.string().uuid()),
   }),
 };
 

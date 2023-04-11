@@ -7,6 +7,7 @@ const verifyCallback = (req, resolve, reject) => {
     if (err || info || !user) {
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
     }
+    // todo: cache id required login again (block)
     req.user = user;
     resolve();
   };

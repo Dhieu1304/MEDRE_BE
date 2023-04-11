@@ -57,6 +57,10 @@ const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
   }
 
+  if (user.blocked) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Your account is blocked');
+  }
+
   return user;
 };
 
@@ -71,6 +75,10 @@ const staffLoginUserWithPhoneNumberAndPassword = async (phone_number, password) 
   const isPasswordMatch = await comparePassword(password, staff.password);
   if (!isPasswordMatch) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  if (staff.blocked) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Your account is blocked');
   }
 
   return staff;
@@ -89,6 +97,10 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
   }
 
+  if (user.blocked) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Your account is blocked');
+  }
+
   return user;
 };
 
@@ -105,6 +117,10 @@ const staffLoginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
   }
 
+  if (staff.blocked) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Your account is blocked');
+  }
+
   return staff;
 };
 
@@ -119,6 +135,10 @@ const staffLoginUserWithUsernameAndPassword = async (username, password) => {
   const isPasswordMatch = await comparePassword(password, staff.password);
   if (!isPasswordMatch) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+  }
+
+  if (staff.blocked) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Your account is blocked');
   }
 
   return staff;

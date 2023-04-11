@@ -4,24 +4,27 @@ const { responseData, responseMessage, paginationFormat } = require('../utils/re
 const staffService = require('./staff.service');
 const pick = require('../utils/pick');
 const { Op } = require('sequelize');
-const scheduleService = require('../schedule/schedule.service');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const models = require('../models');
 const sequelize = require('../config/database');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
+const moment = require('moment');
+const { BOOKING_STATUS } = require('../booking/booking.constant');
+
+const toResponseObject = (staff) => {
+  const result = staff.toJSON();
+  delete result.password;
+  delete result.refresh_token;
+  return result;
+};
 
 const getInfo = catchAsync(async (req, res) => {
-  // check staff
-  const staff = await staffService.findOneByFilter({ id: req.user.id });
-  if (!staff) {
-    return res.status(httpStatus.OK).json(responseMessage('Staff not found', false));
-  }
-
-  // find expertise of staff
-  const staffId = staff.id;
-  const expertise = await staffService.findExpertise({ staffId });
-  return res.status(httpStatus.OK).json(responseData({ staff, expertise }));
+  const staff = await staffService.getStaffInfo({
+    where: { id: req.user.id },
+    include: [{ model: models.expertise, as: 'expertises' }],
+  });
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff)));
 });
 
 const getAll = catchAsync(async (req, res) => {
@@ -73,11 +76,11 @@ const getAll = catchAsync(async (req, res) => {
   delete filter.to;
   delete filter.type;
 
+  include.push({ model: models.expertise, as: 'expertises', required: false, where: {} });
   if (filter.expertise) {
-    include.push({ model: models.expertise, as: 'id_expertise_expertises', where: { id: filter.expertise } });
+    include[include.length - 1].where.id = filter.expertise;
+    include[include.length - 1].required = true;
     delete filter.expertise;
-  } else {
-    // include.push({ model: models.expertise, as: 'id_expertise_expertises' });
   }
 
   const condition = {
@@ -85,72 +88,94 @@ const getAll = catchAsync(async (req, res) => {
     include,
     distinct: true,
     ...pageLimit2Offset(page, limit),
-    attributes: ['id'],
-    raw: true,
+    attributes: { exclude: ['password', 'refresh_token'] },
   };
-
   const staffs = await staffService.findAndCountAllByCondition(condition);
-  const listId = staffs.rows.map((item) => {
-    return item.id;
-  });
-
-  // find by format
-  staffs.rows = await staffService.getListStaff([...new Set(listId)]);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
 const getListStaffSchedule = catchAsync(async (req, res) => {
-  const { page, limit, from, to } = req.query;
-
-  // todo: no generate schedule -> query all
+  const { page, limit, date } = req.query;
   const condition = {
     include: [
       {
         model: models.schedule,
         as: 'staff_schedules',
-        where: {
-          [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
-        },
+        where: { day_of_week: moment(date).day(), apply_to: { [Op.gte]: date } },
+        include: [
+          {
+            model: models.booking,
+            as: 'bookings',
+            required: false,
+            where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date },
+          },
+          {
+            model: models.time_schedule,
+            as: 'time_schedule',
+          },
+        ],
+      },
+      {
+        model: models.doctor_time_off,
+        as: 'time_offs',
+        required: false,
+        where: { date },
       },
     ],
     distinct: true,
     ...pageLimit2Offset(page, limit),
-    attributes: ['id'],
-    raw: true,
+    attributes: { exclude: ['password', 'refresh_token'] },
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
-  const listId = staffs.rows.map((item) => {
-    return item.id;
-  });
-
-  // find by format
-  staffs.rows = await staffService.getListStaffSchedule([...new Set(listId)]);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
 const getDetailStaff = catchAsync(async (req, res) => {
   const { from, to } = req.query;
-  let drs = await staffService.findDetailStaff({ id: req.params.id });
-  if (!drs) {
-    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
-  }
-  drs = drs.toJSON();
-  drs.schedules = await scheduleService.findAllByFilterBookingDetail({
-    id_doctor: req.params.id,
-    [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
-  });
-  return res.status(httpStatus.OK).json(responseData(drs));
+  const options = {
+    where: { id: req.params.id },
+    include: [
+      {
+        model: models.schedule,
+        as: 'staff_schedules',
+        where: { apply_to: { [Op.gte]: to } },
+        include: [
+          {
+            model: models.booking,
+            as: 'bookings',
+            required: false,
+            where: {
+              booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+              [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
+            },
+          },
+          {
+            model: models.time_schedule,
+            as: 'time_schedule',
+          },
+        ],
+      },
+      {
+        model: models.doctor_time_off,
+        as: 'time_offs',
+        required: false,
+        where: { [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }] },
+      },
+    ],
+    attributes: { exclude: ['password', 'refresh_token'] },
+  };
+  const staff = await staffService.findOneByOption(options);
+  return res.status(httpStatus.OK).json(responseData(staff));
 });
 
 const createStaff = catchAsync(async (req, res) => {
   const staff = await staffService.createStaff(req.body);
-  return res.status(httpStatus.OK).json(responseData(staff, 'Create new staff successfully'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Create new staff successfully'));
 });
 
 const blockingAccount = catchAsync(async (req, res) => {
   const staffId = req.user.id;
-  //const staffId = "353066b6-4bb7-4df8-8f46-88f71bf6a182";
   const data = pick(req.body, ['id_account', 'reason']);
   await staffService.blockingAccount(staffId, data);
   return res.status(httpStatus.OK).json(responseMessage('Blocked account', true));
@@ -164,17 +189,8 @@ const unblockingAccount = catchAsync(async (req, res) => {
 });
 
 const editAccountInfo = catchAsync(async (req, res) => {
-  const id = req.params.id;
-  const role = await staffService.getRole(id);
-  var account;
-  if (role === 'User') {
-    account = await userService.editUser(id, req.body);
-  } else if (role === 'Patient') {
-    account = await patientService.editPatient(id, req.body);
-  } else {
-    account = await staffService.editStaff(id, req.body);
-  }
-  return res.status(httpStatus.OK).json(responseData(account, 'Update account successfully'));
+  const staff = await staffService.editStaff(req.params.id, req.body);
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Update account successfully'));
 });
 
 const editProfile = catchAsync(async (req, res) => {

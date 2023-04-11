@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const { v4: uuidv4 } = require('uuid');
-const { USER_STATUS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
+const {BLOCK_ACCOUNT_TYPE} = require("../blocking_account/blocking_account.constant");
 
 const createStaff = async (data) => {
   // check email is exists
@@ -39,20 +39,16 @@ const findOneByFilter = async (filter) => {
   return await models.staff.findOne({ where: filter });
 };
 
+const findOneByOption = async (options) => {
+  return await models.staff.findOne(options);
+};
+
 const findAllByFilter = async (filter) => {
   return await models.staff.findAll({ where: filter });
 };
 
 const findAndCountAllByCondition = async (condition) => {
   return await models.staff.findAndCountAll(condition);
-};
-
-const findExpertise = async (data) => {
-  return await models.staff_expertise.findAll({
-    where: { id_staff: data.staffId },
-    attributes: ['id_expertise'],
-    include: [{ model: models.expertise, as: 'id_expertise_expertise', attributes: ['name'] }],
-  });
 };
 
 const getRole = async (data) => {
@@ -89,43 +85,48 @@ const blockingAccount = async (staffId, data) => {
     account = await findOneByFilter({ id: data.id_account });
   }
 
-  // Check the current status of the account
-  if (account.status !== USER_STATUS.OK) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'The account has already blocked or deleted.');
+  if (!account) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');
   }
 
-  // generate uuid
-  const id = uuidv4();
+  if (account.blocked) {
+    throw new ApiError(httpStatus.OK, 'The account has already blocked.');
+  }
 
   // Nurse can block User
   if (staffRole === STAFF_ROLES.NURSE) {
-    if (blockingAccountRole != 'User') {
+    if (blockingAccountRole !== 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   // Doctor can block Nurse, User
   else if (staffRole === STAFF_ROLES.DOCTOR) {
-    if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole != 'User') {
+    if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole !== 'User') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
     }
   }
 
   // Block the account and write into block_account table
-  account.status = USER_STATUS.BLOCK;
-  await account.save();
-  return models.blocking_account.create({
-    id: id,
+  const blockAccount = await models.blocking_account.create({
+    id: uuidv4(),
     id_staff: staffId,
     id_account: data.id_account,
     role: blockingAccountRole,
-    type: 'Block',
+    type: BLOCK_ACCOUNT_TYPE.BLOCK,
     reason: data.reason,
   });
+
+  // update blocked status
+  account.blocked = true;
+  account.refresh_token = '';
+  await account.save();
+
+  return blockAccount;
 };
 
 const unblockingAccount = async (staffId, data) => {
-  //Get role and data of block account
+  // Get role and data of block account
   const unblockingAccountRole = await getRole(data.id_account);
   let account;
   if (unblockingAccountRole === 'User') {
@@ -134,25 +135,29 @@ const unblockingAccount = async (staffId, data) => {
     account = await findOneByFilter({ id: data.id_account });
   }
 
-  //Check the current status of the account
-  if (account.status === USER_STATUS.OK) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Don't need to unblock the account.");
+  if (!account) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');
   }
 
-  // generate uuid
-  const id = uuidv4();
+  if (!account.blocked) {
+    throw new ApiError(httpStatus.OK, 'The account has already unblocked.');
+  }
 
-  //Unblock the account and write into block_account table
-  account.status = USER_STATUS.OK;
-  await account.save();
-  return models.blocking_account.create({
-    id: id,
+  // Unblock the account and write into block_account table
+  const unBlockAccount = await models.blocking_account.create({
+    id: uuidv4(),
     id_staff: staffId,
     id_account: data.id_account,
     role: unblockingAccountRole,
-    type: 'Unblock',
+    type: BLOCK_ACCOUNT_TYPE.UNBLOCK,
     reason: data.reason,
   });
+
+  // update blocked status
+  account.blocked = false;
+  await account.save();
+
+  return unBlockAccount;
 };
 
 const findDetailStaff = async (filter) => {
@@ -162,34 +167,11 @@ const findDetailStaff = async (filter) => {
   });
 };
 
-const getListStaff = async (listId) => {
-  return await models.staff.findAll({
-    where: { id: listId },
-    include: [
-      {
-        model: models.expertise,
-        as: 'id_expertise_expertises',
-        attributes: { exclude: ['staff_expertise', 'createdAt', 'updatedAt'] },
-      },
-      // { model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } },
-    ],
-    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
-  });
-};
-
-const getListStaffSchedule = async (listId) => {
-  return await models.staff.findAll({
-    where: { id: listId },
-    include: [{ model: models.schedule, as: 'staff_schedules', attributes: { exclude: ['createdAt', 'updatedAt'] } }],
-    attributes: { exclude: ['password', 'refresh_token', 'createdAt', 'updatedAt'] },
-  });
-};
-
 const editStaff = async (id, data) => {
   // check phone number is exists
   if (data.phone_number) {
     const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
-    if (checkPhone && checkPhone.id != id) {
+    if (checkPhone && checkPhone.id !== id) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already taken.');
     }
   }
@@ -197,7 +179,7 @@ const editStaff = async (id, data) => {
   // check email is exists
   if (data.email) {
     const checkEmail = await findOneByFilter({ email: data.email });
-    if (checkEmail && checkEmail.id != id) {
+    if (checkEmail && checkEmail.id !== id) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken.');
     }
   }
@@ -205,54 +187,14 @@ const editStaff = async (id, data) => {
   // check username is exists
   if (data.username) {
     const checkUsername = await findOneByFilter({ username: data.username });
-    if (checkUsername && checkUsername.id != id) {
+    if (checkUsername && checkUsername.id !== id) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
     }
   }
-  //find staff and update
-  const staff = await findOneByFilter({ id: id });
-  if (data.username) {
-    await staff.update({ username: data.username });
-  }
-  if (data.phone_number) {
-    await staff.update({ phone_number: data.phone_number });
-  }
-  if (data.email) {
-    await staff.update({ email: data.email });
-  }
-  if (data.name) {
-    await staff.update({ name: data.name });
-  }
-  if (data.image) {
-    await staff.update({ image: data.image });
-  }
-  if (data.address) {
-    await staff.update({ address: data.address });
-  }
-  if (data.gender) {
-    await staff.update({ gender: data.gender });
-  }
-  if (data.dob) {
-    await staff.update({ dob: data.dob });
-  }
-  if (data.role) {
-    await staff.update({ role: data.role });
-  }
-  if (data.health_insurance) {
-    await staff.update({ health_insurance: data.health_insurance });
-  }
-  if (data.description) {
-    await staff.update({ description: data.description });
-  }
-  if (data.education) {
-    await staff.update({ education: data.education });
-  }
-  if (data.certificate) {
-    await staff.update({ certificate: data.certificate });
-  }
-  if (data.expertise) {
-    await editStaffExpertise(id, data.expertise);
-  }
+  // find staff and update
+  const staff = await findOneByFilter({ id });
+  const result = Object.assign(staff, data);
+  return await result.save();
 };
 
 const changePassword = async (id, data) => {
@@ -330,20 +272,27 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
   }
 };
 
+const getStaffInfo = async (options) => {
+  const user = await models.staff.findOne(options);
+  if (!user) {
+    throw new ApiError(httpStatus.OK, 'User not found');
+  }
+  return user;
+};
+
 module.exports = {
   createStaff,
   findOneByFilter,
+  findOneByOption,
   findAllByFilter,
-  findExpertise,
   findAndCountAllByCondition,
   getRole,
   blockingAccount,
   findDetailStaff,
-  getListStaff,
-  getListStaffSchedule,
   unblockingAccount,
   editStaff,
   changePassword,
   findDifference,
   editStaffExpertise,
+  getStaffInfo,
 };
