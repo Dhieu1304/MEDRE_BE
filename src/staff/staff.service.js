@@ -119,6 +119,7 @@ const blockingAccount = async (staffId, data) => {
 
   // update blocked status
   account.blocked = true;
+  account.refresh_token = '';
   await account.save();
 
   return blockAccount;
@@ -133,8 +134,6 @@ const unblockingAccount = async (staffId, data) => {
   } else {
     account = await findOneByFilter({ id: data.id_account });
   }
-
-  //Check the current status of the account
 
   if (!account) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');

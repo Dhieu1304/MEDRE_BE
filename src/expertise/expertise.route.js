@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.get(
   '/list',
-  //auth(),
   validate(expertiseValidation.getAllExpertise),
   expertiseController.getAll
 );
