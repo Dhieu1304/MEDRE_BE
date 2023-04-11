@@ -1,4 +1,4 @@
-const { ACCOUNT_ROLES, BLOCK_ACCOUNT_TYPE} = require('./blocking_account.constant');
+const { ACCOUNT_ROLES, BLOCK_ACCOUNT_TYPE } = require('./blocking_account.constant');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -23,13 +23,13 @@ module.exports = function (sequelize, DataTypes) {
       },
       role: {
         type: DataTypes.STRING(50),
-          enum: ACCOUNT_ROLES,
+        enum: ACCOUNT_ROLES,
         defaultValue: ACCOUNT_ROLES.USER,
       },
       type: {
         type: DataTypes.STRING(10),
-          enum: BLOCK_ACCOUNT_TYPE,
-          defaultValue: BLOCK_ACCOUNT_TYPE.BLOCK,
+        enum: BLOCK_ACCOUNT_TYPE,
+        defaultValue: BLOCK_ACCOUNT_TYPE.BLOCK,
       },
       reason: {
         type: DataTypes.STRING(500),

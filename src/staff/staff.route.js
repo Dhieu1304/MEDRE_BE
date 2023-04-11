@@ -14,19 +14,9 @@ router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffControl
 
 router.get('/my-profile', auth(), staffController.getInfo);
 
-router.post(
-  '/my-profile/edit',
-  auth(),
-  validate(staffValidation.editStaff),
-  staffController.editProfile
-);
+router.post('/my-profile/edit', auth(), validate(staffValidation.editStaff), staffController.editProfile);
 
-router.post(
-  '/my-profile/change-password',
-  auth(),
-  validate(staffValidation.changePassword),
-  staffController.changePassword
-);
+router.post('/my-profile/change-password', auth(), validate(staffValidation.changePassword), staffController.changePassword);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 router.post(
@@ -39,12 +29,7 @@ router.post(
 
 router.post('/confirm-blocking', auth(), validate(staffValidation.blockAccount), staffController.blockingAccount);
 
-router.post(
-  '/confirm-unblocking',
-  auth(),
-  validate(staffValidation.blockAccount),
-  staffController.unblockingAccount
-);
+router.post('/confirm-unblocking', auth(), validate(staffValidation.blockAccount), staffController.unblockingAccount);
 
 router.post(
   '/edit/:id',
