@@ -7,6 +7,9 @@ const helmet = require('helmet');
 const compression = require('compression');
 const xss = require('xss-clean');
 const httpStatus = require('http-status');
+const i18next = require('i18next')
+const i18nextMiddleware = require('i18next-http-middleware')
+const Backend = require('i18next-fs-backend')
 require('dotenv').config();
 
 const { initRouter } = require('./src/routes.init');
@@ -47,6 +50,21 @@ app.use(
 );
 
 initRouter(app);
+
+//config i18next
+i18next
+    .use(Backend)
+    .use(i18nextMiddleware.LanguageDetector)
+    .init({
+        backend: {
+            loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
+        },
+        fallbackLng: 'vi',
+        preload: ['vi', 'en'],
+        saveMissing: true
+    });
+
+app.use(i18nextMiddleware.handle(i18next));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

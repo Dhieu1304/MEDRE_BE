@@ -1,3 +1,5 @@
+const i18next = require('i18next');
+
 const phoneNumberRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
 
 const objectId = (value, helpers) => {
@@ -9,10 +11,10 @@ const objectId = (value, helpers) => {
 
 const password = (value, helpers) => {
   if (value.length < 8) {
-    return helpers.message('password must be at least 8 characters');
+    return helpers.message(i18next.t('register.password8'));
   }
   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-    return helpers.message('password must contain at least 1 letter and 1 number');
+    return helpers.message(i18next.t('register.passwordLetterNumber'));
   }
   return value;
 };

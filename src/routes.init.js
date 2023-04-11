@@ -1,4 +1,5 @@
 const express = require('express');
+const i18next = require('i18next'); 
 const authRouter = require('./auth/auth.route');
 const userRouter = require('./user/user.route');
 const staffRouter = require('./staff/staff.route');
@@ -18,6 +19,14 @@ module.exports.initRouter = (app) => {
   app.use('/expertise', expertiseRouter);
   app.use('/patient', patientRouter);
 
+  //language
+  app.use(express.Router().get('/language/vi'), (req, res) => {
+    i18next.changeLanguage("vi");
+  });
+  app.use(express.Router().get('/language/en'), (req, res) => {
+    i18next.changeLanguage("en");
+  });
+  
   app.use(express.Router().get('/'), (req, res) => {
     return res.status(200).send('MEDRE_API');
   });
