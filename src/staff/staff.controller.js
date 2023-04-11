@@ -4,7 +4,6 @@ const { responseData, responseMessage, paginationFormat } = require('../utils/re
 const staffService = require('./staff.service');
 const pick = require('../utils/pick');
 const { Op } = require('sequelize');
-const scheduleService = require('../schedule/schedule.service');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const models = require('../models');
@@ -136,33 +135,36 @@ const getDetailStaff = catchAsync(async (req, res) => {
   const { from, to } = req.query;
   const options = {
     where: { id: req.params.id },
-    include: [{
-      model: models.schedule,
-      as: 'staff_schedules',
-      where: { apply_to: { [Op.gte]: to } },
-      include: [
-        {
-          model: models.booking,
-          as: 'bookings',
-          required: false,
-          where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
-            [Op.and]: [{date: {[Op.gte]: from}}, { date: {[Op.lte]: to }}]},
-        },
-        {
-          model: models.time_schedule,
-          as: 'time_schedule',
-        },
-      ],
-    },
+    include: [
+      {
+        model: models.schedule,
+        as: 'staff_schedules',
+        where: { apply_to: { [Op.gte]: to } },
+        include: [
+          {
+            model: models.booking,
+            as: 'bookings',
+            required: false,
+            where: {
+              booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+              [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
+            },
+          },
+          {
+            model: models.time_schedule,
+            as: 'time_schedule',
+          },
+        ],
+      },
       {
         model: models.doctor_time_off,
         as: 'time_offs',
         required: false,
-        where: { [Op.and]: [{date: {[Op.gte]: from}}, { date: {[Op.lte]: to }}] },
+        where: { [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }] },
       },
     ],
     attributes: { exclude: ['password', 'refresh_token'] },
-  }
+  };
   const staff = await staffService.findOneByOption(options);
   return res.status(httpStatus.OK).json(responseData(staff));
 });
