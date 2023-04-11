@@ -25,8 +25,7 @@ const getAllStaff = {
 
 const getListStaffSchedule = {
   query: Joi.object().keys({
-    from: Joi.date().default(moment().startOf('date')),
-    to: Joi.date().default(moment().endOf('date')),
+    date: Joi.date().default(moment().startOf('date')),
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
   }),
