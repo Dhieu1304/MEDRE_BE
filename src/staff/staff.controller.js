@@ -11,17 +11,19 @@ const models = require('../models');
 const sequelize = require('../config/database');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 
-const getInfo = catchAsync(async (req, res) => {
-  // check staff
-  const staff = await staffService.findOneByFilter({ id: req.user.id });
-  if (!staff) {
-    return res.status(httpStatus.OK).json(responseMessage('Staff not found', false));
-  }
+const toResponseObject = (staff) => {
+  const result = staff.toJSON();
+  delete result.password;
+  delete result.refresh_token;
+  return result;
+};
 
-  // find expertise of staff
-  const staffId = staff.id;
-  const expertise = await staffService.findExpertise({ staffId });
-  return res.status(httpStatus.OK).json(responseData({ staff, expertise }));
+const getInfo = catchAsync(async (req, res) => {
+  const staff = await staffService.getStaffInfo({
+    where: { id: req.user.id },
+    include: [{model: models.expertise, as: 'expertises' }],
+  });
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff)));
 });
 
 const getAll = catchAsync(async (req, res) => {

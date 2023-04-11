@@ -29,7 +29,7 @@ function initModels(sequelize) {
     otherKey: 'id_staff',
   });
   staff.belongsToMany(expertise, {
-    as: 'id_expertise_expertises',
+    as: 'expertises',
     through: staff_expertise,
     foreignKey: 'id_staff',
     otherKey: 'id_expertise',
