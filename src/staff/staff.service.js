@@ -6,7 +6,7 @@ const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const { v4: uuidv4 } = require('uuid');
 const { STAFF_ROLES } = require('./staff.constant');
-const {BLOCK_ACCOUNT_TYPE} = require("../blocking_account/blocking_account.constant");
+const { BLOCK_ACCOUNT_TYPE } = require('../blocking_account/blocking_account.constant');
 
 const createStaff = async (data) => {
   // check email is exists
@@ -200,13 +200,13 @@ const editStaff = async (id, data) => {
 const changePassword = async (id, data) => {
   const staff = await findOneByFilter({ id: id });
 
-  //check if password is correct
+  // check if password is correct
   const isPasswordMatch = await bcrypt.compare(data.old_password, staff.password);
   if (!isPasswordMatch) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect password.');
   }
 
-  //check if new password and confirm password is match
+  // check if new password and confirm password is match
   if (data.new_password !== data.confirm_password) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'New password and confirm password do not match.');
   }
