@@ -43,7 +43,6 @@ router.post(
   '/confirm-unblocking',
   auth(),
   validate(staffValidation.blockAccount),
-  staffPermission([STAFF_ROLES.ADMIN]),
   staffController.unblockingAccount
 );
 

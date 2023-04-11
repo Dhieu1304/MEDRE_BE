@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 const userService = require('../user/user.service');
 const patientService = require('../patient/patient.service');
 const { v4: uuidv4 } = require('uuid');
-const { USER_STATUS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
+const {BLOCK_ACCOUNT_TYPE} = require("../blocking_account/blocking_account.constant");
 
 const createStaff = async (data) => {
   // check email is exists
@@ -85,13 +85,13 @@ const blockingAccount = async (staffId, data) => {
     account = await findOneByFilter({ id: data.id_account });
   }
 
-  // Check the current status of the account
-  if (account.status !== USER_STATUS.OK) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'The account has already blocked or deleted.');
+  if (!account) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');
   }
 
-  // generate uuid
-  const id = uuidv4();
+  if (account.blocked) {
+    throw new ApiError(httpStatus.OK, 'The account has already blocked.');
+  }
 
   // Nurse can block User
   if (staffRole === STAFF_ROLES.NURSE) {
@@ -108,20 +108,24 @@ const blockingAccount = async (staffId, data) => {
   }
 
   // Block the account and write into block_account table
-  account.status = USER_STATUS.BLOCK;
-  await account.save();
-  return models.blocking_account.create({
-    id: id,
+  const blockAccount = await models.blocking_account.create({
+    id: uuidv4(),
     id_staff: staffId,
     id_account: data.id_account,
     role: blockingAccountRole,
-    type: 'Block',
+    type: BLOCK_ACCOUNT_TYPE.BLOCK,
     reason: data.reason,
   });
+
+  // update blocked status
+  account.blocked = true;
+  await account.save();
+
+  return blockAccount;
 };
 
 const unblockingAccount = async (staffId, data) => {
-  //Get role and data of block account
+  // Get role and data of block account
   const unblockingAccountRole = await getRole(data.id_account);
   let account;
   if (unblockingAccountRole === 'User') {
@@ -131,24 +135,30 @@ const unblockingAccount = async (staffId, data) => {
   }
 
   //Check the current status of the account
-  if (account.status === USER_STATUS.OK) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Don't need to unblock the account.");
+
+  if (!account) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');
   }
 
-  // generate uuid
-  const id = uuidv4();
+  if (!account.blocked) {
+    throw new ApiError(httpStatus.OK, 'The account has already unblocked.');
+  }
 
-  //Unblock the account and write into block_account table
-  account.status = USER_STATUS.OK;
-  await account.save();
-  return models.blocking_account.create({
-    id: id,
+  // Unblock the account and write into block_account table
+  const unBlockAccount = await models.blocking_account.create({
+    id: uuidv4(),
     id_staff: staffId,
     id_account: data.id_account,
     role: unblockingAccountRole,
-    type: 'Unblock',
+    type: BLOCK_ACCOUNT_TYPE.UNBLOCK,
     reason: data.reason,
   });
+
+  // update blocked status
+  account.blocked = false;
+  await account.save();
+
+  return unBlockAccount;
 };
 
 const findDetailStaff = async (filter) => {

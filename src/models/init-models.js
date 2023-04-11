@@ -50,6 +50,8 @@ function initModels(sequelize) {
   staff.hasMany(schedule, { as: 'staff_schedules', foreignKey: 'id_doctor' });
   doctor_time_off.belongsTo(staff, { as: 'staff_doctor_time_offs', foreignKey: 'id_doctor' });
   staff.hasMany(doctor_time_off, { as: 'time_offs', foreignKey: 'id_doctor' });
+  staff.hasMany(blocking_account, { as: 'blocking_accounts', foreignKey: 'id_staff' });
+  blocking_account.belongsTo(staff, { as: 'staff_blocking_account', foreignKey: 'id_staff' })
 
   return {
     staff,

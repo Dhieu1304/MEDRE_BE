@@ -86,7 +86,7 @@ const editStaff = {
     description: Joi.string(),
     education: Joi.string(),
     certificate: Joi.string(),
-    expertise: Joi.array(),
+    expertise: Joi.array().items(Joi.string().uuid()),
   }),
 };
 

@@ -4,15 +4,6 @@ const GENDERS = Object.freeze({
   OTHER: 'Other',
 });
 
-const USER_STATUS = Object.freeze({
-  OK: 'Ok',
-  BLOCK: 'Block',
-  DELETE: 'Delete',
-});
-
 module.exports = {
   GENDERS,
-  USER_STATUS,
 };
-
-// todo: delete user_status
