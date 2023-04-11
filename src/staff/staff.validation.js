@@ -35,8 +35,8 @@ const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
     phone_number: Joi.string().required().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string(),
-    password: Joi.string().required(),
+    email: Joi.string().email(),
+    password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     image: Joi.string(),
     address: Joi.string(),
@@ -66,7 +66,7 @@ const getDetailStaff = {
 
 const blockAccount = {
   body: Joi.object().keys({
-    id_account: Joi.string().required(),
+    id_account: Joi.string().uuid().required(),
     reason: Joi.string(),
   }),
 };
@@ -75,7 +75,7 @@ const editStaff = {
   body: Joi.object().keys({
     username: Joi.string(),
     phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
-    email: Joi.string(),
+    email: Joi.string().email(),
     name: Joi.string(),
     image: Joi.string(),
     address: Joi.string(),

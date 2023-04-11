@@ -171,12 +171,11 @@ const getDetailStaff = catchAsync(async (req, res) => {
 
 const createStaff = catchAsync(async (req, res) => {
   const staff = await staffService.createStaff(req.body);
-  return res.status(httpStatus.OK).json(responseData(staff, 'Create new staff successfully'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Create new staff successfully'));
 });
 
 const blockingAccount = catchAsync(async (req, res) => {
   const staffId = req.user.id;
-  //const staffId = "353066b6-4bb7-4df8-8f46-88f71bf6a182";
   const data = pick(req.body, ['id_account', 'reason']);
   await staffService.blockingAccount(staffId, data);
   return res.status(httpStatus.OK).json(responseMessage('Blocked account', true));
@@ -190,17 +189,8 @@ const unblockingAccount = catchAsync(async (req, res) => {
 });
 
 const editAccountInfo = catchAsync(async (req, res) => {
-  const id = req.params.id;
-  const role = await staffService.getRole(id);
-  var account;
-  if (role === 'User') {
-    account = await userService.editUser(id, req.body);
-  } else if (role === 'Patient') {
-    account = await patientService.editPatient(id, req.body);
-  } else {
-    account = await staffService.editStaff(id, req.body);
-  }
-  return res.status(httpStatus.OK).json(responseData(account, 'Update account successfully'));
+  const staff = await staffService.editStaff(req.params.id, req.body);
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Update account successfully'));
 });
 
 const editProfile = catchAsync(async (req, res) => {

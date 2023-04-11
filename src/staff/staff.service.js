@@ -162,7 +162,7 @@ const editStaff = async (id, data) => {
   // check phone number is exists
   if (data.phone_number) {
     const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
-    if (checkPhone && checkPhone.id != id) {
+    if (checkPhone && checkPhone.id !== id) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already taken.');
     }
   }
@@ -170,7 +170,7 @@ const editStaff = async (id, data) => {
   // check email is exists
   if (data.email) {
     const checkEmail = await findOneByFilter({ email: data.email });
-    if (checkEmail && checkEmail.id != id) {
+    if (checkEmail && checkEmail.id !== id) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken.');
     }
   }
@@ -178,54 +178,14 @@ const editStaff = async (id, data) => {
   // check username is exists
   if (data.username) {
     const checkUsername = await findOneByFilter({ username: data.username });
-    if (checkUsername && checkUsername.id != id) {
+    if (checkUsername && checkUsername.id !== id) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
     }
   }
-  //find staff and update
-  const staff = await findOneByFilter({ id: id });
-  if (data.username) {
-    await staff.update({ username: data.username });
-  }
-  if (data.phone_number) {
-    await staff.update({ phone_number: data.phone_number });
-  }
-  if (data.email) {
-    await staff.update({ email: data.email });
-  }
-  if (data.name) {
-    await staff.update({ name: data.name });
-  }
-  if (data.image) {
-    await staff.update({ image: data.image });
-  }
-  if (data.address) {
-    await staff.update({ address: data.address });
-  }
-  if (data.gender) {
-    await staff.update({ gender: data.gender });
-  }
-  if (data.dob) {
-    await staff.update({ dob: data.dob });
-  }
-  if (data.role) {
-    await staff.update({ role: data.role });
-  }
-  if (data.health_insurance) {
-    await staff.update({ health_insurance: data.health_insurance });
-  }
-  if (data.description) {
-    await staff.update({ description: data.description });
-  }
-  if (data.education) {
-    await staff.update({ education: data.education });
-  }
-  if (data.certificate) {
-    await staff.update({ certificate: data.certificate });
-  }
-  if (data.expertise) {
-    await editStaffExpertise(id, data.expertise);
-  }
+  // find staff and update
+  const staff = await findOneByFilter({ id });
+  const result = Object.assign(staff, data);
+  return await result.save();
 };
 
 const changePassword = async (id, data) => {

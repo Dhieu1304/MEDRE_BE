@@ -16,14 +16,14 @@ router.get('/my-profile', auth(), staffController.getInfo);
 
 router.post(
   '/my-profile/edit',
-  //auth(),
+  auth(),
   validate(staffValidation.editStaff),
   staffController.editProfile
 );
 
 router.post(
   '/my-profile/change-password',
-  //auth(),
+  auth(),
   validate(staffValidation.changePassword),
   staffController.changePassword
 );
