@@ -2,26 +2,30 @@
     "password": {
         "password8": "Password must be at least 8 characters.",
         "passwordLetterNumber": "Password must contain at least 1 letter and 1 number.",
-        "passwordIncorrect": "Incorrect password."
+        "passwordIncorrect": "Incorrect password.",
+        "changePassword": "Change password successfully.",
+        "notMatch": "New password and confirm password do not match."
     },
     "email": {
-        "emailIncorrect": "Incorrect email address."
+        "emailIncorrect": "Incorrect email address.",
+        "emailExisted": "Email address already exists."
     },
     "phoneNumber": {
         "phoneFormatInvalid": "Invalid phone number format.",
-        "phoneIncorrect": "Incorrect phone number."
+        "phoneIncorrect": "Incorrect phone number.",
+        "phoneExisted": "Phone number already exists."
     },
     "refreshToken": {
         "refreshTokenSuccess": "Refresh token successfully.",
         "refreshTokenIncorrect": "Incorrect refresh token."
     },
     "username": {
-        "usernameIncorrect": "Incorrect username."
+        "usernameIncorrect": "Incorrect username.",
+        "usernameExisted": "Username already exists."
     },
     "auth": {
         "registerSuccess": "Register successfully.",
-        "loginSuccess": "Login successfully.",
-        "blockAccount": "Your account is blocked."
+        "loginSuccess": "Login successfully."
     },
     "booking": {
         "success": "Successful.",
@@ -50,5 +54,22 @@
     "schedule": {
         "success": "Successful.",
         "create": "Create schedule successfully."
+    },
+    "timeSchedule":{
+        "success": "Successful."
+    },
+    "staff": {
+        "create": "Create new staff successfully.",
+        "update": "Update account successfully.",
+        "changeProfile":"Change profile successfully.",
+        "notFound": "Account not found."
+    },
+    "block": {
+        "blockAccount": "Your account is blocked.",
+        "blocked": "Blocked account.",
+        "unblocked": "Unblocked account.",
+        "blockOwnAccount": "Cannot block your own account.",
+        "alreadyBlocked": "The account has already blocked.",
+        "alreadyUnblocked": "The account has already unblocked."
     }
 }

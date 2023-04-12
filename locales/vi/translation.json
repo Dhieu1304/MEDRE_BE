@@ -2,26 +2,30 @@
     "password": {
         "password8": "Mật khẩu phải có ít nhất 8 ký tự.",
         "passwordLetterNumber": "Mật khẩu phải chứa ít nhất 1 chữ cái và 1 số.",
-        "passwordIncorrect": "Sai mật khẩu."
+        "passwordIncorrect": "Sai mật khẩu.",
+        "changePassword": "Thay đổi mật khẩu thành công.",
+        "notMatch": "Mật khẩu mới và mật khẩu xác nhận không giống nhau."
     },
     "email": {
-        "emailIncorrect": "Sai địa chỉ email."
+        "emailIncorrect": "Sai địa chỉ email.",
+        "emailExisted": "Địa chỉ email đã tồn tại trong hệ thống."
     },
     "phoneNumber": {
         "phoneFormatInvalid": "Định dạng số điện thoại không hợp lệ.",
-        "phoneIncorrect": "Sai số điện thoại."
+        "phoneIncorrect": "Sai số điện thoại.",
+        "phoneExisted": "Số điện thoại đã tồn tại trong hệ thống."
     },
     "refreshToken": {
         "refreshTokenSuccess": "Làm mới mã refresh token thành công.",
         "refreshTokenIncorrect": "Sai mã refresh token."
     },
     "username": {
-        "usernameIncorrect": "Sai tên đăng nhập."
+        "usernameIncorrect": "Sai tên đăng nhập.",
+        "usernameExisted": "Tên đăng nhập đã tồn tại trong hệ thống."
     },
     "auth": {
         "registerSuccess": "Đăng ký tài khoản thành công.",
-        "loginSuccess": "Đăng nhập thành công.",
-        "blockAccount": "Tài khoản của bạn đã bị khóa."
+        "loginSuccess": "Đăng nhập thành công."
     },
     "booking": {
         "success": "Tải dữ liệu hành công.",
@@ -50,5 +54,22 @@
     "schedule": {
         "success": "Tải dữ liệu hành công.",
         "create": "Tạo lịch biểu mới thành công."
+    },
+    "timeSchedule":{
+        "success": "Tải dữ liệu hành công."
+    },
+    "staff": {
+        "create": "Tạo tài khoản nhân viên mới thành công.",
+        "update": "Thay đổi thông tin tài khoản thành công.",
+        "changeProfile":"Thay đổi thông tin cá nhân thành công.",
+        "notFound": "Không tìm thấy tài khoản."
+    },
+    "block": {
+        "blockAccount": "Tài khoản đã bị khóa.",
+        "blocked": "Đã khóa tài khoản.",
+        "unblocked": "Đã mở khóa tài khoản.",
+        "blockOwnAccount": "Không thể tự khóa tài khoản của chính mình.",
+        "alreadyBlocked": "Tài khoản đã bị khóa.",
+        "alreadyUnblocked": "Tài khoản đã được mở khóa."
     }
 }

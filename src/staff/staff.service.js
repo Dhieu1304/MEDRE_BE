@@ -7,20 +7,22 @@ const patientService = require('../patient/patient.service');
 const { v4: uuidv4 } = require('uuid');
 const { STAFF_ROLES } = require('./staff.constant');
 const { BLOCK_ACCOUNT_TYPE } = require('../blocking_account/blocking_account.constant');
+const i18next = require('i18next');
+//i18next.t('uncategory.loginSuccess')
 
 const createStaff = async (data) => {
   // check email is exists
   if (data.email) {
     const staff = await findOneByFilter({ email: data.email });
     if (staff) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('email.emailExisted'));
     }
   }
 
   // check username is exists
   const staff = await findOneByFilter({ username: data.username });
   if (staff) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('username.usernameExisted'));
   }
 
   // hash password
@@ -64,7 +66,7 @@ const getRole = async (data) => {
   if (patient) {
     return 'Patient';
   }
-  throw new ApiError(httpStatus.BAD_REQUEST, 'Account not found');
+  throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('staff.notFound'));
 };
 
 const blockingAccount = async (staffId, data) => {
@@ -73,7 +75,7 @@ const blockingAccount = async (staffId, data) => {
 
   // Check if staff id and block account id are the same
   if (staffId === data.id_account) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Cannot block your own account.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockOwnAccount'));
   }
 
   // Get role and data of block account
@@ -86,24 +88,24 @@ const blockingAccount = async (staffId, data) => {
   }
 
   if (!account) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('staff.notFound'));
   }
 
   if (account.blocked) {
-    throw new ApiError(httpStatus.OK, 'The account has already blocked.');
+    throw new ApiError(httpStatus.OK, i18next.t('block.alreadyBlocked'));
   }
 
   // Nurse can block User
   if (staffRole === STAFF_ROLES.NURSE) {
     if (blockingAccountRole !== 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('uncategory.permission'));
     }
   }
 
   // Doctor can block Nurse, User
   else if (staffRole === STAFF_ROLES.DOCTOR) {
     if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole !== 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'You do not have this permission.');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('uncategory.permission'));
     }
   }
 
@@ -136,11 +138,11 @@ const unblockingAccount = async (staffId, data) => {
   }
 
   if (!account) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid account.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('staff.notFound'));
   }
 
   if (!account.blocked) {
-    throw new ApiError(httpStatus.OK, 'The account has already unblocked.');
+    throw new ApiError(httpStatus.OK, i18next.t('block.alreadyUnblocked'));
   }
 
   // Unblock the account and write into block_account table
@@ -172,7 +174,7 @@ const editStaff = async (id, data) => {
   if (data.phone_number) {
     const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
     if (checkPhone && checkPhone.id !== id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already taken.');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phone.phoneExisted'));
     }
   }
 
@@ -180,7 +182,7 @@ const editStaff = async (id, data) => {
   if (data.email) {
     const checkEmail = await findOneByFilter({ email: data.email });
     if (checkEmail && checkEmail.id !== id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken.');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('email.emailExisted'));
     }
   }
 
@@ -188,7 +190,7 @@ const editStaff = async (id, data) => {
   if (data.username) {
     const checkUsername = await findOneByFilter({ username: data.username });
     if (checkUsername && checkUsername.id !== id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('username.usernameExisted'));
     }
   }
   // find staff and update
@@ -203,12 +205,12 @@ const changePassword = async (id, data) => {
   // check if password is correct
   const isPasswordMatch = await bcrypt.compare(data.old_password, staff.password);
   if (!isPasswordMatch) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect password.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.passwordIncorrect'));
   }
 
   // check if new password and confirm password is match
   if (data.new_password !== data.confirm_password) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'New password and confirm password do not match.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.notMatch'));
   }
 
   const newPassword = await bcrypt.hash(data.new_password, 10);
@@ -275,7 +277,7 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
 const getStaffInfo = async (options) => {
   const user = await models.staff.findOne(options);
   if (!user) {
-    throw new ApiError(httpStatus.OK, 'User not found');
+    throw new ApiError(httpStatus.OK, i18next.t('staff.notFound'));
   }
   return user;
 };

@@ -59,7 +59,7 @@ const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
   }
 
   if (user.blocked) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.blockAccount'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
 
   return user;
@@ -79,7 +79,7 @@ const staffLoginUserWithPhoneNumberAndPassword = async (phone_number, password) 
   }
 
   if (staff.blocked) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.blockAccount'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
 
   return staff;
@@ -99,7 +99,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   }
 
   if (user.blocked) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.blockAccount'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
 
   return user;
@@ -119,7 +119,7 @@ const staffLoginUserWithEmailAndPassword = async (email, password) => {
   }
 
   if (staff.blocked) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.blockAccount'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
 
   return staff;
@@ -139,7 +139,7 @@ const staffLoginUserWithUsernameAndPassword = async (username, password) => {
   }
 
   if (staff.blocked) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.blockAccount'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
 
   return staff;
