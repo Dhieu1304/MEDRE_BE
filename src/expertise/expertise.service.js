@@ -15,7 +15,7 @@ const createExpertise = async (data) => {
   data.id = uuidv4();
 
   // create new expertise
-  return models.expertise.create(data);
+  return await models.expertise.create(data);
 };
 
 const updateExpertise = async (data) => {
@@ -25,21 +25,20 @@ const updateExpertise = async (data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Expertise already existed.');
   }
 
-  //update expertise's name
+  // update expertise's name
   const expertise = await findOneByFilter({ name: data.old_name });
   expertise.name = data.new_name;
-  await expertise.save();
-  return expertise;
+  return await expertise.save();
 };
 
 const deleteExpertise = async (data) => {
-  //get expertise
+  // get expertise
   const expertise = await findOneByFilter({ name: data.name });
   if (!expertise) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Expertise not existed.');
   }
 
-  //delete expertise
+  // delete expertise
   return await models.expertise.destroy({ where: { id: expertise.id } });
 };
 

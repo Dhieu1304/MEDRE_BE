@@ -10,7 +10,6 @@ const listExpertise = catchAsync(async (req, res) => {
 
 const getAll = catchAsync(async (req, res) => {
   const expertises = await expertiseService.findAllByFilter();
-  console.log(expertises);
   return res.status(httpStatus.OK).json(responseData(expertises));
 });
 
