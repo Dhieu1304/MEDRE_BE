@@ -25,6 +25,8 @@
     },
     "booking": {
         "success": "Successful.",
+        "booking": "Booking successfully.",
+        "update": "Update booking successfully.",
         "notFound": "Not found.",
         "cancel": "Cancel booking successful.",
         "invalidID": "Invalid booking id."

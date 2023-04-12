@@ -24,7 +24,9 @@
         "blockAccount": "Tài khoản của bạn đã bị khóa."
     },
     "booking": {
-        "success": "Thành công.",
+        "success": "Tải dữ liệu hành công.",
+        "booking": "Đặt lịch thành công.",
+        "update": "Cập nhật thông tin lịch đặt thành công.",
         "notFound": "Không tìm thấy lịch đặt.",
         "cancel": "Hủy lịch đặt thành công.",
         "invalidID": "Mã định danh của lịch đặt không đúng."

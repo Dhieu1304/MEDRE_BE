@@ -41,13 +41,13 @@ const booking = catchAsync(async (req, res) => {
   const data = req.body;
   data.id_user = req.user.id;
   const newBooking = await bookingService.createNewBooking(data);
-  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.success')));
+  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 });
 
 const updateBookingStatus = catchAsync(async (req, res) => {
   const data = pick(req.body, ['id', 'booking_status']);
   const updateBooking = await bookingService.updateStatus(data);
-  return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.success')));
+  return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
 });
 
 const cancelBooking = catchAsync(async (req, res) => {
