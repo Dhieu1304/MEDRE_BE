@@ -5,7 +5,6 @@ const validate = require('../middlewares/validate');
 const patientValidation = require('./patient.validation');
 const { staffPermission } = require('../middlewares/staffPermission');
 const { ALL_STAFF_ROLES, STAFF_ROLES } = require('../staff/staff.constant');
-const staffController = require('../staff/staff.controller');
 
 const router = express.Router();
 router.use(auth());
@@ -18,13 +17,13 @@ router.get('/detail/:id', validate(patientValidation.detailPatient), patientCont
 router.get('/list-for-staff', staffPermission(ALL_STAFF_ROLES),
     validate(patientValidation.listForStaff), patientController.listPatientForStaff);
 
-router.get('/detail/:id', staffPermission(ALL_STAFF_ROLES),
+router.get('/detail-for-staff/:id', staffPermission(ALL_STAFF_ROLES),
     validate(patientValidation.detailPatient), patientController.getDetailPatientForStaff);
 
 router.post(
   '/edit/:id',
   validate(patientValidation.editPatient),
-  staffPermission([STAFF_ROLES.ADMIN]),
+  staffPermission(ALL_STAFF_ROLES),
     patientController.editPatient
 );
 
