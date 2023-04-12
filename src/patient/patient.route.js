@@ -8,19 +8,24 @@ const { ALL_STAFF_ROLES, STAFF_ROLES } = require('../staff/staff.constant');
 const staffController = require('../staff/staff.controller');
 
 const router = express.Router();
+router.use(auth());
 
-router.get('/list', auth(), validate(patientValidation.list), patientController.listPatient);
-router.post('/create', auth(), validate(patientValidation.create), patientController.createPatient);
+router.get('/list', validate(patientValidation.list), patientController.listPatient);
+router.post('/create', validate(patientValidation.create), patientController.createPatient);
+router.get('/detail/:id', validate(patientValidation.detailPatient), patientController.getDetailPatient);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
-router.get('/detail/:id', auth(), staffPermission(ALL_STAFF_ROLES), patientController.getDetailPatient);
+router.get('/list-for-staff', staffPermission(ALL_STAFF_ROLES),
+    validate(patientValidation.listForStaff), patientController.listPatientForStaff);
+
+router.get('/detail/:id', staffPermission(ALL_STAFF_ROLES),
+    validate(patientValidation.detailPatient), patientController.getDetailPatientForStaff);
 
 router.post(
   '/edit/:id',
-  auth(),
   validate(patientValidation.editPatient),
   staffPermission([STAFF_ROLES.ADMIN]),
-  staffController.editAccountInfo
+    patientController.editPatient
 );
 
 module.exports = router;

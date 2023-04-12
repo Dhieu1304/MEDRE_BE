@@ -4,21 +4,38 @@ const { phoneNumberFormat } = require('../utils/messageCustom');
 
 const editPatient = {
   body: Joi.object().keys({
-    id_user: Joi.string(),
+    id_user: Joi.string().uuid(),
     phone_number: Joi.string().custom(phoneNumberFormat),
     name: Joi.string(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     dob: Joi.date(),
     health_insurance: Joi.string(),
   }),
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  })
 };
 
 const list = {
   query: Joi.object().keys({
-    id: Joi.string().uuid(),
     phone_number: Joi.string().custom(phoneNumberFormat),
     name: Joi.string().lowercase().trim(),
     dob: Joi.date(),
+    gender: Joi.string().valid(...Object.values(GENDERS)),
+    page: Joi.number().integer().default(1).min(1),
+    limit: Joi.number().integer().default(10).min(1),
+  }),
+};
+
+const listForStaff = {
+  query: Joi.object().keys({
+    id_user: Joi.string().uuid(),
+    phone_number: Joi.string().custom(phoneNumberFormat),
+    name: Joi.string().lowercase().trim(),
+    dob: Joi.date(),
+    gender: Joi.string().valid(...Object.values(GENDERS)),
+    page: Joi.number().integer().default(1).min(1),
+    limit: Joi.number().integer().default(10).min(1),
   }),
 };
 
@@ -35,10 +52,16 @@ const create = {
   }),
 };
 
+const detailPatient = {
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+};
+
 module.exports = {
-  // admin
-  //createPatient,
-  editPatient,
   list,
+  listForStaff,
+  detailPatient,
+  editPatient,
   create,
 };
