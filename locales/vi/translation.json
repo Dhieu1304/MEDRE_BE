@@ -38,5 +38,11 @@
         "delete": "Đã xóa bỏ chuyên khoa được chọn thành công.",
         "existed": "Chuyên khoa đã tồn tại.",
         "notExisted":"Chuyên khoa không tồn tại."
+    },
+    "error": {
+        "unauthorized": "Vui lòng xác thực."
+    },
+    "uncategory": {
+        "permission": "Bạn không có quyền truy cập."
     }
 }

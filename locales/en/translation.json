@@ -38,5 +38,11 @@
         "delete": "Delete expertise successfully.",
         "existed": "Expertise already existed.",
         "notExisted":"Expertise not existed."
+    },
+    "error": {
+        "unauthorized": "Please authenticate."
+    },
+    "uncategory": {
+        "permission": "You do not have this permission."
     }
 }
