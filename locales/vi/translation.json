@@ -46,5 +46,9 @@
     },
     "uncategory": {
         "permission": "Bạn không có quyền truy cập."
+    },
+    "schedule": {
+        "success": "Tải dữ liệu hành công.",
+        "create": "Tạo lịch biểu mới thành công."
     }
 }

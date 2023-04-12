@@ -46,5 +46,9 @@
     },
     "uncategory": {
         "permission": "You do not have this permission."
+    },
+    "schedule": {
+        "success": "Successful.",
+        "create": "Create schedule successfully."
     }
 }
