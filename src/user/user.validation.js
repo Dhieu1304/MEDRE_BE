@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
-const { phoneNumberRegex } = require('../utils/validateCustom');
+const { phoneNumberFormat } = require('../utils/messageCustom');
 const { password } = require('../utils/validateCustom');
 
 const editUser = {
@@ -24,7 +24,7 @@ const changePassword = {
 
 const listUser = {
   query: Joi.object().keys({
-    phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
+    phone_number: Joi.string().custom(phoneNumberFormat),
     email: Joi.string().email(),
     name: Joi.string().trim().lowercase(),
     gender: Joi.string().valid(...Object.values(GENDERS)),

@@ -58,8 +58,8 @@
     "timeSchedule":{
         "success": "Successful."
     },
-    "staff": {
-        "create": "Create new staff successfully.",
+    "account": {
+        "create": "Create new account successfully.",
         "update": "Update account successfully.",
         "changeProfile":"Change profile successfully.",
         "notFound": "Account not found."

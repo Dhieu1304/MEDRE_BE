@@ -5,6 +5,8 @@ const userService = require('./user.service');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const pick = require('../utils/pick');
 const sequelize = require('../config/database');
+const i18next = require('i18next');
+//i18next.t('uncategory.loginSuccess')
 
 const toResponseObject = (user) => {
   const result = user.toJSON();
@@ -25,7 +27,7 @@ const getDetailUser = catchAsync(async (req, res) => {
 
 const editUser = catchAsync(async (req, res) => {
   const user = await userService.editUser(req.params.id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), 'Update user successfully'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), i18next.t('account.update')));
 });
 
 const getAll = catchAsync(async (req, res) => {
@@ -47,12 +49,12 @@ const getAll = catchAsync(async (req, res) => {
 
 const editProfile = catchAsync(async (req, res) => {
   const user = await userService.editUser(req.user.id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), 'Change profile successfully.'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), i18next.t('account.changeProfile')));
 });
 
 const changePassword = catchAsync(async (req, res) => {
   const user = await userService.changePassword(req.user.id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), 'Change password successfully.'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(user), i18next.t('password.changePassword')));
 });
 
 module.exports = {

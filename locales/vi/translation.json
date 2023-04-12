@@ -58,8 +58,8 @@
     "timeSchedule":{
         "success": "Tải dữ liệu hành công."
     },
-    "staff": {
-        "create": "Tạo tài khoản nhân viên mới thành công.",
+    "account": {
+        "create": "Tạo tài khoản mới thành công.",
         "update": "Thay đổi thông tin tài khoản thành công.",
         "changeProfile":"Thay đổi thông tin cá nhân thành công.",
         "notFound": "Không tìm thấy tài khoản."

@@ -170,7 +170,7 @@ const getDetailStaff = catchAsync(async (req, res) => {
 
 const createStaff = catchAsync(async (req, res) => {
   const staff = await staffService.createStaff(req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('staff.create')));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.create')));
 });
 
 const blockingAccount = catchAsync(async (req, res) => {
@@ -189,13 +189,13 @@ const unblockingAccount = catchAsync(async (req, res) => {
 
 const editAccountInfo = catchAsync(async (req, res) => {
   const staff = await staffService.editStaff(req.params.id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('staff.update')));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.update')));
 });
 
 const editProfile = catchAsync(async (req, res) => {
   const id = req.user.id;
   const staff = await staffService.editStaff(id, req.body);
-  return res.status(httpStatus.OK).json(responseData(staff, i18next.t('staff.changeProfile')));
+  return res.status(httpStatus.OK).json(responseData(staff, i18next.t('account.changeProfile')));
 });
 
 const changePassword = catchAsync(async (req, res) => {

@@ -3,20 +3,22 @@ const httpStatus = require('http-status');
 const { v4: uuidv4 } = require('uuid');
 const models = require('../models');
 const bcrypt = require('bcryptjs');
+const i18next = require('i18next');
+//i18next.t('uncategory.loginSuccess')
 
 const createUser = async (data) => {
   // check email is exist
   if (data.email) {
     const user = await findOneByFilter({ email: data.email });
     if (user) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already existed.');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('email.emailExisted'));
     }
   }
 
   if (data.phone_number) {
     const user = await findOneByFilter({ phone_number: data.phone_number });
     if (user) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already existed.');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phone.phoneExisted'));
     }
   }
 
@@ -48,7 +50,7 @@ const editUser = async (id, data) => {
   // find user and update
   const user = await findOneByFilter({ id });
   if (!user) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
   }
 
   const result = Object.assign(user, data);
@@ -58,7 +60,7 @@ const editUser = async (id, data) => {
 const changePassword = async (id, data) => {
   //check if new password and confirm password is match
   if (data.new_password !== data.confirm_password) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'New password and confirm password do not match.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.notMatch'));
   }
 
   const user = await findOneByFilter({ id });
@@ -66,7 +68,7 @@ const changePassword = async (id, data) => {
   // check if password is correct
   const isPasswordMatch = await bcrypt.compare(data.old_password, user.password);
   if (!isPasswordMatch) {
-    throw new ApiError(httpStatus.OK, 'Incorrect password.');
+    throw new ApiError(httpStatus.OK, i18next.t('password.passwordIncorrect'));
   }
 
   user.password = await bcrypt.hash(data.new_password, 10);
@@ -76,7 +78,7 @@ const changePassword = async (id, data) => {
 const getUserInfo = async (options) => {
   const user = await models.user.findOne(options);
   if (!user) {
-    throw new ApiError(httpStatus.OK, 'User not found');
+    throw new ApiError(httpStatus.OK, i18next.t('account.notFound'));
   }
   return user;
 };

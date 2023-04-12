@@ -66,7 +66,7 @@ const getRole = async (data) => {
   if (patient) {
     return 'Patient';
   }
-  throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('staff.notFound'));
+  throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('account.notFound'));
 };
 
 const blockingAccount = async (staffId, data) => {
@@ -88,7 +88,7 @@ const blockingAccount = async (staffId, data) => {
   }
 
   if (!account) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('staff.notFound'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
   }
 
   if (account.blocked) {
@@ -138,7 +138,7 @@ const unblockingAccount = async (staffId, data) => {
   }
 
   if (!account) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('staff.notFound'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
   }
 
   if (!account.blocked) {
@@ -277,7 +277,7 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
 const getStaffInfo = async (options) => {
   const user = await models.staff.findOne(options);
   if (!user) {
-    throw new ApiError(httpStatus.OK, i18next.t('staff.notFound'));
+    throw new ApiError(httpStatus.OK, i18next.t('account.notFound'));
   }
   return user;
 };
