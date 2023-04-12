@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require('uuid');
 const models = require('../models');
 const bcrypt = require('bcryptjs');
 const i18next = require('i18next');
-//i18next.t('uncategory.loginSuccess')
 
 const createUser = async (data) => {
   // check email is exist

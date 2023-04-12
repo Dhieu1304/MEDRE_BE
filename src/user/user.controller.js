@@ -6,7 +6,6 @@ const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const pick = require('../utils/pick');
 const sequelize = require('../config/database');
 const i18next = require('i18next');
-//i18next.t('uncategory.loginSuccess')
 
 const toResponseObject = (user) => {
   const result = user.toJSON();

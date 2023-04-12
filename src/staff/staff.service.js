@@ -8,7 +8,6 @@ const { v4: uuidv4 } = require('uuid');
 const { STAFF_ROLES } = require('./staff.constant');
 const { BLOCK_ACCOUNT_TYPE } = require('../blocking_account/blocking_account.constant');
 const i18next = require('i18next');
-//i18next.t('uncategory.loginSuccess')
 
 const createStaff = async (data) => {
   // check email is exists
@@ -66,7 +65,7 @@ const getRole = async (data) => {
   if (patient) {
     return 'Patient';
   }
-  throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('account.notFound'));
+  throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
 };
 
 const blockingAccount = async (staffId, data) => {
@@ -98,14 +97,14 @@ const blockingAccount = async (staffId, data) => {
   // Nurse can block User
   if (staffRole === STAFF_ROLES.NURSE) {
     if (blockingAccountRole !== 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('uncategory.permission'));
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('unCategory.permission'));
     }
   }
 
   // Doctor can block Nurse, User
   else if (staffRole === STAFF_ROLES.DOCTOR) {
     if (blockingAccountRole !== STAFF_ROLES.NURSE && blockingAccountRole !== 'User') {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('uncategory.permission'));
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('unCategory.permission'));
     }
   }
 

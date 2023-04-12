@@ -43,7 +43,7 @@ const staffLoginPhonePassword = catchAsync(async (req, res) => {
   const tokens = await authService.generateAuthTokens(staff);
   staff.refresh_token = tokens.refresh.token;
   await staff.save();
-  return res.status(httpStatus.OK).json(responseData({ staff, tokens },  i18next.t('auth.loginSuccess')));
+  return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
 });
 
 const staffLoginUsernamePassword = catchAsync(async (req, res) => {
@@ -57,7 +57,7 @@ const staffLoginUsernamePassword = catchAsync(async (req, res) => {
 
 const refreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.refreshAuth(req.body.refresh_token);
-  return res.status(httpStatus.OK).json(responseData(tokens,  i18next.t('refreshToken.refreshTokenSuccess')));
+  return res.status(httpStatus.OK).json(responseData(tokens, i18next.t('refreshToken.refreshTokenSuccess')));
 });
 
 const staffRefreshTokens = catchAsync(async (req, res) => {

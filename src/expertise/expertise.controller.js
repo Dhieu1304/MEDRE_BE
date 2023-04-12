@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage} = require('../utils/responseFormat');
+const { responseData, responseMessage } = require('../utils/responseFormat');
 const expertiseService = require('./expertise.service');
 const i18next = require('i18next');
 

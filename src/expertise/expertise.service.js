@@ -36,7 +36,7 @@ const deleteExpertise = async (data) => {
   // get expertise
   const expertise = await findOneByFilter({ name: data.name });
   if (!expertise) {
-    throw new ApiError(httpStatus.BAD_REQUEST,i18next.t('expertise.notExisted'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('expertise.notExisted'));
   }
 
   // delete expertise
