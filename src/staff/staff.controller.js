@@ -9,6 +9,7 @@ const sequelize = require('../config/database');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const moment = require('moment');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
+const i18next = require('i18next');
 
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
@@ -169,38 +170,38 @@ const getDetailStaff = catchAsync(async (req, res) => {
 
 const createStaff = catchAsync(async (req, res) => {
   const staff = await staffService.createStaff(req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Create new staff successfully'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.create')));
 });
 
 const blockingAccount = catchAsync(async (req, res) => {
   const staffId = req.user.id;
   const data = pick(req.body, ['id_account', 'reason']);
   await staffService.blockingAccount(staffId, data);
-  return res.status(httpStatus.OK).json(responseMessage('Blocked account', true));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('block.blocked'), true));
 });
 
 const unblockingAccount = catchAsync(async (req, res) => {
   const staffId = req.user.id;
   const data = pick(req.body, ['id_account', 'reason']);
   await staffService.unblockingAccount(staffId, data);
-  return res.status(httpStatus.OK).json(responseMessage('Unblocked account', true));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('block.unblocked'), true));
 });
 
 const editAccountInfo = catchAsync(async (req, res) => {
   const staff = await staffService.editStaff(req.params.id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Update account successfully'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.update')));
 });
 
 const editProfile = catchAsync(async (req, res) => {
   const id = req.user.id;
   const staff = await staffService.editStaff(id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Change profile successfully.'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.changeProfile')));
 });
 
 const changePassword = catchAsync(async (req, res) => {
   const id = req.user.id;
   const staff = await staffService.changePassword(id, req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), 'Change password successfully.'));
+  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('password.changePassword')));
 });
 
 module.exports = {

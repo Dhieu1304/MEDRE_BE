@@ -3,12 +3,12 @@ const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 const moment = require('moment');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
-const { phoneNumberRegex } = require('../utils/validateCustom');
+const { phoneNumberFormat } = require('../utils/messageCustom');
 const { password } = require('../utils/validateCustom');
 
 const getAllStaff = {
   query: Joi.object().keys({
-    phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
+    phone_number: Joi.string().custom(phoneNumberFormat),
     email: Joi.string().email(),
     name: Joi.string().trim().lowercase(),
     address: Joi.string(),
@@ -34,7 +34,7 @@ const getListStaffSchedule = {
 const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
-    phone_number: Joi.string().required().regex(phoneNumberRegex).message('Invalid phone number format'),
+    phone_number: Joi.string().required().custom(phoneNumberFormat),
     email: Joi.string().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
@@ -74,7 +74,7 @@ const blockAccount = {
 const editStaff = {
   body: Joi.object().keys({
     username: Joi.string(),
-    phone_number: Joi.string().regex(phoneNumberRegex).message('Invalid phone number format'),
+    phone_number: Joi.string().custom(phoneNumberFormat),
     email: Joi.string().email(),
     name: Joi.string(),
     image: Joi.string(),

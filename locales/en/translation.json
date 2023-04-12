@@ -1,0 +1,75 @@
+{
+    "password": {
+        "password8": "Password must be at least 8 characters.",
+        "passwordLetterNumber": "Password must contain at least 1 letter and 1 number.",
+        "passwordIncorrect": "Incorrect password.",
+        "changePassword": "Change password successfully.",
+        "notMatch": "New password and confirm password do not match."
+    },
+    "email": {
+        "emailIncorrect": "Incorrect email address.",
+        "emailExisted": "Email address already exists."
+    },
+    "phoneNumber": {
+        "phoneFormatInvalid": "Invalid phone number format.",
+        "phoneIncorrect": "Incorrect phone number.",
+        "phoneExisted": "Phone number already exists."
+    },
+    "refreshToken": {
+        "refreshTokenSuccess": "Refresh token successfully.",
+        "refreshTokenIncorrect": "Incorrect refresh token."
+    },
+    "username": {
+        "usernameIncorrect": "Incorrect username.",
+        "usernameExisted": "Username already exists."
+    },
+    "auth": {
+        "registerSuccess": "Register successfully.",
+        "loginSuccess": "Login successfully."
+    },
+    "booking": {
+        "success": "Successful.",
+        "booking": "Booking successfully.",
+        "update": "Update booking successfully.",
+        "notFound": "Not found.",
+        "cancel": "Cancel booking successful.",
+        "invalidID": "Invalid booking id."
+    },
+    "patient": {
+        "notFound":"Patient not found."
+    },
+    "expertise": {
+        "create": "Create new expertise successfully.",
+        "update": "Update expertise successfully.",
+        "delete": "Delete expertise successfully.",
+        "existed": "Expertise already existed.",
+        "notExisted":"Expertise not existed."
+    },
+    "error": {
+        "unauthorized": "Please authenticate."
+    },
+    "uncategory": {
+        "permission": "You do not have this permission."
+    },
+    "schedule": {
+        "success": "Successful.",
+        "create": "Create schedule successfully."
+    },
+    "timeSchedule":{
+        "success": "Successful."
+    },
+    "account": {
+        "create": "Create new account successfully.",
+        "update": "Update account successfully.",
+        "changeProfile":"Change profile successfully.",
+        "notFound": "Account not found."
+    },
+    "block": {
+        "blockAccount": "Your account is blocked.",
+        "blocked": "Blocked account.",
+        "unblocked": "Unblocked account.",
+        "blockOwnAccount": "Cannot block your own account.",
+        "alreadyBlocked": "The account has already blocked.",
+        "alreadyUnblocked": "The account has already unblocked."
+    }
+}

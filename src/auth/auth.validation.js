@@ -1,10 +1,11 @@
 const Joi = require('joi');
-const { password, phoneNumberRegex } = require('../utils/validateCustom');
+const { password } = require('../utils/validateCustom');
 const { GENDERS } = require('../user/user.constant');
+const { phoneNumberFormat } = require('../utils/messageCustom');
 
 const register = {
   body: Joi.object().keys({
-    phone_number: Joi.string().required().regex(phoneNumberRegex).message('Invalid phone number format'),
+    phone_number: Joi.string().required().custom(phoneNumberFormat),
     email: Joi.string().email().lowercase(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
@@ -23,7 +24,7 @@ const loginByEmail = {
 
 const loginByPhoneNumber = {
   body: Joi.object().keys({
-    phone_number: Joi.string().required().regex(phoneNumberRegex).message('Invalid phone number format'),
+    phone_number: Joi.string().required().custom(phoneNumberFormat),
     password: Joi.string().required(),
   }),
 };

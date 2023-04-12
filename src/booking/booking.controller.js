@@ -6,6 +6,7 @@ const bookingService = require('./booking.service');
 const { Op } = require('sequelize');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
+const i18next = require('i18next');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -106,27 +107,27 @@ const getDetailBooking = catchAsync(async (req, res) => {
 const getDetailBookingForStaff = catchAsync(async (req, res) => {
   const booking = await bookingService.findOneByFilter({ id: req.params.id });
   if (!booking) {
-    return res.status(httpStatus.OK).json(responseMessage('Invalid booking', false));
+    return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.notFound'), false));
   }
-  return res.status(httpStatus.OK).json(responseData(booking));
+  return res.status(httpStatus.OK).json(responseData(booking, i18next.t('booking.success')));
 });
 
 const booking = catchAsync(async (req, res) => {
   const data = req.body;
   data.id_user = req.user.id;
   const newBooking = await bookingService.createNewBooking(data);
-  return res.status(httpStatus.OK).json(responseData(newBooking, 'Successful.'));
+  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 });
 
 const updateBooking = catchAsync(async (req, res) => {
   const data = pick(req.body, ['id', 'booking_status', 'type', 'is_payment']);
   const updateBooking = await bookingService.updateBooking(data);
-  return res.status(httpStatus.OK).json(responseData(updateBooking, 'Update Successfully'));
+  return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
 });
 
 const cancelBooking = catchAsync(async (req, res) => {
   await bookingService.cancelBooking(req.user.id, req.body.id);
-  return res.status(httpStatus.OK).json(responseMessage('Cancel booking successfully', true));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.cancel'), true));
 });
 
 module.exports = {

@@ -7,6 +7,7 @@ const models = require('../models');
 const moment = require('moment');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const { v4: uuidv4 } = require('uuid');
+const i18next = require('i18next');
 
 const listByDay = catchAsync(async (req, res) => {
   const { id_doctor, date } = req.query;
@@ -25,7 +26,7 @@ const listByDay = catchAsync(async (req, res) => {
     ],
   };
   const listScheduleByDay = await scheduleService.findAllByOption(options);
-  return res.status(httpStatus.OK).json(responseData(listScheduleByDay, 'Successful'));
+  return res.status(httpStatus.OK).json(responseData(listScheduleByDay, i18next.t('schedule.success')));
 });
 
 const listAll = catchAsync(async (req, res) => {
@@ -48,7 +49,7 @@ const listAll = catchAsync(async (req, res) => {
     ],
   };
   const listSchedule = await scheduleService.findAllByOption(options);
-  return res.status(httpStatus.OK).json(responseData(listSchedule, 'Successful'));
+  return res.status(httpStatus.OK).json(responseData(listSchedule, i18next.t('schedule.success')));
 });
 
 const createSchedule = catchAsync(async (req, res) => {
@@ -65,7 +66,7 @@ const createSchedule = catchAsync(async (req, res) => {
     };
   });
   await scheduleService.createSchedule(schedules);
-  return res.status(httpStatus.OK).json(responseMessage('Create schedule successfully'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('schedule.create')));
 });
 
 module.exports = {

@@ -6,12 +6,13 @@ const httpStatus = require('http-status');
 const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
 const { Op } = require('sequelize');
 const { BOOKING_STATUS } = require('./booking.constant');
+const i18next = require('i18next');
 
 const create = async (data) => {
   // check schedule
   const schedule = await scheduleService.findOneByFilter({ id: data.id_schedule });
   if (!schedule || schedule.status !== SCHEDULE_STATUS.EMPTY) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid schedule id');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   data.id = uuidv4();
@@ -27,7 +28,7 @@ const createNewBooking = async (data) => {
   // check booking
   if (data.id_patient) {
     if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid patient');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('patient.notFound'));
     }
   }
 
@@ -40,7 +41,7 @@ const createNewBooking = async (data) => {
     },
   });
   if (booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   data.id = uuidv4();
@@ -62,7 +63,7 @@ const findAndCountAllByCondition = async (condition) => {
 const updateBooking = async (data) => {
   let booking = await findOneByFilter({ id: data.id });
   if (!booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   booking = Object.assign(booking, data);
@@ -72,7 +73,7 @@ const updateBooking = async (data) => {
 const cancelBooking = async (id_user, id) => {
   const booking = await findOneByFilter({ id, id_user });
   if (!booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   // check time
