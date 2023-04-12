@@ -6,11 +6,12 @@ const pick = require('../utils/pick');
 const sequelize = require('../config/database');
 const { Op } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
+const i18next = require('i18next');
 
 const getDetailPatient = catchAsync(async (req, res) => {
   const patient = await patientService.findOneByFilter({ id: req.params.id });
   if (!patient) {
-    return res.status(httpStatus.OK).json(responseMessage('Patient not found', false));
+    return res.status(httpStatus.OK).json(responseMessage(i18next.t('patient.notFound'), false));
   }
   return res.status(httpStatus.OK).json(responseData(patient));
 });

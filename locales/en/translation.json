@@ -30,7 +30,7 @@
         "invalidID": "Invalid booking id."
     },
     "patient": {
-        "notFound":"Not found patient."
+        "notFound":"Patient not found."
     },
     "expertise": {
         "create": "Create new expertise successfully.",
