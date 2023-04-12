@@ -31,5 +31,12 @@
     },
     "patient": {
         "notFound":"Không tìm thấy người bệnh."
+    },
+    "expertise": {
+        "create": "Tạo chuyên khoa mới thành công.",
+        "update": "Cập nhật thông tin chuyên khoa thành công.",
+        "delete": "Đã xóa bỏ chuyên khoa được chọn thành công.",
+        "existed": "Chuyên khoa đã tồn tại.",
+        "notExisted":"Chuyên khoa không tồn tại."
     }
 }

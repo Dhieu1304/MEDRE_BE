@@ -31,5 +31,12 @@
     },
     "patient": {
         "notFound":"Not found patient."
+    },
+    "expertise": {
+        "create": "Create new expertise successfully.",
+        "update": "Update expertise successfully.",
+        "delete": "Delete expertise successfully.",
+        "existed": "Expertise already existed.",
+        "notExisted":"Expertise not existed."
     }
 }

@@ -3,12 +3,13 @@ const httpStatus = require('http-status');
 const models = require('../models');
 const logger = require('../config/logger');
 const { v4: uuidv4 } = require('uuid');
+const i18next = require('i18next');
 
 const createExpertise = async (data) => {
   // check if expertise is exists
   const expertise = await findOneByFilter({ name: data.name });
   if (expertise) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Expertise already existed.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('expertise.existed'));
   }
 
   // generate uuid
@@ -22,7 +23,7 @@ const updateExpertise = async (data) => {
   // check if expertise's new name is exists
   const expertiseName = await findOneByFilter({ name: data.new_name });
   if (expertiseName) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Expertise already existed.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('expertise.existed'));
   }
 
   //update expertise's name
@@ -36,7 +37,7 @@ const deleteExpertise = async (data) => {
   //get expertise
   const expertise = await findOneByFilter({ name: data.name });
   if (!expertise) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Expertise not existed.');
+    throw new ApiError(httpStatus.BAD_REQUEST,i18next.t('expertise.notExisted'));
   }
 
   //delete expertise

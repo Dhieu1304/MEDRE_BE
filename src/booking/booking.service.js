@@ -7,7 +7,6 @@ const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
 const { Op } = require('sequelize');
 const { BOOKING_STATUS } = require('./booking.constant');
 const i18next = require('i18next');
-//i18next.t('auth.loginSuccess')
 
 const create = async (data) => {
   // check schedule
