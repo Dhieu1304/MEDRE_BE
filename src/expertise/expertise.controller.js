@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData } = require('../utils/responseFormat');
+const { responseData, responseMessage} = require('../utils/responseFormat');
 const expertiseService = require('./expertise.service');
 
 const listExpertise = catchAsync(async (req, res) => {
@@ -24,8 +24,8 @@ const updateExpertise = catchAsync(async (req, res) => {
 });
 
 const deleteExpertise = catchAsync(async (req, res) => {
-  const expertise = await expertiseService.deleteExpertise(req.body);
-  return res.status(httpStatus.OK).json(responseData(expertise, 'Delete expertise successfully.'));
+  await expertiseService.deleteExpertise(req.body);
+  return res.status(httpStatus.OK).json(responseMessage('Delete expertise successfully.'));
 });
 
 module.exports = {
