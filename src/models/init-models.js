@@ -38,7 +38,7 @@ function initModels(sequelize) {
   expertise.hasMany(staff_expertise, { as: 'staff_expertises', foreignKey: 'id_expertise' });
   staff_expertise.belongsTo(staff, { as: 'id_staff_staff', foreignKey: 'id_staff' });
   staff.hasMany(staff_expertise, { as: 'staff_expertises', foreignKey: 'id_staff' });
-  booking.belongsTo(schedule, { as: 'id_schedule_schedule', foreignKey: 'id_schedule' });
+  booking.belongsTo(schedule, { as: 'booking_schedule', foreignKey: 'id_schedule' });
   schedule.hasMany(booking, { as: 'bookings', foreignKey: 'id_schedule' });
   booking.belongsTo(user, { as: 'id_user_user', foreignKey: 'id_user' });
   user.hasMany(booking, { as: 'id_user_bookings', foreignKey: 'id_user' });

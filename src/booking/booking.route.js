@@ -7,19 +7,32 @@ const { staffPermission } = require('../middlewares/staffPermission');
 const { ALL_STAFF_ROLES } = require('../staff/staff.constant');
 
 const router = express.Router();
+router.use(auth());
 
-router.get('/list', auth(), validate(bookingValidation.list), bookingController.listBookings);
-router.post('/new-booking', auth(), validate(bookingValidation.booking), bookingController.booking);
+router.get('/list', validate(bookingValidation.list), bookingController.listBookings);
+router.post('/new-booking', validate(bookingValidation.booking), bookingController.booking);
+router.get('/detail/:id', validate(bookingValidation.detailBooking), bookingController.getDetailBooking);
+router.post('/cancel', validate(bookingValidation.cancelBooking), bookingController.cancelBooking);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 
-router.get('/details/:id', auth(), staffPermission(ALL_STAFF_ROLES), bookingController.getDetailBooking);
-router.post(
-  '/change-booking-status',
-  auth(),
-  validate(bookingValidation.updateBookingStatus),
-  bookingController.updateBookingStatus
+router.get(
+  '/list-for-staff',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(bookingValidation.listForStaff),
+  bookingController.listBookingsForStaff
 );
-router.post('/cancel', auth(), validate(bookingValidation.cancelBooking), bookingController.cancelBooking);
+router.get(
+  '/detail-for-staff/:id',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(bookingValidation.detailBooking),
+  bookingController.getDetailBookingForStaff
+);
+router.post(
+  '/update',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(bookingValidation.updateBooking),
+  bookingController.updateBooking
+);
 
 module.exports = router;

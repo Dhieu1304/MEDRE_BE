@@ -3,8 +3,8 @@ const Joi = require('joi');
 const getAllExpertise = {
   query: Joi.object().keys({
     name: Joi.string(),
-    page: Joi.number().default(1),
-    limit: Joi.number().default(10),
+    page: Joi.number().integer().default(1).min(1),
+    limit: Joi.number().integer().default(10).min(1),
   }),
 };
 

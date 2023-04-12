@@ -55,31 +55,42 @@ const findAllByFilter = async (filter) => {
   return await models.booking.findAll({ where: filter });
 };
 
-const updateStatus = async (data) => {
-  const booking = await findOneByFilter({ id: data.id });
+const findAndCountAllByCondition = async (condition) => {
+  return await models.booking.findAndCountAll(condition);
+};
+
+const updateBooking = async (data) => {
+  let booking = await findOneByFilter({ id: data.id });
   if (!booking) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
   }
-  booking.booking_status = data.booking_status;
-  await booking.save();
-  return booking;
+
+  booking = Object.assign(booking, data);
+  return await booking.save();
 };
 
-const cancelBooking = async (data) => {
-  const booking = await findOneByFilter({ id: data.id });
+const cancelBooking = async (id_user, id) => {
+  const booking = await findOneByFilter({ id, id_user });
   if (!booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Booking not existed.');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking');
   }
 
-  //delete booking
-  return await models.booking.destroy({ where: { id: booking.id } });
+  // check time
+  if (booking.date < new Date()) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This is old booking');
+  }
+
+  booking.booking_status = BOOKING_STATUS.CANCELED;
+  booking.canceledAt = new Date();
+  return await booking.save();
 };
 
 module.exports = {
   create,
   findOneByFilter,
   findAllByFilter,
-  updateStatus,
+  updateBooking,
   cancelBooking,
   createNewBooking,
+  findAndCountAllByCondition,
 };

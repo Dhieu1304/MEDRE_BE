@@ -40,8 +40,10 @@ const listAll = catchAsync(async (req, res) => {
         model: models.booking,
         as: 'bookings',
         required: false,
-        where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
-        [Op.and]: [{date: { [Op.gte]: from }}, {date: { [Op.lte]: to }}]},
+        where: {
+          booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+          [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
+        },
       },
     ],
   };

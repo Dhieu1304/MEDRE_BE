@@ -5,7 +5,7 @@ const timeScheduleService = require('./time_schedule.service');
 
 const getTimeSchedule = catchAsync(async (req, res) => {
   const timeSchedule = await timeScheduleService.findAllByFilter({ order: ['time_start'] });
-  return res.status(httpStatus.OK).json(responseData(timeSchedule, 'Successful'));
+  return res.status(httpStatus.OK).json(responseData(timeSchedule));
 });
 
 module.exports = {
