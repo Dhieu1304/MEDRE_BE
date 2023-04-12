@@ -61,7 +61,11 @@ i18next
         },
         fallbackLng: 'vi',
         preload: ['vi', 'en'],
-        saveMissing: true
+        saveMissing: true,
+        detection: {
+          order: ['querystring', 'cookie'],
+          caches: ['cookie']
+        },
     });
 
 app.use(i18nextMiddleware.handle(i18next));

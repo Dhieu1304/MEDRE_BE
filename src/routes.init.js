@@ -21,10 +21,15 @@ module.exports.initRouter = (app) => {
 
   //language
   app.use(express.Router().get('/language/vi'), (req, res) => {
-    i18next.changeLanguage("vi");
+    i18next.changeLanguage('vi');
+    res.cookie('lang', 'en', { maxAge: 900000 });
+    return res.status(200).send('MEDRE_API');
+
   });
   app.use(express.Router().get('/language/en'), (req, res) => {
-    i18next.changeLanguage("en");
+    i18next.changeLanguage('en');
+    res.cookie('lang', 'en', { maxAge: 900000 });
+    return res.status(200).send('MEDRE_API');
   });
   
   app.use(express.Router().get('/'), (req, res) => {
