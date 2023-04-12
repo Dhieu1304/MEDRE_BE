@@ -22,5 +22,14 @@
         "registerSuccess": "Register successfully.",
         "loginSuccess": "Login successfully.",
         "blockAccount": "Your account is blocked."
+    },
+    "booking": {
+        "success": "Successful.",
+        "notFound": "Not found.",
+        "cancel": "Cancel booking successful.",
+        "invalidID": "Invalid booking id."
+    },
+    "patient": {
+        "notFound":"Not found patient."
     }
 }

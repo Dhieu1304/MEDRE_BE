@@ -4,6 +4,7 @@ const { responseData, responseMessage } = require('../utils/responseFormat');
 const pick = require('../utils/pick');
 const bookingService = require('./booking.service');
 const { Op } = require('sequelize');
+const i18next = require('i18next');
 
 const listBookings = catchAsync(async (req, res) => {
   let filter = pick(req.query, ['type', 'booking_status', 'from', 'to']);
@@ -25,34 +26,34 @@ const listBookings = catchAsync(async (req, res) => {
     }
   }
   const listBooking = await bookingService.findAllByFilter(filter);
-  return res.status(httpStatus.OK).json(responseData(listBooking, 'Successful'));
+  return res.status(httpStatus.OK).json(responseData(listBooking, i18next.t('booking.success')));
 });
 
 const getDetailBooking = catchAsync(async (req, res) => {
   const booking = await bookingService.findOneByFilter({ id: req.params.id });
   if (!booking) {
-    return res.status(httpStatus.OK).json(responseMessage('Not found', false));
+    return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.notFound'), false));
   }
-  return res.status(httpStatus.OK).json(responseData(booking, 'Successful'));
+  return res.status(httpStatus.OK).json(responseData(booking, i18next.t('booking.success')));
 });
 
 const booking = catchAsync(async (req, res) => {
   const data = req.body;
   data.id_user = req.user.id;
   const newBooking = await bookingService.createNewBooking(data);
-  return res.status(httpStatus.OK).json(responseData(newBooking, 'Successful.'));
+  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.success')));
 });
 
 const updateBookingStatus = catchAsync(async (req, res) => {
   const data = pick(req.body, ['id', 'booking_status']);
   const updateBooking = await bookingService.updateStatus(data);
-  return res.status(httpStatus.OK).json(responseData(updateBooking, 'Successful.'));
+  return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.success')));
 });
 
 const cancelBooking = catchAsync(async (req, res) => {
   const data = pick(req.body, ['id', 'note']);
   await bookingService.cancelBooking(data);
-  return res.status(httpStatus.OK).json(responseData({}, 'Cancel booking successful.'));
+  return res.status(httpStatus.OK).json(responseData({}, i18next.t('booking.cancel')));
 });
 
 module.exports = {

@@ -22,5 +22,14 @@
         "registerSuccess": "Đăng ký tài khoản thành công.",
         "loginSuccess": "Đăng nhập thành công.",
         "blockAccount": "Tài khoản của bạn đã bị khóa."
+    },
+    "booking": {
+        "success": "Thành công.",
+        "notFound": "Không tìm thấy lịch đặt.",
+        "cancel": "Hủy lịch đặt thành công.",
+        "invalidID": "Mã định danh của lịch đặt không đúng."
+    },
+    "patient": {
+        "notFound":"Không tìm thấy người bệnh."
     }
 }

@@ -6,12 +6,14 @@ const httpStatus = require('http-status');
 const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
 const { Op } = require('sequelize');
 const { BOOKING_STATUS } = require('./booking.constant');
+const i18next = require('i18next');
+//i18next.t('auth.loginSuccess')
 
 const create = async (data) => {
   // check schedule
   const schedule = await scheduleService.findOneByFilter({ id: data.id_schedule });
   if (!schedule || schedule.status !== SCHEDULE_STATUS.EMPTY) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid schedule id');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   data.id = uuidv4();
@@ -27,7 +29,7 @@ const createNewBooking = async (data) => {
   // check booking
   if (data.id_patient) {
     if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid patient');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('patient.notFound'));
     }
   }
 
@@ -40,7 +42,7 @@ const createNewBooking = async (data) => {
     },
   });
   if (booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   data.id = uuidv4();
@@ -58,7 +60,7 @@ const findAllByFilter = async (filter) => {
 const updateStatus = async (data) => {
   const booking = await findOneByFilter({ id: data.id });
   if (!booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid booking id');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
   booking.booking_status = data.booking_status;
   await booking.save();
@@ -68,7 +70,7 @@ const updateStatus = async (data) => {
 const cancelBooking = async (data) => {
   const booking = await findOneByFilter({ id: data.id });
   if (!booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Booking not existed.');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
   //delete booking
