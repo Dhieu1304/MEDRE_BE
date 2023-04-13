@@ -29,6 +29,7 @@ const listUser = {
     name: Joi.string().trim().lowercase(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     address: Joi.string(),
+    blocked: Joi.boolean(),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),

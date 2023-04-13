@@ -33,6 +33,7 @@ const getAll = catchAsync(async (req, res) => {
     'email',
     'name',
     'address',
+    'blocked',
     'gender',
     'role',
     'type',

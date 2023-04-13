@@ -12,6 +12,7 @@ const getAllStaff = {
     email: Joi.string().email().lowercase(),
     name: Joi.string().trim().lowercase(),
     address: Joi.string(),
+    blocked: Joi.boolean(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     role: Joi.string().valid(...Object.values(STAFF_ROLES)),
     type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),

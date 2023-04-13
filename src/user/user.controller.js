@@ -31,7 +31,7 @@ const editUser = catchAsync(async (req, res) => {
 
 const getAll = catchAsync(async (req, res) => {
   const { gender, page, limit } = req.query;
-  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address']);
+  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked']);
   for (let key in filter) {
     filter[key] = sequelize.where(sequelize.fn('LOWER', sequelize.col(key)), 'LIKE', '%' + filter[key] + '%');
   }
