@@ -40,6 +40,10 @@ const { createMockData } = require('../utils/createMockData');
       const booking = xlsx.parse(__dirname + '/data/booking.xlsx');
       await models.booking.bulkCreate(createMockData(booking[0].data));
 
+      logger.info('-------------------- DOCTOR TIME OFF ---------------------');
+      const doctorTimeOff = xlsx.parse(__dirname + '/data/doctor_time_off.xlsx');
+      await models.doctor_time_off.bulkCreate(createMockData(doctorTimeOff[0].data));
+
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
   } catch (e) {
