@@ -1,6 +1,7 @@
 const i18next = require('i18next');
 
 const phoneNumberRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+const timeScheduleRegex = /^([0-9]{2}):(00|30):(00)$/;
 
 const password = (value, helpers) => {
   if (value.length < 8) {
@@ -14,5 +15,6 @@ const password = (value, helpers) => {
 
 module.exports = {
   phoneNumberRegex,
+  timeScheduleRegex,
   password,
 };

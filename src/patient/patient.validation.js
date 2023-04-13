@@ -13,7 +13,7 @@ const editPatient = {
   }),
   params: Joi.object().keys({
     id: Joi.string().uuid().required(),
-  })
+  }),
 };
 
 const list = {

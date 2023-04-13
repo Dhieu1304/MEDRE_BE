@@ -152,7 +152,7 @@ const refreshAuth = async (refresh_token) => {
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
-  const tokens = generateAuthTokens(user);
+  const tokens = await generateAuthTokens(user);
   user.refresh_token = tokens.refresh.token;
   await user.save();
   return { user, tokens };
@@ -163,7 +163,7 @@ const staffRefreshAuth = async (refresh_token) => {
   if (!staff) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
-  const tokens = generateAuthTokens(staff);
+  const tokens = await generateAuthTokens(staff);
   staff.refresh_token = tokens.refresh.token;
   await staff.save();
   return { staff, tokens };
