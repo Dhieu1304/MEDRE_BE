@@ -8,6 +8,7 @@ const bookingRouter = require('./booking/booking.route');
 const expertiseRouter = require('./expertise/expertise.route');
 const patientRouter = require('./patient/patient.route');
 const language = require('../locales/language');
+const doctorTimeOffRouter = require('./doctor_time_off/doctor_time_off.route');
 
 module.exports.initRouter = (app) => {
   app.use('/auth', authRouter);
@@ -19,6 +20,7 @@ module.exports.initRouter = (app) => {
   app.use('/expertise', expertiseRouter);
   app.use('/patient', patientRouter);
   app.use('/language', language);
+  app.use('/doctor-time-off', doctorTimeOffRouter);
 
   app.use(express.Router().get('/'), (req, res) => {
     return res.status(200).send('MEDRE_API');

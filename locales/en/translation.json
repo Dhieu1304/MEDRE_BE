@@ -56,7 +56,10 @@
     "create": "Create schedule successfully."
   },
   "timeSchedule": {
-    "success": "Successful."
+    "success": "Successful.",
+    "timeFormatInvalid": "Invalid time format.",
+    "invalidTime": "Invalid time.",
+    "haveBooking": "This time is booked"
   },
   "account": {
     "create": "Create new account successfully.",

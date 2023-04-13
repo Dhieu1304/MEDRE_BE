@@ -56,7 +56,10 @@
     "create": "Tạo lịch biểu mới thành công."
   },
   "timeSchedule": {
-    "success": "Tải dữ liệu hành công."
+    "success": "Tải dữ liệu hành công.",
+    "timeFormatInvalid": "Định dạng thời gian không hợp lệ.",
+    "invalidTime": "Thời gian không hợp lệ.",
+    "haveBooking": "Đã có người đặt khung giờ này"
   },
   "account": {
     "create": "Tạo tài khoản mới thành công.",
