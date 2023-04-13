@@ -38,14 +38,17 @@ const listBookings = catchAsync(async (req, res) => {
     as: 'booking_schedule',
     required: false,
     where: {},
-    include: [{
-      model: models.time_schedule,
-      as: 'time_schedule',
-    },{
-      model: models.staff,
-      as: 'schedule_of_staff',
-      attributes: { exclude: ['password', 'refresh_token'] }
-    }]
+    include: [
+      {
+        model: models.time_schedule,
+        as: 'time_schedule',
+      },
+      {
+        model: models.staff,
+        as: 'schedule_of_staff',
+        attributes: { exclude: ['password', 'refresh_token'] },
+      },
+    ],
   });
   // convert filter type
   if (filter.type) {
@@ -53,8 +56,8 @@ const listBookings = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.type;
   }
-  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] }});
-  include.push({ model: models.patient, as: 'booking_of_patient'});
+  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
+  include.push({ model: models.patient, as: 'booking_of_patient' });
   const condition = {
     where: filter,
     include,
@@ -103,14 +106,17 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     as: 'booking_schedule',
     required: false,
     where: {},
-    include: [{
-      model: models.time_schedule,
-      as: 'time_schedule',
-    },{
-      model: models.staff,
-      as: 'schedule_of_staff',
-      attributes: { exclude: ['password', 'refresh_token'] }
-    }],
+    include: [
+      {
+        model: models.time_schedule,
+        as: 'time_schedule',
+      },
+      {
+        model: models.staff,
+        as: 'schedule_of_staff',
+        attributes: { exclude: ['password', 'refresh_token'] },
+      },
+    ],
   });
   // convert filter type
   if (filter.type) {
@@ -118,8 +124,8 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.type;
   }
-  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] }});
-  include.push({ model: models.patient, as: 'booking_of_patient'});
+  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
+  include.push({ model: models.patient, as: 'booking_of_patient' });
 
   const condition = {
     where: filter,
@@ -133,24 +139,28 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
 
 const getDetailBooking = catchAsync(async (req, res) => {
   const booking = await bookingService.findOneByOption({
-    where: {id: req.params.id},
-    include: [{
-      model: models.schedule,
-      as: 'booking_schedule',
-      required: false,
-      where: {},
-      include: [{
-        model: models.time_schedule,
-        as: 'time_schedule',
-      },{
-        model: models.staff,
-        as: 'schedule_of_staff',
-        attributes: { exclude: ['password', 'refresh_token'] }
-      }],
-    },
-      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] }},
-      { model: models.patient, as: 'booking_of_patient'}
-    ]
+    where: { id: req.params.id },
+    include: [
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        required: false,
+        where: {},
+        include: [
+          {
+            model: models.time_schedule,
+            as: 'time_schedule',
+          },
+          {
+            model: models.staff,
+            as: 'schedule_of_staff',
+            attributes: { exclude: ['password', 'refresh_token'] },
+          },
+        ],
+      },
+      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } },
+      { model: models.patient, as: 'booking_of_patient' },
+    ],
   });
   if (!booking || booking.id_user !== req.user.id) {
     return res.status(httpStatus.OK).json(responseMessage('Invalid booking', false));
@@ -160,24 +170,28 @@ const getDetailBooking = catchAsync(async (req, res) => {
 
 const getDetailBookingForStaff = catchAsync(async (req, res) => {
   const booking = await bookingService.findOneByOption({
-    where: {id: req.params.id},
-    include: [{
-      model: models.schedule,
-      as: 'booking_schedule',
-      required: false,
-      where: {},
-      include: [{
-        model: models.time_schedule,
-        as: 'time_schedule',
-      },{
-        model: models.staff,
-        as: 'schedule_of_staff',
-        attributes: { exclude: ['password', 'refresh_token'] }
-      }],
-    },
-      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] }},
-      { model: models.patient, as: 'booking_of_patient'}
-    ]
+    where: { id: req.params.id },
+    include: [
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        required: false,
+        where: {},
+        include: [
+          {
+            model: models.time_schedule,
+            as: 'time_schedule',
+          },
+          {
+            model: models.staff,
+            as: 'schedule_of_staff',
+            attributes: { exclude: ['password', 'refresh_token'] },
+          },
+        ],
+      },
+      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } },
+      { model: models.patient, as: 'booking_of_patient' },
+    ],
   });
   if (!booking) {
     return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.notFound'), false));
