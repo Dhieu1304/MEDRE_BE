@@ -6,6 +6,7 @@ const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const pick = require('../utils/pick');
 const sequelize = require('../config/database');
 const i18next = require('i18next');
+const {Op} = require("sequelize");
 
 const toResponseObject = (user) => {
   const result = user.toJSON();
@@ -30,14 +31,18 @@ const editUser = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const { gender, page, limit } = req.query;
-  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked']);
-  for (let key in filter) {
-    filter[key] = sequelize.where(sequelize.fn('LOWER', sequelize.col(key)), 'LIKE', '%' + filter[key] + '%');
+  const { page, limit } = req.query;
+  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked', 'gender']);
+  const filterLike = ['phone_number', 'email', 'address'];
+  for (let i = 0; i < filterLike.length; i++) {
+    if (filter[filterLike[i]]) {
+      filter[filterLike[i]] = { [Op.substring]: filter[filterLike[i]] };
+    }
   }
-  if (gender) {
-    filter.gender = gender;
+  if (filter.name) {
+    filter.name = sequelize.where(sequelize.fn('LOWER', sequelize.col('name')), 'LIKE', `%${filter.name}%`);
   }
+
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
