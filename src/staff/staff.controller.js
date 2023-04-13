@@ -41,15 +41,17 @@ const getAll = catchAsync(async (req, res) => {
     'expertise',
   ]);
 
-  const filterLike = ['phone_number', 'email', 'name', 'address'];
+  const filterLike = ['phone_number', 'email', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {
-      filter[filterLike[i]] = sequelize.where(
-        sequelize.fn('LOWER', sequelize.col(filterLike[i])),
-        'LIKE',
-        '%' + filter[filterLike[i]] + '%'
-      );
+      filter[filterLike[i]] = { [Op.substring]: filter[filterLike[i]] }
     }
+  }
+
+  if (filter.name) {
+    filter.name = sequelize.where(
+        sequelize.fn('LOWER', sequelize.col('staff.name')),
+        'LIKE',`%${filter.name}%`);
   }
 
   const include = [];
@@ -58,22 +60,18 @@ const getAll = catchAsync(async (req, res) => {
   }
   if (filter.type) {
     include[0].where.type = filter.type;
+    delete filter.type;
   }
 
   if (filter.from) {
-    if (filter.to) {
-      const objectFilterDate = { [Op.and]: [{ date: { [Op.gte]: filter.from } }, { date: { [Op.lte]: filter.to } }] };
-      Object.assign(include[0].where, objectFilterDate);
-    } else {
-      include[0].where.date = { [Op.gte]: filter.from };
-    }
-  } else if (filter.to) {
-    include[0].where.date = { [Op.lte]: filter.to };
+    // include[0].where.apply_to = { [Op.gte]: filter.from };
+    delete filter.from;
   }
 
-  delete filter.from;
-  delete filter.to;
-  delete filter.type;
+  if (filter.to) {
+    include[0].where.apply_to = { [Op.gte]: filter.to };
+    delete filter.to;
+  }
 
   include.push({ model: models.expertise, as: 'expertises', required: false, where: {} });
   if (filter.expertise) {
@@ -89,6 +87,9 @@ const getAll = catchAsync(async (req, res) => {
     ...pageLimit2Offset(page, limit),
     attributes: { exclude: ['password', 'refresh_token'] },
   };
+
+  console.log(condition);
+
   const staffs = await staffService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });

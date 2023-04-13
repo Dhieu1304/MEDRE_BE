@@ -9,7 +9,7 @@ const { password } = require('../utils/validateCustom');
 const getAllStaff = {
   query: Joi.object().keys({
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email(),
+    email: Joi.string().email().lowercase(),
     name: Joi.string().trim().lowercase(),
     address: Joi.string(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
@@ -35,7 +35,7 @@ const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
     phone_number: Joi.string().required().custom(phoneNumberFormat),
-    email: Joi.string().email(),
+    email: Joi.string().email().lowercase(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     image: Joi.string(),
@@ -75,7 +75,7 @@ const editStaff = {
   body: Joi.object().keys({
     username: Joi.string(),
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email(),
+    email: Joi.string().email().lowercase(),
     name: Joi.string(),
     image: Joi.string(),
     address: Joi.string(),
