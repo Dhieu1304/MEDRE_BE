@@ -33,9 +33,11 @@ const listBookings = catchAsync(async (req, res) => {
   }
 
   const include = [];
+  include.push({ model: models.schedule, as: 'booking_schedule', required: false, where: { } });
   // convert filter type
   if (filter.type) {
-    include.push({ model: models.schedule, as: 'booking_schedule', where: { type: filter.type } });
+    include[include.length - 1].where.type = filter.type;
+    include[include.length - 1].required = true;
     delete filter.type;
   }
   const condition = {
@@ -81,9 +83,11 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
   }
 
   const include = [];
+  include.push({ model: models.schedule, as: 'booking_schedule', required: false, where: { } });
   // convert filter type
   if (filter.type) {
-    include.push({ model: models.schedule, as: 'booking_schedule', where: { type: filter.type } });
+    include[include.length - 1].where.type = filter.type;
+    include[include.length - 1].required = true;
     delete filter.type;
   }
   const condition = {
