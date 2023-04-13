@@ -37,11 +37,11 @@ const listBookings = catchAsync(async (req, res) => {
     model: models.schedule,
     as: 'booking_schedule',
     required: false,
-    where: { },
+    where: {},
     include: {
-        model: models.time_schedule,
-        as: 'time_schedule',
-    }
+      model: models.time_schedule,
+      as: 'time_schedule',
+    },
   });
   // convert filter type
   if (filter.type) {
@@ -96,11 +96,12 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     model: models.schedule,
     as: 'booking_schedule',
     required: false,
-    where: { },
+    where: {},
     include: {
       model: models.time_schedule,
       as: 'time_schedule',
-    }});
+    },
+  });
   // convert filter type
   if (filter.type) {
     include[include.length - 1].where.type = filter.type;

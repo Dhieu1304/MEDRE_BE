@@ -44,14 +44,12 @@ const getAll = catchAsync(async (req, res) => {
   const filterLike = ['phone_number', 'email', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {
-      filter[filterLike[i]] = { [Op.substring]: filter[filterLike[i]] }
+      filter[filterLike[i]] = { [Op.substring]: filter[filterLike[i]] };
     }
   }
 
   if (filter.name) {
-    filter.name = sequelize.where(
-        sequelize.fn('LOWER', sequelize.col('staff.name')),
-        'LIKE',`%${filter.name}%`);
+    filter.name = sequelize.where(sequelize.fn('LOWER', sequelize.col('staff.name')), 'LIKE', `%${filter.name}%`);
   }
 
   const include = [];

@@ -1,11 +1,8 @@
-//const ApiError = require('../utils/ApiError');
-//const httpStatus = require('http-status');
-const logger = require('../config/logger');
 const { v4: uuidv4 } = require('uuid');
 const models = require('../models');
-const httpStatus = require("http-status");
-const ApiError = require("../utils/ApiError");
-const i18next = require("i18next");
+const httpStatus = require('http-status');
+const ApiError = require('../utils/ApiError');
+const i18next = require('i18next');
 
 const createPatient = async (data) => {
   // generate uuid
@@ -16,7 +13,7 @@ const createPatient = async (data) => {
 };
 
 const findOneByFilter = async (filter) => {
-    return await models.patient.findOne({ where: filter });
+  return await models.patient.findOne({ where: filter });
 };
 
 const findAllByFilter = async (filter) => {

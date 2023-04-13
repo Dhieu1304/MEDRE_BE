@@ -1,5 +1,5 @@
 const i18next = require('i18next');
-const { phoneNumberRegex, timeScheduleRegex} = require('./validateCustom');
+const { phoneNumberRegex, timeScheduleRegex } = require('./validateCustom');
 
 const phoneNumberFormat = (value, helpers) => {
   if (!value.match(phoneNumberRegex)) {

@@ -1,9 +1,4 @@
 const models = require('../models');
-const {Op} = require("sequelize");
-const {BOOKING_STATUS} = require("../booking/booking.constant");
-const httpStatus = require("http-status");
-const ApiError = require("../utils/ApiError");
-const i18next = require("i18next");
 
 const findAllByFilter = async (filter) => {
   return await models.doctor_time_off.findAll(filter);

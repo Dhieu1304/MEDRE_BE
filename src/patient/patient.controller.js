@@ -1,13 +1,13 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage, paginationFormat} = require('../utils/responseFormat');
+const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
 const patientService = require('./patient.service');
 const pick = require('../utils/pick');
 const sequelize = require('../config/database');
 const { Op } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
 const i18next = require('i18next');
-const pageLimit2Offset = require("../utils/pageLimit2Offset");
+const pageLimit2Offset = require('../utils/pageLimit2Offset');
 
 const getDetailPatient = catchAsync(async (req, res) => {
   const patient = await patientService.findOneByFilter({ id: req.params.id, id_user: req.user.id });
@@ -26,7 +26,7 @@ const getDetailPatientForStaff = catchAsync(async (req, res) => {
 });
 
 const listPatient = catchAsync(async (req, res) => {
-  const {page, limit} = req.query;
+  const { page, limit } = req.query;
   const filter = pick(req.query, ['phone_number', 'name', 'dob', 'gender']);
   filter.id_user = req.user.id;
   if (filter.phone_number) {
@@ -38,13 +38,13 @@ const listPatient = catchAsync(async (req, res) => {
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
-  }
+  };
   const patients = await patientService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(patients, page, limit)));
 });
 
 const listPatientForStaff = catchAsync(async (req, res) => {
-  const {page, limit} = req.query;
+  const { page, limit } = req.query;
   const filter = pick(req.query, ['id_user', 'phone_number', 'name', 'dob', 'gender']);
   if (filter.phone_number) {
     filter.phone_number = { [Op.substring]: filter.phone_number };
@@ -55,7 +55,7 @@ const listPatientForStaff = catchAsync(async (req, res) => {
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
-  }
+  };
   const patients = await patientService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(patients, page, limit)));
 });
