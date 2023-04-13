@@ -161,6 +161,10 @@ const getDetailStaff = catchAsync(async (req, res) => {
         required: false,
         where: { [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }] },
       },
+      {
+        model: models.expertise,
+        as: 'expertises',
+      },
     ],
     attributes: { exclude: ['password', 'refresh_token'] },
   };
