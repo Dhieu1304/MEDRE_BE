@@ -138,6 +138,7 @@ const getDetailStaff = catchAsync(async (req, res) => {
         model: models.schedule,
         as: 'staff_schedules',
         where: { apply_to: { [Op.gte]: to } },
+        required: false,
         include: [
           {
             model: models.booking,

@@ -39,6 +39,8 @@ const createTimeOff = async (data) => {
 
   // todo: check is have schedule at this time
 
+  // todo: check is have time off at this time
+
   return await models.doctor_time_off.create(data);
 };
 

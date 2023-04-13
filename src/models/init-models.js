@@ -40,13 +40,13 @@ function initModels(sequelize) {
   staff.hasMany(staff_expertise, { as: 'staff_expertises', foreignKey: 'id_staff' });
   booking.belongsTo(schedule, { as: 'booking_schedule', foreignKey: 'id_schedule' });
   schedule.hasMany(booking, { as: 'bookings', foreignKey: 'id_schedule' });
-  booking.belongsTo(user, { as: 'id_user_user', foreignKey: 'id_user' });
+  booking.belongsTo(user, { as: 'booking_of_user', foreignKey: 'id_user' });
   user.hasMany(booking, { as: 'id_user_bookings', foreignKey: 'id_user' });
-  booking.belongsTo(patient, { as: 'id_patient_patient', foreignKey: 'id_patient' });
+  booking.belongsTo(patient, { as: 'booking_of_patient', foreignKey: 'id_patient' });
   patient.hasMany(booking, { as: 'bookings', foreignKey: 'id_patient' });
   schedule.belongsTo(time_schedule, { as: 'time_schedule', foreignKey: 'id_time' });
   time_schedule.hasMany(schedule, { as: 'schedules', foreignKey: 'id_time' });
-  schedule.belongsTo(staff, { as: 'id_doctor_staff', foreignKey: 'id_doctor' });
+  schedule.belongsTo(staff, { as: 'schedule_of_staff', foreignKey: 'id_doctor' });
   staff.hasMany(schedule, { as: 'staff_schedules', foreignKey: 'id_doctor' });
   doctor_time_off.belongsTo(staff, { as: 'staff_doctor_time_offs', foreignKey: 'id_doctor' });
   staff.hasMany(doctor_time_off, { as: 'time_offs', foreignKey: 'id_doctor' });

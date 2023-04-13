@@ -37,20 +37,6 @@ const findByDayOrGenerate = async (filter) => {
   }
 };
 
-const findAllByFilterBookingDetail = async (filter) => {
-  try {
-    return await models.schedule.findAll({
-      where: filter,
-      include: [
-        { model: models.time_schedule, as: 'time_schedule' },
-        { model: models.booking, as: 'bookings', include: [{ model: models.patient, as: 'id_patient_patient' }] },
-      ],
-    });
-  } catch (e) {
-    logger.error(e.message);
-  }
-};
-
 const createSchedule = async (data) => {
   return await models.schedule.bulkCreate(data);
 };
@@ -59,7 +45,6 @@ module.exports = {
   findOneByFilter,
   findAllByFilter,
   findByDayOrGenerate,
-  findAllByFilterBookingDetail,
   findAllByOption,
   createSchedule,
 };

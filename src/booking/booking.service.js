@@ -52,6 +52,10 @@ const findOneByFilter = async (filter) => {
   return await models.booking.findOne({ where: filter });
 };
 
+const findOneByOption = async (option) => {
+  return await models.booking.findOne(option);
+};
+
 const findAllByFilter = async (filter) => {
   return await models.booking.findAll({ where: filter });
 };
@@ -89,6 +93,7 @@ const cancelBooking = async (id_user, id) => {
 module.exports = {
   create,
   findOneByFilter,
+  findOneByOption,
   findAllByFilter,
   updateBooking,
   cancelBooking,
