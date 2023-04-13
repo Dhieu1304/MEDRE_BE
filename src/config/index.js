@@ -18,6 +18,9 @@ const envVarsSchema = Joi.object()
     HDB_USERNAME: Joi.string().required().description('Username'),
     HDB_PASSWORD: Joi.string().required().description('Password'),
     HDB_PORT: Joi.number().required().description('Port'),
+    NODEMAILER_EMAIL: Joi.string().required().description('Email'),
+    NODEMAILER_PASSWORD: Joi.string().required().description('Password'),
+    BASE_URL: Joi.string().required().description('Url of frontend'),
   })
   .unknown();
 
@@ -59,4 +62,9 @@ module.exports = {
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
   },
+  nodemailer: {
+    nm_email: envVars.NODEMAILER_EMAIL,
+    nm_password: envVars.NODEMAILER_PASSWORD,
+  },
+  base_url: envVars.BASE_URL,
 };

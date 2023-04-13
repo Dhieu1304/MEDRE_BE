@@ -1,7 +1,14 @@
 const getLocale = () => {
     let locale = Intl.DateTimeFormat().resolvedOptions().locale;
-    console.log(locale);
-    return locale;
+    if(locale === 'vi-VN')
+    {
+      return locale;
+    }
+    else {
+      locale = 'en-US';
+      return locale;
+    }
+    
 };
 
 const getLanguage = () => {
