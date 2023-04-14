@@ -8,7 +8,7 @@ const register = {
     phone_number: Joi.string().required().custom(phoneNumberFormat),
     email: Joi.string().email().lowercase(),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    name: Joi.string().trim(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     dob: Joi.date(),
     address: Joi.string(),

@@ -65,7 +65,11 @@
     "create": "Create new account successfully.",
     "update": "Update account successfully.",
     "changeProfile": "Change profile successfully.",
-    "notFound": "Account not found."
+    "notFound": "Account not found.",
+    "canNotChangeEmail": "You cannot change the verified email.",
+    "canNotChangePhoneNumber": "You cannot change the verified phone number.",
+    "emailIsExist": "This email already exists in the system.",
+    "phoneNumberIsExist": "This phone number already exists in the system."
   },
   "block": {
     "blockAccount": "Your account is blocked.",

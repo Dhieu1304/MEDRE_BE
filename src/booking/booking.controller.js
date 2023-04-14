@@ -56,7 +56,7 @@ const listBookings = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.type;
   }
-  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
+  // include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
   include.push({ model: models.patient, as: 'booking_of_patient' });
   const condition = {
     where: filter,

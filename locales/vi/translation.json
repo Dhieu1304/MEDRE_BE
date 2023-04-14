@@ -65,7 +65,11 @@
     "create": "Tạo tài khoản mới thành công.",
     "update": "Thay đổi thông tin tài khoản thành công.",
     "changeProfile": "Thay đổi thông tin cá nhân thành công.",
-    "notFound": "Không tìm thấy tài khoản."
+    "notFound": "Không tìm thấy tài khoản.",
+    "canNotChangeEmail": "Bạn không thể thay đổi email đã xác thực.",
+    "canNotChangePhoneNumber": "Bạn không thể thay đổi số điện thoại đã xác thực.",
+    "emailIsExist": "Email này đã tồn tại trong hệ thống.",
+    "phoneNumberIsExist": "Số điện thoại này đã tồn tại trong hệ thống."
   },
   "block": {
     "blockAccount": "Tài khoản đã bị khóa.",

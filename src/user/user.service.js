@@ -52,6 +52,24 @@ const editUser = async (id, data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
   }
 
+  if (data.email) {
+    if (user.email_verified) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangeEmail'));
+    }
+    if (await findOneByFilter({email: data.email, email_verified: true})) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.emailIsExist'));
+    }
+  }
+
+  if (data.phone_number) {
+    if (user.phone_verified) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangePhoneNumber'));
+    }
+    if (await findOneByFilter({phone_number: data.phone_number, phone_verified: true})) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.phoneNumberIsExist'));
+    }
+  }
+
   const result = Object.assign(user, data);
   return await result.save();
 };
