@@ -16,6 +16,7 @@ const { initRouter } = require('./src/routes.init');
 const ApiError = require('./src/utils/ApiError');
 const passport = require('passport');
 const { jwtStrategy } = require('./src/config/passport');
+const { getLocale} = require('./src/utils/locale');
 
 require('./src/models/mockup-data');
 
@@ -52,6 +53,8 @@ app.use(
 initRouter(app);
 
 //config i18next
+const lang = getLocale();
+
 i18next
   .use(Backend)
   .use(i18nextMiddleware.LanguageDetector)
@@ -59,7 +62,7 @@ i18next
     backend: {
       loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
     },
-    fallbackLng: 'vi',
+    fallbackLng: lang,
     preload: ['vi', 'en'],
     saveMissing: true,
     detection: {

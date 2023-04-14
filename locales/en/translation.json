@@ -25,7 +25,9 @@
   },
   "auth": {
     "registerSuccess": "Register successfully.",
-    "loginSuccess": "Login successfully."
+    "loginSuccess": "Login successfully.",
+    "verifySuccess": "Verify successfully.",
+    "verifyFailure": "Cannot verify."
   },
   "booking": {
     "success": "Successful.",
@@ -79,5 +81,13 @@
     "blockOwnAccount": "Cannot block your own account.",
     "alreadyBlocked": "The account has already blocked.",
     "alreadyUnblocked": "The account has already unblocked."
+  },
+  "mailTemplate": {
+    "header": "We are delighted to welcome you to use our medical services.",
+    "verify": "Please verify your email address to continue.",
+    "button":"VERIFY",
+    "subject": "MEDRE",
+    "success": "Email sent successfully.",
+    "fail": "An error occurred, cannot send email."
   }
 }

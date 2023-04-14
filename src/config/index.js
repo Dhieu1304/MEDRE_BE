@@ -7,6 +7,7 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
+    JWT_VERIFY_EXPIRATION_HOURS: Joi.string().description('hours after which verify tokens expire'),
     DB_SYNC: Joi.number().default(0).valid(0, 1).description('sync database'),
     DB_HOST: Joi.string().required().description('Host'),
     DB_DATABASE: Joi.string().required().description('Database'),
@@ -18,6 +19,9 @@ const envVarsSchema = Joi.object()
     HDB_USERNAME: Joi.string().required().description('Username'),
     HDB_PASSWORD: Joi.string().required().description('Password'),
     HDB_PORT: Joi.number().required().description('Port'),
+    NODEMAILER_EMAIL: Joi.string().required().description('Email'),
+    NODEMAILER_PASSWORD: Joi.string().required().description('Password'),
+    BASE_URL: Joi.string().required().description('Url of frontend'),
     FB_PRIVATE_KEY_ID: Joi.string().required().description('Private key id Firebase Admin'),
     FB_PRIVATE_KEY: Joi.string().required().description('Private key Firebase Admin'),
   })
@@ -60,7 +64,13 @@ module.exports = {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
+    verifyExpirationHours: envVars.JWT_VERIFY_EXPIRATION_HOURS,
   },
+  nodemailer: {
+    nm_email: envVars.NODEMAILER_EMAIL,
+    nm_password: envVars.NODEMAILER_PASSWORD,
+  },
+  base_url: envVars.BASE_URL,
   firebaseAdmin: {
     privateKeyId: envVars.FB_PRIVATE_KEY_ID,
     privateKey: envVars.FB_PRIVATE_KEY.replace(/\\n/g, '\n'),

@@ -25,7 +25,9 @@
   },
   "auth": {
     "registerSuccess": "Đăng ký tài khoản thành công.",
-    "loginSuccess": "Đăng nhập thành công."
+    "loginSuccess": "Đăng nhập thành công.",
+    "verifySuccess": "Xác thực thành công.",
+    "verifyFailure": "Không thể xác thực."
   },
   "booking": {
     "success": "Tải dữ liệu hành công.",
@@ -79,5 +81,13 @@
     "blockOwnAccount": "Không thể tự khóa tài khoản của chính mình.",
     "alreadyBlocked": "Tài khoản đã bị khóa.",
     "alreadyUnblocked": "Tài khoản đã được mở khóa."
+  },
+  "mailTemplate": {
+    "header": "Cảm ơn đã đăng ký sử dụng dịch vụ y tế của MEDRE",
+    "verify": "Vui lòng xác thực địa chỉ mail của bạn để tiếp tục.",
+    "button":"XÁC NHẬN",
+    "subject": "MEDRE",
+    "success": "Email đã được gửi thành công.",
+    "fail": "Đã có lỗi xảy ra, không thể gửi được email."
   }
 }
