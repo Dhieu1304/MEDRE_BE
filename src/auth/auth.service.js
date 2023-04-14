@@ -8,9 +8,8 @@ const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const staffService = require('../staff/staff.service');
 const i18next = require('i18next');
-const { getLocale } = require('../utils/locale');
 const nodemailer = require('nodemailer');
-const logger = require("../config/logger");
+const logger = require('../config/logger');
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
@@ -171,7 +170,6 @@ const staffRefreshAuth = async (refresh_token) => {
 };
 
 const verificationEmailTemplate = (link) => {
-  const locale = getLocale();
   return `
 	    <!DOCTYPE html>
         <html>
