@@ -1,7 +1,6 @@
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const models = require('../models');
-const logger = require('../config/logger');
 const { v4: uuidv4 } = require('uuid');
 const i18next = require('i18next');
 
@@ -44,19 +43,11 @@ const deleteExpertise = async (data) => {
 };
 
 const findOneByFilter = async (filter) => {
-  try {
-    return await models.expertise.findOne({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
+  return await models.expertise.findOne({ where: filter });
 };
 
 const findAllByFilter = async (filter) => {
-  try {
-    return await models.expertise.findAll({ where: filter });
-  } catch (e) {
-    logger.error(e.message);
-  }
+  return await models.expertise.findAll({ where: filter });
 };
 
 const findAndCountAllByCondition = async (condition) => {

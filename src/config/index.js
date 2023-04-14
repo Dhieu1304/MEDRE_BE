@@ -18,6 +18,8 @@ const envVarsSchema = Joi.object()
     HDB_USERNAME: Joi.string().required().description('Username'),
     HDB_PASSWORD: Joi.string().required().description('Password'),
     HDB_PORT: Joi.number().required().description('Port'),
+    FB_PRIVATE_KEY_ID: Joi.string().required().description('Private key id Firebase Admin'),
+    FB_PRIVATE_KEY: Joi.string().required().description('Private key Firebase Admin'),
   })
   .unknown();
 
@@ -58,5 +60,10 @@ module.exports = {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
+  },
+  firebaseAdmin: {
+    privateKeyId: envVars.FB_PRIVATE_KEY_ID,
+    privateKey: envVars.FB_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    storageBucket: 'medre-9f7f5.appspot.com',
   },
 };

@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const { STAFF_ROLES } = require('./staff.constant');
 const { BLOCK_ACCOUNT_TYPE } = require('../blocking_account/blocking_account.constant');
 const i18next = require('i18next');
+const logger = require('../config/logger');
 
 const createStaff = async (data) => {
   // check email is exists
@@ -251,12 +252,6 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
       };
     });
 
-    // console.log("expertiseIds: ", expertiseIds);
-    // console.log("currentStaffExpertiseExpertiseIds: ", currentStaffExpertiseExpertiseIds);
-    // console.log("removeStaffExpertiseIds: ", removeStaffExpertiseIds);
-    // console.log("newStaffExpertiseIds: ", newStaffExpertiseIds);
-    // console.log("newStaffExpertises: ", newStaffExpertises);
-
     // Delete old expertises that no longer existed in staff_expertise
     await models.staff_expertise.destroy({
       where: {
@@ -269,7 +264,7 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
     const res = await models.staff_expertise.bulkCreate(newStaffExpertises);
     return res;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 };
 

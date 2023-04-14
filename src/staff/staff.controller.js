@@ -87,8 +87,6 @@ const getAll = catchAsync(async (req, res) => {
     attributes: { exclude: ['password', 'refresh_token'] },
   };
 
-  console.log(condition);
-
   const staffs = await staffService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
