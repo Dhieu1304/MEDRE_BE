@@ -174,7 +174,7 @@ const editStaff = async (id, data) => {
   if (data.phone_number) {
     const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
     if (checkPhone && checkPhone.id !== id) {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phone.phoneExisted'));
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phoneNumber.phoneExisted'));
     }
   }
 

@@ -8,8 +8,9 @@ const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const staffService = require('../staff/staff.service');
 const i18next = require('i18next');
-const { getLocale} = require('../utils/locale');
+const { getLocale } = require('../utils/locale');
 const nodemailer = require('nodemailer');
+const logger = require("../config/logger");
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
@@ -171,8 +172,7 @@ const staffRefreshAuth = async (refresh_token) => {
 
 const verificationEmailTemplate = (link) => {
   const locale = getLocale();
-  console.log('register',locale)
-	return `
+  return `
 	    <!DOCTYPE html>
         <html>
             <head>
@@ -193,60 +193,60 @@ const verificationEmailTemplate = (link) => {
 							</h1>
 							<p style="text-align:center;">${i18next.t('mailTemplate.verify')}</p>
 							<div style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
-								<a href=${link} style="background: #0000D1; text-align:center;font-size:16px;margin:auto;padding:15px 30px; color:#ffffff; text-decoration:None;">${i18next.t('mailTemplate.button')}</a>
+								<a href=${link} style="background: #0000D1; text-align:center;font-size:16px;margin:auto;padding:15px 30px; color:#ffffff; text-decoration:None;">${i18next.t(
+    'mailTemplate.button'
+  )}</a>
 							</div>
 						</div> 
                     </div>
-           </body>`
-}
+           </body>`;
+};
 
 const generateVerifyToken = (mail, secret = config.jwt.secret) => {
-  return jwt.sign({mail:mail}, secret, {expiresIn: config.jwt.verifyExpirationHours});
+  return jwt.sign({ mail: mail }, secret, { expiresIn: config.jwt.verifyExpirationHours });
 };
 
 const sendMailVerification = async (email) => {
-	try {
-			const transporter=nodemailer.createTransport({
-				service: 'gmail',
-                auth: {
-					user: config.nodemailer.nm_email,
-					pass: config.nodemailer.nm_password
-				}
-			});
-			let token = generateVerifyToken(email);
-			let url = config.base_url+config.port+'/auth/verify/'+token;
-			const mailOptions = {
-				from: config.nodemailer.nm_email,
-                to: email,
-				subject: i18next.t('mailTemplate.subject'),
-				html: verificationEmailTemplate(url),
-			}
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: config.nodemailer.nm_email,
+        pass: config.nodemailer.nm_password,
+      },
+    });
+    let token = generateVerifyToken(email);
+    let url = config.base_url + '/auth/verify/' + token;
+    const mailOptions = {
+      from: 'noreply.medre@gmail.com',
+      to: email,
+      subject: i18next.t('mailTemplate.subject'),
+      html: verificationEmailTemplate(url),
+    };
 
-			transporter.sendMail(mailOptions, (error, info) => {
-				if (error) {
-          throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('mailTemplate.fail'));
-				}
-				else{
-					console.log("Email sent successfully. Info: " + info.response);
-				}
-			})
-	} catch (error) {
-    console.log(error);
-	}
-}
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        logger.error('Fail send mail: ' + error.message);
+      } else {
+        logger.info('Email sent successfully. Info: ' + info.response);
+      }
+    });
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
 
 const verifyEmail = async (token) => {
   try {
-		const decoded = jwt.verify(token, config.jwt.secret);
-		const user = await userService.findOneByFilter({email: decoded.mail});
+    const decoded = jwt.verify(token, config.jwt.secret);
+    const user = await userService.findOneByFilter({ email: decoded.mail });
     await user.update({ email_verified: true });
     return true;
-    
-	} catch (error) {
-    console.log(error);
-		return false;
-	}
-}
+  } catch (error) {
+    logger.error(error.message);
+    return false;
+  }
+};
 
 module.exports = {
   generateAuthTokens,

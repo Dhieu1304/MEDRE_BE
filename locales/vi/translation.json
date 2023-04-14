@@ -85,8 +85,8 @@
   "mailTemplate": {
     "header": "Cảm ơn đã đăng ký sử dụng dịch vụ y tế của MEDRE",
     "verify": "Vui lòng xác thực địa chỉ mail của bạn để tiếp tục.",
-    "button":"XÁC NHẬN",
-    "subject": "MEDRE",
+    "button": "XÁC NHẬN",
+    "subject": "Xác thực email",
     "success": "Email đã được gửi thành công.",
     "fail": "Đã có lỗi xảy ra, không thể gửi được email."
   }

@@ -85,8 +85,8 @@
   "mailTemplate": {
     "header": "We are delighted to welcome you to use our medical services.",
     "verify": "Please verify your email address to continue.",
-    "button":"VERIFY",
-    "subject": "MEDRE",
+    "button": "VERIFY",
+    "subject": "Verify Email",
     "success": "Email sent successfully.",
     "fail": "An error occurred, cannot send email."
   }

@@ -17,7 +17,7 @@ const createUser = async (data) => {
   if (data.phone_number) {
     const user = await findOneByFilter({ phone_number: data.phone_number });
     if (user) {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phone.phoneExisted'));
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phoneNumber.phoneExisted'));
     }
   }
 
@@ -56,7 +56,7 @@ const editUser = async (id, data) => {
     if (user.email_verified) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangeEmail'));
     }
-    if (await findOneByFilter({ email: data.email, email_verified: true })) {
+    if (await findOneByFilter({ email: data.email })) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.emailIsExist'));
     }
   }
@@ -65,7 +65,7 @@ const editUser = async (id, data) => {
     if (user.phone_verified) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangePhoneNumber'));
     }
-    if (await findOneByFilter({ phone_number: data.phone_number, phone_verified: true })) {
+    if (await findOneByFilter({ phone_number: data.phone_number })) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.phoneNumberIsExist'));
     }
   }

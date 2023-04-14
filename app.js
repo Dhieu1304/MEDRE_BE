@@ -16,7 +16,7 @@ const { initRouter } = require('./src/routes.init');
 const ApiError = require('./src/utils/ApiError');
 const passport = require('passport');
 const { jwtStrategy } = require('./src/config/passport');
-const { getLocale} = require('./src/utils/locale');
+const { getLocale } = require('./src/utils/locale');
 
 require('./src/models/mockup-data');
 

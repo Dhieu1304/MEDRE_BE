@@ -76,6 +76,16 @@ module.exports = function (sequelize, DataTypes) {
           unique: true,
           fields: [{ name: 'id' }],
         },
+        {
+          name: 'user_email_key',
+          unique: true,
+          fields: [{ name: 'email' }],
+        },
+        {
+          name: 'user_phone_number_key',
+          unique: true,
+          fields: [{ name: 'phone_number' }],
+        },
       ],
     }
   );

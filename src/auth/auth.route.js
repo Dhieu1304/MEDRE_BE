@@ -2,8 +2,10 @@ const express = require('express');
 const validate = require('../middlewares/validate');
 const authValidation = require('./auth.validation');
 const authController = require('./auth.controller');
+const {authLimiter} = require("../middlewares/rateLimit");
 
 const router = express.Router();
+router.use(authLimiter);
 
 router.post('/register', validate(authValidation.register), authController.register);
 router.get('/verify/:token', authController.verifySuccess);
