@@ -7,6 +7,7 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
+    JWT_VERIFY_EXPIRATION_HOURS: Joi.number().default(12).description('hours after which verify tokens expire'),
     DB_SYNC: Joi.number().default(0).valid(0, 1).description('sync database'),
     DB_HOST: Joi.string().required().description('Host'),
     DB_DATABASE: Joi.string().required().description('Database'),
@@ -61,6 +62,7 @@ module.exports = {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
+    verifyExpirationHours: envVars.JWT_VERIFY_EXPIRATION_HOURS,
   },
   nodemailer: {
     nm_email: envVars.NODEMAILER_EMAIL,

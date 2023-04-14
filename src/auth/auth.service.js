@@ -201,7 +201,7 @@ const verificationEmailTemplate = (link) => {
 }
 
 const generateVerifyToken = (mail, secret = config.jwt.secret) => {
-  return jwt.sign(mail, secret);
+  return jwt.sign(mail, secret, {expiresIn: `${config.jwt.verifyExpirationHours}h`});
 };
 
 const sendMailVerification = async (email) => {
@@ -214,7 +214,7 @@ const sendMailVerification = async (email) => {
 				}
 			});
 			let token = generateVerifyToken(email);
-			let url = config.base_url+'/verifyCompleted/'+token;
+			let url = config.base_url+config.port+'/auth/verify/'+token;
 			const mailOptions = {
 				from: config.nodemailer.nm_email,
                 to: email,
@@ -238,9 +238,9 @@ const sendMailVerification = async (email) => {
 const verifyEmail = async (token) => {
   try {
 		const decoded = jwt.verify(token, config.jwt.secret);
-		const email = decoded.email;
-		const user = await userService.findOneByFilter(email);
+		const user = await userService.findOneByFilter({email: decoded});
     await user.update({ email_verified: true });
+    
 	} catch (error) {
 		throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.verifyFailure'))
 	}

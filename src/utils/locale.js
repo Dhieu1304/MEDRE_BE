@@ -13,7 +13,6 @@ const getLocale = () => {
 
 const getLanguage = () => {
     let language = window.navigator.userLanguage || window.navigator.language;
-    console.log(language);
     return language;
 };
  
