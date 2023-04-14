@@ -72,8 +72,21 @@ const staffRefreshTokens = catchAsync(async (req, res) => {
 
 const verifySuccess = catchAsync(async (req, res) => {
 	const token = req.params.token;
-	await authService.verifyEmail(token);
-  return res.status(httpStatus.OK).json(responseMessage(i18next.t('auth.verifySuccess'),true));
+	const result = await authService.verifyEmail(token);
+  if (result === true)
+  {
+    res.send(
+      `<h1 style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+      ${i18next.t('auth.verifySuccess')}
+      </h1>`)
+  }
+  else
+  {
+    res.send(
+      `<h1 style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+      ${i18next.t('auth.verifyFailure')}
+      </h1>`)
+  }
 })
 
 module.exports = {

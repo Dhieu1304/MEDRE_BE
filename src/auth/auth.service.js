@@ -201,7 +201,7 @@ const verificationEmailTemplate = (link) => {
 }
 
 const generateVerifyToken = (mail, secret = config.jwt.secret) => {
-  return jwt.sign(mail, secret, {expiresIn: `${config.jwt.verifyExpirationHours}h`});
+  return jwt.sign({mail:mail}, secret, {expiresIn: config.jwt.verifyExpirationHours});
 };
 
 const sendMailVerification = async (email) => {
@@ -238,11 +238,13 @@ const sendMailVerification = async (email) => {
 const verifyEmail = async (token) => {
   try {
 		const decoded = jwt.verify(token, config.jwt.secret);
-		const user = await userService.findOneByFilter({email: decoded});
+		const user = await userService.findOneByFilter({email: decoded.mail});
     await user.update({ email_verified: true });
+    return true;
     
 	} catch (error) {
-		throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('auth.verifyFailure'))
+    console.log(error);
+		return false;
 	}
 }
 
