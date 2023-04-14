@@ -171,6 +171,49 @@ const getDetailStaff = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(staff));
 });
 
+const getDetailStaffByDate = catchAsync(async (req, res) => {
+  const { date } = req.query;
+  const options = {
+    where: { id: req.params.id },
+    include: [
+      {
+        model: models.schedule,
+        as: 'staff_schedules',
+        where: { day_of_week: moment(date).day() },
+        required: false,
+        include: [
+          {
+            model: models.booking,
+            as: 'bookings',
+            required: false,
+            where: {
+              booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+              date,
+            },
+          },
+          {
+            model: models.time_schedule,
+            as: 'time_schedule',
+          },
+        ],
+      },
+      {
+        model: models.doctor_time_off,
+        as: 'time_offs',
+        required: false,
+        where: { date },
+      },
+      {
+        model: models.expertise,
+        as: 'expertises',
+      },
+    ],
+    attributes: { exclude: ['password', 'refresh_token'] },
+  };
+  const staff = await staffService.findOneByOption(options);
+  return res.status(httpStatus.OK).json(responseData(staff));
+});
+
 const createStaff = catchAsync(async (req, res) => {
   const staff = await staffService.createStaff(req.body);
   return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.create')));
@@ -211,6 +254,7 @@ module.exports = {
   getInfo,
   getAll,
   getDetailStaff,
+  getDetailStaffByDate,
   getListStaffSchedule,
   editProfile,
   changePassword,

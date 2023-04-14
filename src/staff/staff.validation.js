@@ -65,6 +65,15 @@ const getDetailStaff = {
   }),
 };
 
+const getDetailStaffByDate = {
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+  query: Joi.object().keys({
+    date: Joi.date().default(moment().startOf('date')),
+  }),
+};
+
 const blockAccount = {
   body: Joi.object().keys({
     id_account: Joi.string().uuid().required(),
@@ -116,6 +125,7 @@ const changePassword = {
 module.exports = {
   getAllStaff,
   getDetailStaff,
+  getDetailStaffByDate,
   editProfile,
   getListStaffSchedule,
   changePassword,

@@ -11,6 +11,7 @@ const router = express.Router();
 router.get('/all', validate(staffValidation.getAllStaff), staffController.getAll);
 router.get('/list-staff-schedule', validate(staffValidation.getListStaffSchedule), staffController.getListStaffSchedule);
 router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffController.getDetailStaff);
+router.get('/detail-by-date/:id', validate(staffValidation.getDetailStaffByDate), staffController.getDetailStaffByDate);
 
 router.get('/my-profile', auth(), staffController.getInfo);
 
