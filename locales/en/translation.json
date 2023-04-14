@@ -33,7 +33,8 @@
     "update": "Update booking successfully.",
     "notFound": "Not found.",
     "cancel": "Cancel booking successful.",
-    "invalidID": "Invalid booking id."
+    "invalidID": "Invalid booking id.",
+    "missingUserInfo": "Please update your personal information."
   },
   "patient": {
     "notFound": "Patient not found."

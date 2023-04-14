@@ -33,7 +33,8 @@
     "update": "Cập nhật thông tin lịch đặt thành công.",
     "notFound": "Không tìm thấy lịch đặt.",
     "cancel": "Hủy lịch đặt thành công.",
-    "invalidID": "Mã định danh của lịch đặt không đúng."
+    "invalidID": "Mã định danh của lịch đặt không đúng.",
+    "missingUserInfo": "Vui lòng cập nhật thông tin cá nhân."
   },
   "patient": {
     "notFound": "Không tìm thấy người bệnh."

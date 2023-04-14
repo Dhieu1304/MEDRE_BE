@@ -7,6 +7,7 @@ const { SCHEDULE_STATUS } = require('../schedule/schedule.constant');
 const { Op } = require('sequelize');
 const { BOOKING_STATUS } = require('./booking.constant');
 const i18next = require('i18next');
+const userService = require('../user/user.service');
 
 const create = async (data) => {
   // check schedule
@@ -25,6 +26,11 @@ const create = async (data) => {
 };
 
 const createNewBooking = async (data) => {
+  // check user info
+  if (!(await userService.checkUserInfo(data.id_user))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.missingUserInfo'));
+  }
+
   // check booking
   if (data.id_patient) {
     if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {

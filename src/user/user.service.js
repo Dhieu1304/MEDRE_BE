@@ -56,7 +56,7 @@ const editUser = async (id, data) => {
     if (user.email_verified) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangeEmail'));
     }
-    if (await findOneByFilter({email: data.email, email_verified: true})) {
+    if (await findOneByFilter({ email: data.email, email_verified: true })) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.emailIsExist'));
     }
   }
@@ -65,7 +65,7 @@ const editUser = async (id, data) => {
     if (user.phone_verified) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangePhoneNumber'));
     }
-    if (await findOneByFilter({phone_number: data.phone_number, phone_verified: true})) {
+    if (await findOneByFilter({ phone_number: data.phone_number, phone_verified: true })) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.phoneNumberIsExist'));
     }
   }
@@ -100,6 +100,11 @@ const getUserInfo = async (options) => {
   return user;
 };
 
+const checkUserInfo = async (filter) => {
+  const user = await findOneByFilter(filter);
+  return !(!user || !user.name || !user.address || !user.dob || !user.gender);
+};
+
 module.exports = {
   createUser,
   findOneByFilter,
@@ -108,4 +113,5 @@ module.exports = {
   changePassword,
   findAndCountAllByCondition,
   getUserInfo,
+  checkUserInfo,
 };
