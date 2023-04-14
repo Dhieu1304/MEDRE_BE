@@ -72,7 +72,9 @@
     "canNotChangeEmail": "Bạn không thể thay đổi email đã xác thực.",
     "canNotChangePhoneNumber": "Bạn không thể thay đổi số điện thoại đã xác thực.",
     "emailIsExist": "Email này đã tồn tại trong hệ thống.",
-    "phoneNumberIsExist": "Số điện thoại này đã tồn tại trong hệ thống."
+    "phoneNumberIsExist": "Số điện thoại này đã tồn tại trong hệ thống.",
+    "verifyEmail": "Vui lòng xác thực email.",
+    "verifyPhoneNumber": "Vui lòng xác thực số điện thoại."
   },
   "block": {
     "blockAccount": "Tài khoản đã bị khóa.",

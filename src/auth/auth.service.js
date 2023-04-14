@@ -60,6 +60,12 @@ const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('password.passwordIncorrect'));
   }
 
+
+  // check verify phone number
+  if (!user.phone_verified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('account.verifyPhoneNumber'));
+  }
+
   if (user.blocked) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
@@ -78,6 +84,11 @@ const staffLoginUserWithPhoneNumberAndPassword = async (phone_number, password) 
   const isPasswordMatch = await comparePassword(password, staff.password);
   if (!isPasswordMatch) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('password.passwordIncorrect'));
+  }
+
+  // check verify phone number
+  if (!staff.phone_verified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('account.verifyPhoneNumber'));
   }
 
   if (staff.blocked) {
@@ -100,6 +111,11 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('password.passwordIncorrect'));
   }
 
+  // check verify email
+  if (!user.email_verified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('account.verifyEmail'));
+  }
+
   if (user.blocked) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('block.blockAccount'));
   }
@@ -118,6 +134,11 @@ const staffLoginUserWithEmailAndPassword = async (email, password) => {
   const isPasswordMatch = await comparePassword(password, staff.password);
   if (!isPasswordMatch) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('password.passwordIncorrect'));
+  }
+
+  // check verify email
+  if (!staff.email_verified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('account.verifyEmail'));
   }
 
   if (staff.blocked) {

@@ -72,7 +72,9 @@
     "canNotChangeEmail": "You cannot change the verified email.",
     "canNotChangePhoneNumber": "You cannot change the verified phone number.",
     "emailIsExist": "This email already exists in the system.",
-    "phoneNumberIsExist": "This phone number already exists in the system."
+    "phoneNumberIsExist": "This phone number already exists in the system.",
+    "verifyEmail": "Please verify your email.",
+    "verifyPhoneNumber": "Please verify your phone number."
   },
   "block": {
     "blockAccount": "Your account is blocked.",
