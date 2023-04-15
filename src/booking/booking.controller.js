@@ -157,8 +157,8 @@ const getDetailBooking = catchAsync(async (req, res) => {
             attributes: { exclude: ['password', 'refresh_token'] },
             include: {
               model: models.expertise,
-              as: 'expertises'
-            }
+              as: 'expertises',
+            },
           },
         ],
       },
@@ -189,8 +189,8 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
             attributes: { exclude: ['password', 'refresh_token'] },
             include: {
               model: models.expertise,
-              as: 'expertises'
-            }
+              as: 'expertises',
+            },
           },
         ],
       },

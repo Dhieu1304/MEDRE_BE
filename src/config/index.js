@@ -21,9 +21,11 @@ const envVarsSchema = Joi.object()
     HDB_PORT: Joi.number().required().description('Port'),
     NODEMAILER_EMAIL: Joi.string().required().description('Email'),
     NODEMAILER_PASSWORD: Joi.string().required().description('Password'),
-    BASE_URL: Joi.string().required().description('Url of frontend'),
+    BASE_URL: Joi.string().required().description('Url of backend'),
     FB_PRIVATE_KEY_ID: Joi.string().required().description('Private key id Firebase Admin'),
     FB_PRIVATE_KEY: Joi.string().required().description('Private key Firebase Admin'),
+    VNP_TMN_CODE: Joi.string().required().description('VNPay tmn code'),
+    VNP_HASH_SECRET: Joi.string().required().description('VNPay hash secret'),
   })
   .unknown();
 
@@ -75,5 +77,11 @@ module.exports = {
     privateKeyId: envVars.FB_PRIVATE_KEY_ID,
     privateKey: envVars.FB_PRIVATE_KEY.replace(/\\n/g, '\n'),
     storageBucket: 'medre-9f7f5.appspot.com',
+  },
+  vn_pay: {
+    tmnCode: envVars.VNP_TMN_CODE,
+    hashSecret: envVars.VNP_HASH_SECRET,
+    url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+    returnUrl: `${envVars.BASE_URL}/payment/vnpay-return`,
   },
 };

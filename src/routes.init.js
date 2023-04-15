@@ -10,6 +10,7 @@ const patientRouter = require('./patient/patient.route');
 const language = require('../locales/language');
 const doctorTimeOffRouter = require('./doctor_time_off/doctor_time_off.route');
 const uploadRouter = require('./upload/upload.route');
+const paymentRouter = require('./payment/payment.route');
 
 module.exports.initRouter = (app) => {
   app.use('/auth', authRouter);
@@ -23,6 +24,7 @@ module.exports.initRouter = (app) => {
   app.use('/language', language);
   app.use('/doctor-time-off', doctorTimeOffRouter);
   app.use('/upload', uploadRouter);
+  app.use('/payment', paymentRouter);
 
   app.use(express.Router().get('/'), (req, res) => {
     return res.status(200).send('MEDRE_API');

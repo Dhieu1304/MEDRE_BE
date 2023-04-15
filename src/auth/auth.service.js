@@ -60,7 +60,6 @@ const loginUserWithPhoneNumberAndPassword = async (phone_number, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('password.passwordIncorrect'));
   }
 
-
   // check verify phone number
   if (!user.phone_verified) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('account.verifyPhoneNumber'));
