@@ -139,7 +139,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
 
 const getDetailBooking = catchAsync(async (req, res) => {
   const booking = await bookingService.findOneByOption({
-    where: { id: req.params.id },
+    where: { id: req.params.id, id_user: req.user.id },
     include: [
       {
         model: models.schedule,
@@ -155,6 +155,10 @@ const getDetailBooking = catchAsync(async (req, res) => {
             model: models.staff,
             as: 'schedule_of_staff',
             attributes: { exclude: ['password', 'refresh_token'] },
+            include: {
+              model: models.expertise,
+              as: 'expertises'
+            }
           },
         ],
       },
@@ -162,9 +166,6 @@ const getDetailBooking = catchAsync(async (req, res) => {
       { model: models.patient, as: 'booking_of_patient' },
     ],
   });
-  if (!booking || booking.id_user !== req.user.id) {
-    return res.status(httpStatus.OK).json(responseMessage('Invalid booking', false));
-  }
   return res.status(httpStatus.OK).json(responseData(booking));
 });
 
@@ -186,6 +187,10 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
             model: models.staff,
             as: 'schedule_of_staff',
             attributes: { exclude: ['password', 'refresh_token'] },
+            include: {
+              model: models.expertise,
+              as: 'expertises'
+            }
           },
         ],
       },
@@ -193,10 +198,7 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
       { model: models.patient, as: 'booking_of_patient' },
     ],
   });
-  if (!booking) {
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.notFound'), false));
-  }
-  return res.status(httpStatus.OK).json(responseData(booking, i18next.t('booking.success')));
+  return res.status(httpStatus.OK).json(responseData(booking));
 });
 
 const booking = catchAsync(async (req, res) => {
