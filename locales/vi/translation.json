@@ -92,6 +92,8 @@
     "success": "Email đã được gửi thành công.",
     "fail": "Đã có lỗi xảy ra, không thể gửi được email."
   },
+  "payment": {
+
   "handleBefore": "Lịch này đã được xử lý rồi.",
   "invalidBooking": "Lịch không phù hợp.",
   "invalidUserBooking": "Người dùng đặt lịch không phù hợp.",
@@ -111,5 +113,6 @@
     "75": "Ngân hàng thanh toán đang bảo trì.",
     "79": "Sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch.",
     "99": "Lỗi không xác định."
+  }
   }
 }
