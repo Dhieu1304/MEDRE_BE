@@ -3,8 +3,8 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const logger = require('../config/logger');
-const {PAYMENT_STATUS} = require("../booking_payment/booking_payment.constant");
-const i18next = require("i18next");
+const { PAYMENT_STATUS } = require('../booking_payment/booking_payment.constant');
+const i18next = require('i18next');
 
 const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   const booking = await models.booking.findOne({
@@ -50,15 +50,15 @@ const handlePaymentSuccess = async (txn_ref) => {
 };
 
 const handlePaymentFail = async (txn_ref, rsp_code) => {
-    const booking_payment = await models.booking_payment.findOne({ where: { txn_ref } });
-    if (booking_payment.handle) {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.handleBefore'));
-    }
-    booking_payment.handle = true;
-    booking_payment.rsp_code = rsp_code;
-    booking_payment.status = PAYMENT_STATUS.FAIL;
+  const booking_payment = await models.booking_payment.findOne({ where: { txn_ref } });
+  if (booking_payment.handle) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.handleBefore'));
+  }
+  booking_payment.handle = true;
+  booking_payment.rsp_code = rsp_code;
+  booking_payment.status = PAYMENT_STATUS.FAIL;
 
-    await booking_payment.save();
+  await booking_payment.save();
 };
 
 module.exports = {

@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const moment = require('moment');
 const logger = require('../config/logger');
 const paymentService = require('./payment.service');
-const i18next = require("i18next");
+const i18next = require('i18next');
 
 const sortObject = (obj) => {
   const sorted = {};
@@ -81,10 +81,10 @@ const returnData = catchAsync(async (req, res) => {
   const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
 
   if (secureHash === signed) {
-    const {vnp_TxnRef: txn_ref, vnp_ResponseCode: rsp_code} = vnp_Params;
+    const { vnp_TxnRef: txn_ref, vnp_ResponseCode: rsp_code } = vnp_Params;
     if (rsp_code === '00') {
-    await paymentService.handlePaymentSuccess(txn_ref);
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('payment.paymentSuccess')));
+      await paymentService.handlePaymentSuccess(txn_ref);
+      return res.status(httpStatus.OK).json(responseMessage(i18next.t('payment.paymentSuccess')));
     } else {
       await paymentService.handlePaymentFail(txn_ref, rsp_code);
       return res.status(httpStatus.OK).json(responseMessage(i18next.t(`payment.paymentFail.${rsp_code}`)));
