@@ -6,6 +6,7 @@ const _staff_expertise = require('../staff_expertise/staff_expertise.model');
 const _schedule = require('../schedule/schedule.model');
 const _patient = require('../patient/patient.model');
 const _booking = require('../booking/booking.model');
+const _booking_payment = require('../booking_payment/booking_payment.model');
 const _time_schedule = require('../time_schedule/time_schedule.model');
 const _blocking_account = require('../blocking_account/blocking_account.model');
 const _doctor_time_off = require('../doctor_time_off/doctor_time_off.model');
@@ -21,6 +22,7 @@ function initModels(sequelize) {
   const booking = _booking(sequelize, DataTypes);
   const blocking_account = _blocking_account(sequelize, DataTypes);
   const doctor_time_off = _doctor_time_off(sequelize, DataTypes);
+  const booking_payment = _booking_payment(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -52,8 +54,13 @@ function initModels(sequelize) {
   staff.hasMany(doctor_time_off, { as: 'time_offs', foreignKey: 'id_doctor' });
   staff.hasMany(blocking_account, { as: 'blocking_accounts', foreignKey: 'id_staff' });
   blocking_account.belongsTo(staff, { as: 'staff_blocking_account', foreignKey: 'id_staff' });
+  booking.hasMany(booking_payment, { as: 'booking_payments', foreignKey: 'id_booking' });
+  booking_payment.belongsTo(booking, { as: 'payment_of_booking', foreignKey: 'id_booking' });
+  user.hasMany(booking_payment, { as: 'user_payments', foreignKey: 'id_user' });
+  booking_payment.belongsTo(user, { as: 'payment_of_user', foreignKey: 'id_user' });
 
   return {
+    sequelize,
     staff,
     user,
     expertise,
@@ -64,6 +71,7 @@ function initModels(sequelize) {
     patient,
     booking,
     doctor_time_off,
+    booking_payment,
   };
 }
 

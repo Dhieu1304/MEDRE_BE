@@ -26,6 +26,7 @@ const create = async (data) => {
 };
 
 const createNewBooking = async (data) => {
+  console.log('000000000000');
   // check user info
   if (!(await userService.checkUserInfo(data.id_user))) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.missingUserInfo'));

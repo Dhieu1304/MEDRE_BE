@@ -100,8 +100,8 @@ const getUserInfo = async (options) => {
   return user;
 };
 
-const checkUserInfo = async (filter) => {
-  const user = await findOneByFilter(filter);
+const checkUserInfo = async (id) => {
+  const user = await findOneByFilter({ id });
   return !(!user || !user.name || !user.address || !user.dob || !user.gender);
 };
 
