@@ -42,6 +42,9 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         unique: 'booking_payment_txn_ref_key',
       },
+      rsp_code: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,

@@ -91,5 +91,25 @@
     "subject": "Xác thực email",
     "success": "Email đã được gửi thành công.",
     "fail": "Đã có lỗi xảy ra, không thể gửi được email."
+  },
+  "handleBefore": "Lịch này đã được xử lý rồi.",
+  "invalidBooking": "Lịch không phù hợp.",
+  "invalidUserBooking": "Người dùng đặt lịch không phù hợp.",
+  "invalidSignature": "Chữ ký không đúng.",
+  "paymentBefore": "Lịch này đã được thanh toán rồi.",
+  "paymentSuccess": "Thanh toán thành công.",
+  "paymentFail": {
+    "07": "Trừ tiền thành công. Giao dịch bị nghi ngờ.",
+    "09": "Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.",
+    "10": "Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần.",
+    "11": "Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.",
+    "12": "Thẻ/Tài khoản của khách hàng bị khóa.",
+    "13": "Quý khách nhập sai mật khẩu xác thực giao dịch (OTP).",
+    "24": "Khách hàng hủy giao dịch.",
+    "51": "Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.",
+    "65": "Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.",
+    "75": "Ngân hàng thanh toán đang bảo trì.",
+    "79": "Sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch.",
+    "99": "Lỗi không xác định."
   }
 }

@@ -91,5 +91,27 @@
     "subject": "Verify Email",
     "success": "Email sent successfully.",
     "fail": "An error occurred, cannot send email."
+  },
+  "payment": {
+    "handleBefore": "This booking is handle before.",
+    "invalidBooking": "Invalid booking.",
+    "invalidUserBooking": "Invalid user booking.",
+    "invalidSignature": "Invalid Signature.",
+    "paymentBefore": "This booking has been paid.",
+    "paymentSuccess": "Payment successfully.",
+    "paymentFail": {
+      "07": "Subtraction successfully but suspicious transaction.",
+      "09": "Card/Account have not registered for InternetBanking service.",
+      "10": "Verify card/account information incorrect more than 3 times.",
+      "11": "Payment has expired. Please repeat the transaction.",
+      "12": "Card/Account is locked.",
+      "13": "Wrong password for transaction authentication (OTP).",
+      "24": "Customer cancels transaction.",
+      "51": "Your account does not have enough balance to make a transaction.",
+      "65": "Your account has exceeded the daily transaction limit.",
+      "75": "Payment bank under maintenance.",
+      "79": "Wrong password to pay more than the specified number of times. Please repeat the transaction.",
+      "99": "Unknown error."
+    }
   }
 }
