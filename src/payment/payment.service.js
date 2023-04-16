@@ -33,6 +33,7 @@ const handlePaymentSuccess = async (txn_ref) => {
 
     const booking = await models.booking.findOne({ where: { id: booking_payment.id_booking } }, { transaction });
     booking.is_payment = true;
+    booking.booking_status = BOOKING_STATUS.BOOKED;
 
     await booking_payment.save({ transaction });
     await booking.save({ transaction });
