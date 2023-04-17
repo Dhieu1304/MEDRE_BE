@@ -48,6 +48,14 @@ const resendMail = {
   }),
 };
 
+const resetPassword = {
+  body: Joi.object().keys({
+    token: Joi.string().required(),
+    new_password: Joi.string().required(),
+    confirm_password: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   register,
   loginByEmail,
@@ -55,4 +63,5 @@ module.exports = {
   loginByUsername,
   refreshTokens,
   resendMail,
+  resetPassword,
 };

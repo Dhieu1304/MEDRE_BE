@@ -13,6 +13,8 @@ router.post("/verify/resend-mail",validate(authValidation.resendMail), authContr
 router.post('/login-by-email', validate(authValidation.loginByEmail), authController.loginEmailPassword);
 router.post('/login-by-phone-number', validate(authValidation.loginByPhoneNumber), authController.loginPhonePassword);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
+router.post("/reset-password/send-mail", validate(authValidation.resendMail), authController.sendResetPasswordMail);
+router.post("/reset-password", validate(authValidation.resetPassword), authController.resetPassword);
 
 // -------------------------------- STAFF ROUTE ------------------------------------
 router.post('/staff/login-by-email', validate(authValidation.loginByEmail), authController.staffLoginEmailPassword);
