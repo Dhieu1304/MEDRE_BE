@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseMessage } = require('../utils/responseFormat');
+const { responseMessage, responseData} = require('../utils/responseFormat');
 const { vn_pay } = require('../config');
 const querystring = require('qs');
 const crypto = require('crypto');
@@ -63,9 +63,8 @@ const createPaymentUrl = catchAsync(async (req, res) => {
 
   let vnpUrl = vn_pay.url;
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
-  logger.info(vnpUrl);
 
-  res.redirect(vnpUrl);
+  return res.status(httpStatus.OK).json(responseData(vnpUrl));
 });
 
 const returnData = catchAsync(async (req, res) => {
