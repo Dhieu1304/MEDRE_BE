@@ -26,14 +26,14 @@ const sortObject = (obj) => {
 
 const createPaymentUrl = catchAsync(async (req, res) => {
   const ipAddr = req.ipAddr;
-  const { booking_id, language: locale, bankCode } = req.body;
+  const { id_booking, language: locale, bankCode } = req.body;
 
   const date = new Date();
   const orderId = moment(date).format('DDHHmmss');
   const createDate = moment(date).format('YYYYMMDDHHmmss');
 
   // create booking payment
-  await paymentService.checkBookingPayment(booking_id, req.user.id, orderId);
+  await paymentService.checkBookingPayment(id_booking, req.user.id, orderId);
 
   const amount = '199000';
 
