@@ -42,10 +42,17 @@ const refreshTokens = {
   }),
 };
 
+const resendMail = {
+  body: Joi.object().keys({
+    email: Joi.string().email().lowercase().required(),
+  }),
+};
+
 module.exports = {
   register,
   loginByEmail,
   loginByPhoneNumber,
   loginByUsername,
   refreshTokens,
+  resendMail,
 };

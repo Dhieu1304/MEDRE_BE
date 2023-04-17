@@ -246,12 +246,15 @@ const sendMailVerification = async (email) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         logger.error('Fail send mail: ' + error.message);
+        //return false;
       } else {
         logger.info('Email sent successfully. Info: ' + info.response);
+        //return true;
       }
     });
   } catch (error) {
     logger.error(error.message);
+    //return false;
   }
 };
 

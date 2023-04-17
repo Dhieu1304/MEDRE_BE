@@ -9,6 +9,7 @@ router.use(authLimiter);
 
 router.post('/register', validate(authValidation.register), authController.register);
 router.get('/verify/:token', authController.verifySuccess);
+router.post("/verify/resend-mail",validate(authValidation.resendMail), authController.resendMail);
 router.post('/login-by-email', validate(authValidation.loginByEmail), authController.loginEmailPassword);
 router.post('/login-by-phone-number', validate(authValidation.loginByPhoneNumber), authController.loginPhonePassword);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);

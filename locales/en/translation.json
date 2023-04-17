@@ -8,7 +8,8 @@
   },
   "email": {
     "emailIncorrect": "Incorrect email address.",
-    "emailExisted": "Email address already exists."
+    "emailExisted": "Email address already exists.",
+    "emailNotFound": "Email address not found."
   },
   "phoneNumber": {
     "phoneFormatInvalid": "Invalid phone number format.",

@@ -8,7 +8,8 @@
   },
   "email": {
     "emailIncorrect": "Sai địa chỉ email.",
-    "emailExisted": "Địa chỉ email đã tồn tại trong hệ thống."
+    "emailExisted": "Địa chỉ email đã tồn tại trong hệ thống.",
+    "emailNotFound": "Không tìm thấy địa chỉ email trong hệ thống."
   },
   "phoneNumber": {
     "phoneFormatInvalid": "Định dạng số điện thoại không hợp lệ.",
