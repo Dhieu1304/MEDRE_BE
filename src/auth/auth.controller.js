@@ -119,7 +119,7 @@ const sendResetPasswordMail = catchAsync(async (req, res) => {
 const resetPassword = catchAsync(async (req, res) => {
   const { token, new_password, confirm_password } = req.body;
   const result = await authService.resetPassword(token, new_password, confirm_password);
-  if (result == true) {
+  if (result) {
     return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePassword'), true));
   } else {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('password.changePasswordFailure'), false));
