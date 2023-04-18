@@ -73,8 +73,7 @@ module.exports = {
     nm_email: envVars.NODEMAILER_EMAIL,
     nm_password: envVars.NODEMAILER_PASSWORD,
   },
-  base_url:
-  {
+  base_url: {
     be_url: envVars.BE_URL,
     fe_url: envVars.FE_URL,
   },

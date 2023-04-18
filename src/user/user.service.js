@@ -106,14 +106,14 @@ const checkUserInfo = async (id) => {
 };
 
 const resetPassword = async (email, new_password, confirm_password) => {
-    //check if new password and confirm password is match
-    if (new_password !== confirm_password) {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.notMatch'));
-    }
-    const user = await findOneByFilter({ email: email });
-    user.password = await bcrypt.hash(new_password, 10);
-    return await user.save();
-}
+  //check if new password and confirm password is match
+  if (new_password !== confirm_password) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.notMatch'));
+  }
+  const user = await findOneByFilter({ email: email });
+  user.password = await bcrypt.hash(new_password, 10);
+  return await user.save();
+};
 
 module.exports = {
   createUser,

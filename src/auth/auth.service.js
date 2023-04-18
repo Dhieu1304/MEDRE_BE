@@ -267,7 +267,7 @@ const verifyEmail = async (token) => {
 };
 
 const resetPassEmailTemplate = (link) => {
-	return `
+  return `
 	    <!DOCTYPE html>
         <html>
             <head>
@@ -288,15 +288,17 @@ const resetPassEmailTemplate = (link) => {
 							</h1>
 							<p style="text-align:center;">${i18next.t('resetMailTemplate.open')} </p>
 							<div style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
-								<a href=${link} style="background: #0000D1; text-align:center;font-size:16px;margin:auto;padding:15px 30px; color:#ffffff; text-decoration:None;">${i18next.t('resetMailTemplate.button')}</a>
+								<a href=${link} style="background: #0000D1; text-align:center;font-size:16px;margin:auto;padding:15px 30px; color:#ffffff; text-decoration:None;">${i18next.t(
+    'resetMailTemplate.button'
+  )}</a>
 							</div>
 							<br/>
 							<p style="text-align:center;">${i18next.t('resetMailTemplate.warning1')}</p>
 							<p style="text-align:center;">${i18next.t('resetMailTemplate.warning2')}</p>
 						</div> 
                     </div>
-           </body>`
-}
+           </body>`;
+};
 
 const sendMailResetPassword = async (email) => {
   try {

@@ -90,7 +90,7 @@ const verifySuccess = catchAsync(async (req, res) => {
 
 const resendMail = catchAsync(async (req, res) => {
   const email = req.body.email;
-  const user = await userService.findOneByFilter({email: email});
+  const user = await userService.findOneByFilter({ email: email });
   if (user) {
     try {
       await authService.sendMailVerification(email);
@@ -104,7 +104,7 @@ const resendMail = catchAsync(async (req, res) => {
 
 const sendResetPasswordMail = catchAsync(async (req, res) => {
   const email = req.body.email;
-  const user = await userService.findOneByFilter({email: email});
+  const user = await userService.findOneByFilter({ email: email });
   if (user) {
     try {
       await authService.sendMailResetPassword(email);
@@ -117,7 +117,7 @@ const sendResetPasswordMail = catchAsync(async (req, res) => {
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  const {token, new_password, confirm_password} = req.body;
+  const { token, new_password, confirm_password } = req.body;
   const result = await authService.resetPassword(token, new_password, confirm_password);
   if (result == true) {
     return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePassword'), true));

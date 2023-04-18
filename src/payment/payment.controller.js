@@ -1,11 +1,10 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseMessage, responseData} = require('../utils/responseFormat');
+const { responseMessage, responseData } = require('../utils/responseFormat');
 const { vn_pay } = require('../config');
 const querystring = require('qs');
 const crypto = require('crypto');
 const moment = require('moment');
-const logger = require('../config/logger');
 const paymentService = require('./payment.service');
 const i18next = require('i18next');
 
