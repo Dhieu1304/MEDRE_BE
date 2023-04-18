@@ -87,6 +87,6 @@ module.exports = {
     tmnCode: envVars.VNP_TMN_CODE,
     hashSecret: envVars.VNP_HASH_SECRET,
     url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
-    returnUrl: `${envVars.BASE_URL}/payment/vnpay-return`,
+    returnUrl: `${envVars.BE_URL}/payment/vnpay-return`,
   },
 };
