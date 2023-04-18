@@ -4,11 +4,15 @@
     "passwordLetterNumber": "Mật khẩu phải chứa ít nhất 1 chữ cái và 1 số.",
     "passwordIncorrect": "Sai mật khẩu.",
     "changePassword": "Thay đổi mật khẩu thành công.",
+    "changePasswordFailure": "Thay đổi mật khẩu thất bại.",
     "notMatch": "Mật khẩu mới và mật khẩu xác nhận không giống nhau."
   },
   "email": {
     "emailIncorrect": "Sai địa chỉ email.",
-    "emailExisted": "Địa chỉ email đã tồn tại trong hệ thống."
+    "emailExisted": "Địa chỉ email đã tồn tại trong hệ thống.",
+    "emailNotFound": "Không tìm thấy địa chỉ email trong hệ thống.",
+    "success": "Email đã được gửi thành công.",
+    "fail": "Đã có lỗi xảy ra, không thể gửi được email."
   },
   "phoneNumber": {
     "phoneFormatInvalid": "Định dạng số điện thoại không hợp lệ.",
@@ -84,13 +88,19 @@
     "alreadyBlocked": "Tài khoản đã bị khóa.",
     "alreadyUnblocked": "Tài khoản đã được mở khóa."
   },
-  "mailTemplate": {
-    "header": "Cảm ơn đã đăng ký sử dụng dịch vụ y tế của MEDRE",
+  "verifyMailTemplate": {
+    "header": "Cảm ơn đã đăng ký sử dụng dịch vụ y tế của MEDRE.",
     "verify": "Vui lòng xác thực địa chỉ mail của bạn để tiếp tục.",
     "button": "XÁC NHẬN",
-    "subject": "Xác thực email",
-    "success": "Email đã được gửi thành công.",
-    "fail": "Đã có lỗi xảy ra, không thể gửi được email."
+    "subject": "Xác Thực Email"
+  },
+  "resetMailTemplate": {
+    "header": "Đặt lại mật khẩu.",
+    "open": "Bạn nhận được email này vì chúng tôi nhận được yêu cầu đặt lại mật khẩu của bạn.",
+    "warning1": "Nếu như bạn không yêu cầu đặt lại mật khẩu, bạn có thể bỏ qua email này.",
+    "warning2": "Chỉ người có quyền truy cập vào tài khoản email của bạn mới có quyền đặt lại mật khẩu.",
+    "button": "Nhấn Vào Đây Để Đặt Lại Mật Khẩu.",
+    "subject": "Đặt Lại Mật Khẩu"
   },
   "payment": {
     "handleBefore": "Lịch này đã được xử lý rồi.",

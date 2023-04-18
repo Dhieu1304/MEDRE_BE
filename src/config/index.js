@@ -21,7 +21,8 @@ const envVarsSchema = Joi.object()
     HDB_PORT: Joi.number().required().description('Port'),
     NODEMAILER_EMAIL: Joi.string().required().description('Email'),
     NODEMAILER_PASSWORD: Joi.string().required().description('Password'),
-    BASE_URL: Joi.string().required().description('Url of backend'),
+    BE_URL: Joi.string().required().description('Url of backend'),
+    FE_URL: Joi.string().required().description('Url of frontend'),
     FB_PRIVATE_KEY_ID: Joi.string().required().description('Private key id Firebase Admin'),
     FB_PRIVATE_KEY: Joi.string().required().description('Private key Firebase Admin'),
     VNP_TMN_CODE: Joi.string().required().description('VNPay tmn code'),
@@ -72,7 +73,11 @@ module.exports = {
     nm_email: envVars.NODEMAILER_EMAIL,
     nm_password: envVars.NODEMAILER_PASSWORD,
   },
-  base_url: envVars.BASE_URL,
+  base_url:
+  {
+    be_url: envVars.BE_URL,
+    fe_url: envVars.FE_URL,
+  },
   firebaseAdmin: {
     privateKeyId: envVars.FB_PRIVATE_KEY_ID,
     privateKey: envVars.FB_PRIVATE_KEY.replace(/\\n/g, '\n'),

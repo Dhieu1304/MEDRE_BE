@@ -4,11 +4,15 @@
     "passwordLetterNumber": "Password must contain at least 1 letter and 1 number.",
     "passwordIncorrect": "Incorrect password.",
     "changePassword": "Change password successfully.",
+    "changePasswordFailure": "Change password failed.",
     "notMatch": "New password and confirm password do not match."
   },
   "email": {
     "emailIncorrect": "Incorrect email address.",
-    "emailExisted": "Email address already exists."
+    "emailExisted": "Email address already exists.",
+    "emailNotFound": "Email address not found.",
+    "success": "Email sent successfully.",
+    "fail": "An error occurred, cannot send email."
   },
   "phoneNumber": {
     "phoneFormatInvalid": "Invalid phone number format.",
@@ -84,13 +88,19 @@
     "alreadyBlocked": "The account has already blocked.",
     "alreadyUnblocked": "The account has already unblocked."
   },
-  "mailTemplate": {
+  "verifyMailTemplate": {
     "header": "We are delighted to welcome you to use our medical services.",
     "verify": "Please verify your email address to continue.",
     "button": "VERIFY",
-    "subject": "Verify Email",
-    "success": "Email sent successfully.",
-    "fail": "An error occurred, cannot send email."
+    "subject": "Verify Email"
+  },
+  "resetMailTemplate": {
+    "header": "Reset Password.",
+    "open": "You are receiving this email beacause we received your password reset request.",
+    "warning1": "If you did not request a password reset, you can safely ignore this email.",
+    "warning2": "Only a person with access to your email address can change you account password.",
+    "button": "Click Here To Reset Your Password.",
+    "subject": "Reset Your Account Password"
   },
   "payment": {
     "handleBefore": "This booking is handle before.",

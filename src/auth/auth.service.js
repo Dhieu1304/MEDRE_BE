@@ -207,12 +207,12 @@ const verificationEmailTemplate = (link) => {
 					<div>
 						<div style="max-width: 620px; margin:0 auto; font-family:sans-serif;color:#272727;background: #f6f6f6">
 							<h1 style="padding:10px;text-align:center;color:#272727;">
-							${i18next.t('mailTemplate.header')}
+							${i18next.t('verifyMailTemplate.header')}
 							</h1>
-							<p style="text-align:center;">${i18next.t('mailTemplate.verify')}</p>
+							<p style="text-align:center;">${i18next.t('verifyMailTemplate.verify')}</p>
 							<div style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
 								<a href=${link} style="background: #0000D1; text-align:center;font-size:16px;margin:auto;padding:15px 30px; color:#ffffff; text-decoration:None;">${i18next.t(
-    'mailTemplate.button'
+    'verifyMailTemplate.button'
   )}</a>
 							</div>
 						</div> 
@@ -234,11 +234,11 @@ const sendMailVerification = async (email) => {
       },
     });
     let token = generateVerifyToken(email);
-    let url = config.base_url + '/auth/verify/' + token;
+    let url = config.base_url.be_url + '/auth/verify/' + token;
     const mailOptions = {
-      from: 'noreply.medre@gmail.com',
+      from: config.nodemailer.nm_email,
       to: email,
-      subject: i18next.t('mailTemplate.subject'),
+      subject: i18next.t('verifyMailTemplate.subject'),
       html: verificationEmailTemplate(url),
     };
 
@@ -262,7 +262,80 @@ const verifyEmail = async (token) => {
     return true;
   } catch (error) {
     logger.error(error.message);
-    return false;
+    //return false;
+  }
+};
+
+const resetPassEmailTemplate = (link) => {
+	return `
+	    <!DOCTYPE html>
+        <html>
+            <head>
+			    <meta charset="UTF-8">
+				<meta http-equiv="X-UA-Compatible" content="IE=edge">
+				<style>
+					h1{
+						font-size: 20px;
+						padding: 5px;
+					}
+				</style>
+			</head>
+			<body>
+					<div>
+						<div style="max-width: 620px; margin:0 auto; font-family:sans-serif;color:#272727;background: #f6f6f6">
+							<h1 style="padding:10px;text-align:center;color:#272727;">
+							${i18next.t('resetMailTemplate.header')}
+							</h1>
+							<p style="text-align:center;">${i18next.t('resetMailTemplate.open')} </p>
+							<div style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+								<a href=${link} style="background: #0000D1; text-align:center;font-size:16px;margin:auto;padding:15px 30px; color:#ffffff; text-decoration:None;">${i18next.t('resetMailTemplate.button')}</a>
+							</div>
+							<br/>
+							<p style="text-align:center;">${i18next.t('resetMailTemplate.warning1')}</p>
+							<p style="text-align:center;">${i18next.t('resetMailTemplate.warning2')}</p>
+						</div> 
+                    </div>
+           </body>`
+}
+
+const sendMailResetPassword = async (email) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: config.nodemailer.nm_email,
+        pass: config.nodemailer.nm_password,
+      },
+    });
+    let token = generateVerifyToken(email);
+    let url = config.base_url.fe_url + '/reset-password/' + token;
+    const mailOptions = {
+      from: config.nodemailer.nm_email,
+      to: email,
+      subject: i18next.t('resetMailTemplate.subject'),
+      html: resetPassEmailTemplate(url),
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        logger.error('Fail send mail: ' + error.message);
+      } else {
+        logger.info('Email sent successfully. Info: ' + info.response);
+      }
+    });
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
+
+const resetPassword = async (token, new_password, confirm_password) => {
+  try {
+    const decoded = jwt.verify(token, config.jwt.secret);
+    await userService.resetPassword(decoded.mail, new_password, confirm_password);
+    return true;
+  } catch (error) {
+    logger.error(error.message);
+    //return false;
   }
 };
 
@@ -275,6 +348,9 @@ module.exports = {
   verificationEmailTemplate,
   sendMailVerification,
   verifyEmail,
+  resetPassEmailTemplate,
+  sendMailResetPassword,
+  resetPassword,
 
   // admin
   staffLoginUserWithEmailAndPassword,
