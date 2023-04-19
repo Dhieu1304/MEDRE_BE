@@ -56,7 +56,8 @@
     "unauthorized": "Vui lòng xác thực."
   },
   "unCategory": {
-    "permission": "Bạn không có quyền truy cập."
+    "permission": "Bạn không có quyền truy cập.",
+    "fileInvalid":"Tập tin không hợp lệ."
   },
   "schedule": {
     "success": "Tải dữ liệu hành công.",

@@ -56,7 +56,8 @@
     "unauthorized": "Please authenticate."
   },
   "unCategory": {
-    "permission": "You do not have this permission."
+    "permission": "You do not have this permission.",
+    "fileInvalid":"Invalid file."
   },
   "schedule": {
     "success": "Successful.",
