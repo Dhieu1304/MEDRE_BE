@@ -11,7 +11,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       id_user: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'user',
           key: 'id',
