@@ -3,6 +3,7 @@ const models = require('../models');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const i18next = require('i18next');
+const logger = require('../config/logger');
 
 const createPatient = async (data) => {
   // generate uuid
@@ -39,22 +40,24 @@ const updatePatient = async (id, data) => {
 };
 
 const findOrCreatePatientFromUser = async (id_user) => {
-  const user = await models.user.findOne({where: {id: id_user}, raw: true})
+  const user = await models.user.findOne({ where: { id: id_user }, raw: true });
 
   const dataPatient = {};
   const attribute = Object.keys(models.patient.getAttributes());
-  attribute.map(item => {
+  attribute.map((item) => {
     if (item !== 'id' && item !== 'createdAt' && item !== 'updatedAt' && user[item]) {
-        dataPatient[item] = user[item];
-      }
+      dataPatient[item] = user[item];
+    }
   });
 
   const [patient, created] = await models.patient.findOrCreate({
-    where: dataPatient
+    where: dataPatient,
   });
 
+  if (created) logger.info(`Create patient from user id: ${id_user}`);
+
   return patient;
-}
+};
 
 module.exports = {
   createPatient,

@@ -7,8 +7,8 @@ const { Op } = require('sequelize');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
 const i18next = require('i18next');
-const patientService = require("../patient/patient.service");
-const moment = require("moment");
+const patientService = require('../patient/patient.service');
+const moment = require('moment');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;

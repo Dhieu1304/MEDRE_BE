@@ -52,7 +52,7 @@ const editUser = async (id, data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
   }
 
-  if (data.email) {
+  if (data.email && user.email !== data.email) {
     if (user.email_verified) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangeEmail'));
     }
@@ -61,7 +61,7 @@ const editUser = async (id, data) => {
     }
   }
 
-  if (data.phone_number) {
+  if (data.phone_number && user.phone_number !== data.phone_number) {
     if (user.phone_verified) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangePhoneNumber'));
     }
