@@ -224,7 +224,7 @@ const generateVerifyToken = (mail, secret = config.jwt.secret) => {
   return jwt.sign({ mail: mail }, secret, { expiresIn: config.jwt.verifyExpirationHours });
 };
 
-const sendMailVerification = async (email) => {
+const sendMailVerification = async (email, type) => {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -234,7 +234,7 @@ const sendMailVerification = async (email) => {
       },
     });
     let token = generateVerifyToken(email);
-    let url = config.base_url.be_url + '/auth/verify/' + token;
+    let url = config.base_url.be_url + '/auth/verify/' + token + type;
     const mailOptions = {
       from: config.nodemailer.nm_email,
       to: email,
@@ -256,10 +256,24 @@ const sendMailVerification = async (email) => {
 
 const verifyEmail = async (token) => {
   try {
-    const decoded = jwt.verify(token, config.jwt.secret);
-    const user = await userService.findOneByFilter({ email: decoded.mail });
-    await user.update({ email_verified: true });
-    return true;
+    const type = token[token.length - 1];
+    const tk = token.substr(0,token.length - 1);
+    const decoded = jwt.verify(tk, config.jwt.secret);
+    if(type == 1)
+    { 
+      const user = await userService.findOneByFilter({ email: decoded.mail });
+      await user.update({ email_verified: true });
+      return true;
+    }
+    if(type == 2)
+    {
+      const staff = await staffService.findOneByFilter({ email: decoded.mail });
+      await staff.update({ email_verified: true });
+      return true;
+    }
+    else {
+      return false;
+    }
   } catch (error) {
     logger.error(error.message);
     //return false;
@@ -300,7 +314,7 @@ const resetPassEmailTemplate = (link) => {
            </body>`;
 };
 
-const sendMailResetPassword = async (email) => {
+const sendMailResetPassword = async (email, type) => {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -310,7 +324,15 @@ const sendMailResetPassword = async (email) => {
       },
     });
     let token = generateVerifyToken(email);
-    let url = config.base_url.fe_url + '/reset-password/' + token;
+    var url = "";
+    if(type == 1)
+    {
+      url = config.base_url.fe_user_url + '/reset-password/' + token + type;
+    }
+    else if(type == 2)
+    {
+      url = config.base_url.fe_admin_url + '/reset-password/' + token + type;
+    }
     const mailOptions = {
       from: config.nodemailer.nm_email,
       to: email,
@@ -332,9 +354,22 @@ const sendMailResetPassword = async (email) => {
 
 const resetPassword = async (token, new_password, confirm_password) => {
   try {
-    const decoded = jwt.verify(token, config.jwt.secret);
-    await userService.resetPassword(decoded.mail, new_password, confirm_password);
-    return true;
+    const type = token[token.length - 1];
+    const tk = token.substr(0,token.length - 1);
+    const decoded = jwt.verify(tk, config.jwt.secret);
+    if(type == 1)
+    { 
+      await userService.resetPassword(decoded.mail, new_password, confirm_password);
+      return true;
+    }
+    if(type == 2)
+    {
+      await staffService.resetPassword(decoded.mail, new_password, confirm_password);
+      return true;
+    }
+    else {
+      return false;
+    }
   } catch (error) {
     logger.error(error.message);
     //return false;

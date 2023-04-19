@@ -10,6 +10,7 @@ const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const moment = require('moment');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const i18next = require('i18next');
+const authService = require('../auth/auth.service');
 
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
@@ -216,7 +217,12 @@ const getDetailStaffByDate = catchAsync(async (req, res) => {
 
 const createStaff = catchAsync(async (req, res) => {
   const staff = await staffService.createStaff(req.body);
-  return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.create')));
+  const mail = req.body.email;
+  res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.create')));
+  // only running underground
+  if (mail) {
+    await authService.sendMailVerification(mail, 2);
+  }
 });
 
 const blockingAccount = catchAsync(async (req, res) => {
