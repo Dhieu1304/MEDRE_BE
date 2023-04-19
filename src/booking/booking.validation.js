@@ -36,7 +36,7 @@ const booking = {
   body: Joi.object().keys({
     id_schedule: Joi.string().uuid().required(),
     date: Joi.date().required(),
-    reason: Joi.string().required(),
+    reason: Joi.string(),
     id_patient: Joi.string().uuid(),
   }),
 };

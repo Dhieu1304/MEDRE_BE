@@ -1,4 +1,5 @@
 const { GENDERS } = require('../user/user.constant');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -8,6 +9,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+        defaultValue: uuidv4(),
       },
       id_user: {
         type: DataTypes.UUID,

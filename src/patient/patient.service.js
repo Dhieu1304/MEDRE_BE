@@ -38,6 +38,24 @@ const updatePatient = async (id, data) => {
   return await patient.save();
 };
 
+const findOrCreatePatientFromUser = async (id_user) => {
+  const user = await models.user.findOne({where: {id: id_user}, raw: true})
+
+  const dataPatient = {};
+  const attribute = Object.keys(models.patient.getAttributes());
+  attribute.map(item => {
+    if (item !== 'id' && item !== 'createdAt' && item !== 'updatedAt' && user[item]) {
+        dataPatient[item] = user[item];
+      }
+  });
+
+  const [patient, created] = await models.patient.findOrCreate({
+    where: dataPatient
+  });
+
+  return patient;
+}
+
 module.exports = {
   createPatient,
   findOneByFilter,
@@ -45,4 +63,5 @@ module.exports = {
   create,
   findAndCountAllByCondition,
   updatePatient,
+  findOrCreatePatientFromUser,
 };
