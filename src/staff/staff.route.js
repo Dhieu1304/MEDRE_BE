@@ -12,11 +12,8 @@ router.get('/all', validate(staffValidation.getAllStaff), staffController.getAll
 router.get('/list-staff-schedule', validate(staffValidation.getListStaffSchedule), staffController.getListStaffSchedule);
 router.get('/detail/:id', validate(staffValidation.getDetailStaff), staffController.getDetailStaff);
 router.get('/detail-by-date/:id', validate(staffValidation.getDetailStaffByDate), staffController.getDetailStaffByDate);
-
 router.get('/my-profile', auth(), staffController.getInfo);
-
 router.post('/my-profile/edit', auth(), validate(staffValidation.editProfile), staffController.editProfile);
-
 router.post('/my-profile/change-password', auth(), validate(staffValidation.changePassword), staffController.changePassword);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
@@ -27,11 +24,8 @@ router.post(
   //staffPermission([STAFF_ROLES.ADMIN]),
   staffController.createStaff
 );
-
 router.post('/confirm-blocking', auth(), validate(staffValidation.blockAccount), staffController.blockingAccount);
-
 router.post('/confirm-unblocking', auth(), validate(staffValidation.blockAccount), staffController.unblockingAccount);
-
 router.post(
   '/edit/:id',
   auth(),

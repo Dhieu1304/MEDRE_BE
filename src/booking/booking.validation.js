@@ -5,7 +5,7 @@ const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const list = {
   query: Joi.object().keys({
     type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),
-    booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
+    booking_status: Joi.array().items(Joi.string().valid(...Object.values(BOOKING_STATUS))),
     is_payment: Joi.boolean(),
     from: Joi.date(),
     to: Joi.date(),
@@ -21,7 +21,7 @@ const listForStaff = {
     id_staff_booking: Joi.string().uuid(),
     id_staff_cancel: Joi.string().uuid(),
     type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),
-    booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
+    booking_status: Joi.array().items(Joi.string().valid(...Object.values(BOOKING_STATUS))),
     is_payment: Joi.boolean(),
     from: Joi.date(),
     to: Joi.date(),
@@ -34,7 +34,7 @@ const booking = {
   body: Joi.object().keys({
     id_schedule: Joi.string().uuid().required(),
     date: Joi.date().required(),
-    reason: Joi.string().required(),
+    reason: Joi.string(),
     id_patient: Joi.string().uuid(),
   }),
 };

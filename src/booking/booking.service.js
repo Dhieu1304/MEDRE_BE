@@ -8,6 +8,7 @@ const { Op } = require('sequelize');
 const { BOOKING_STATUS } = require('./booking.constant');
 const i18next = require('i18next');
 const userService = require('../user/user.service');
+const moment = require('moment');
 
 const create = async (data) => {
   // check schedule
@@ -36,6 +37,12 @@ const createNewBooking = async (data) => {
     if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('patient.notFound'));
     }
+  }
+
+  // check day_of_week of schedule is valid date booking
+  const schedule = await models.schedule.findOne({ where: { id: data.id_schedule } });
+  if (!schedule || schedule.day_of_week !== moment(data.date).day()) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidScheduleId'));
   }
 
   // check is any booking at this time

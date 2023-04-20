@@ -40,7 +40,9 @@
     "notFound": "Not found.",
     "cancel": "Cancel booking successful.",
     "invalidID": "Invalid booking id.",
-    "missingUserInfo": "Please update your personal information."
+    "missingUserInfo": "Please update your personal information.",
+    "invalidScheduleId": "Invalid schedule id.",
+    "invalidDate": "You need to booking 1 day in advance."
   },
   "patient": {
     "notFound": "Patient not found."

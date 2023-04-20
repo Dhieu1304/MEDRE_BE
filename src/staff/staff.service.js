@@ -170,18 +170,25 @@ const findDetailStaff = async (filter) => {
 };
 
 const editStaff = async (id, data) => {
+  // find staff and update
+  const staff = await findOneByFilter({ id });
+
   // check phone number is exists
-  if (data.phone_number) {
-    const checkPhone = await findOneByFilter({ phone_number: data.phone_number });
-    if (checkPhone && checkPhone.id !== id) {
+  if (data.phone_number && staff.phone_number !== data.phone_number) {
+    if (staff.phone_verified) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangePhoneNumber'));
+    }
+    if (await findOneByFilter({ phone_number: data.phone_number })) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('phoneNumber.phoneExisted'));
     }
   }
 
   // check email is exists
-  if (data.email) {
-    const checkEmail = await findOneByFilter({ email: data.email });
-    if (checkEmail && checkEmail.id !== id) {
+  if (data.email && staff.email !== data.email) {
+    if (staff.email_verified) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotChangeEmail'));
+    }
+    if (await findOneByFilter({ email: data.email })) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('email.emailExisted'));
     }
   }
@@ -193,8 +200,7 @@ const editStaff = async (id, data) => {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('username.usernameExisted'));
     }
   }
-  // find staff and update
-  const staff = await findOneByFilter({ id });
+
   const result = Object.assign(staff, data);
   return await result.save();
 };

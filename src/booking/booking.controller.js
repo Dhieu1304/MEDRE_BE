@@ -7,6 +7,8 @@ const { Op } = require('sequelize');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
 const i18next = require('i18next');
+const patientService = require('../patient/patient.service');
+const moment = require('moment');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -203,7 +205,19 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
 
 const booking = catchAsync(async (req, res) => {
   const data = req.body;
+
+  // check booking date ( > 1 day)
+  if (data.date < moment(new Date()).add(1, 'd')) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
+  }
   data.id_user = req.user.id;
+
+  // check book for other people
+  if (!data.id_patient) {
+    const patient = await patientService.findOrCreatePatientFromUser(req.user.id);
+    data.id_patient = patient.id;
+  }
+
   const newBooking = await bookingService.createNewBooking(data);
   return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 });
