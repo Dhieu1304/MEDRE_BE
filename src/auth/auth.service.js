@@ -257,21 +257,18 @@ const sendMailVerification = async (email, type) => {
 const verifyEmail = async (token) => {
   try {
     const type = token[token.length - 1];
-    const tk = token.substr(0,token.length - 1);
+    const tk = token.substr(0, token.length - 1);
     const decoded = jwt.verify(tk, config.jwt.secret);
-    if(type == 1)
-    { 
+    if (type == 1) {
       const user = await userService.findOneByFilter({ email: decoded.mail });
       await user.update({ email_verified: true });
       return true;
     }
-    if(type == 2)
-    {
+    if (type == 2) {
       const staff = await staffService.findOneByFilter({ email: decoded.mail });
       await staff.update({ email_verified: true });
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   } catch (error) {
@@ -324,13 +321,10 @@ const sendMailResetPassword = async (email, type) => {
       },
     });
     let token = generateVerifyToken(email);
-    var url = "";
-    if(type == 1)
-    {
+    var url = '';
+    if (type == 1) {
       url = config.base_url.fe_user_url + '/reset-password/' + token + type;
-    }
-    else if(type == 2)
-    {
+    } else if (type == 2) {
       url = config.base_url.fe_admin_url + '/reset-password/' + token + type;
     }
     const mailOptions = {
@@ -355,19 +349,16 @@ const sendMailResetPassword = async (email, type) => {
 const resetPassword = async (token, new_password, confirm_password) => {
   try {
     const type = token[token.length - 1];
-    const tk = token.substr(0,token.length - 1);
+    const tk = token.substr(0, token.length - 1);
     const decoded = jwt.verify(tk, config.jwt.secret);
-    if(type == 1)
-    { 
+    if (type == 1) {
       await userService.resetPassword(decoded.mail, new_password, confirm_password);
       return true;
     }
-    if(type == 2)
-    {
+    if (type == 2) {
       await staffService.resetPassword(decoded.mail, new_password, confirm_password);
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   } catch (error) {

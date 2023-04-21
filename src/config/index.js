@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const ApiError = require('../utils/ApiError');
 
 const envVarsSchema = Joi.object()
   .keys({

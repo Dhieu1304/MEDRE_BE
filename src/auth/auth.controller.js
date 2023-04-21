@@ -5,7 +5,7 @@ const staffService = require('../staff/staff.service');
 const authService = require('./auth.service');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
-const {sendSMS} = require('../otp/sms');
+// const { sendSMS } = require('../otp/sms');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -16,9 +16,9 @@ const register = catchAsync(async (req, res) => {
   if (mail) {
     await authService.sendMailVerification(mail, 1);
   }
-  // if(phone) {
-  //   await sendSMS();
-  // }
+  if (phone) {
+    // await sendSMS();
+  }
 });
 
 const loginEmailPassword = catchAsync(async (req, res) => {
@@ -95,9 +95,8 @@ const verifySuccess = catchAsync(async (req, res) => {
 });
 
 const resendMail = catchAsync(async (req, res) => {
-  const {email, type} = req.body;
-  if(type == 1)
-  {
+  const { email, type } = req.body;
+  if (type == 1) {
     const user = await userService.findOneByFilter({ email: email });
     if (user) {
       try {
@@ -107,9 +106,7 @@ const resendMail = catchAsync(async (req, res) => {
         return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
       }
     }
-  }
-  else if(type == 2)
-  {
+  } else if (type == 2) {
     const staff = await staffService.findOneByFilter({ email: email });
     if (staff) {
       try {
@@ -124,9 +121,8 @@ const resendMail = catchAsync(async (req, res) => {
 });
 
 const sendResetPasswordMail = catchAsync(async (req, res) => {
-  const {email, type} = req.body;
-  if(type == 1)
-  {
+  const { email, type } = req.body;
+  if (type == 1) {
     const user = await userService.findOneByFilter({ email: email });
     if (user) {
       try {
@@ -136,9 +132,7 @@ const sendResetPasswordMail = catchAsync(async (req, res) => {
         return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
       }
     }
-  }
-  else if(type == 2)
-  {
+  } else if (type == 2) {
     const staff = await staffService.findOneByFilter({ email: email });
     if (staff) {
       try {

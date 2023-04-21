@@ -59,7 +59,7 @@
   },
   "unCategory": {
     "permission": "You do not have this permission.",
-    "fileInvalid":"Invalid file."
+    "fileInvalid": "Invalid file."
   },
   "schedule": {
     "success": "Successful.",

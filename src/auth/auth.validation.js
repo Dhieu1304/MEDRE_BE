@@ -46,7 +46,9 @@ const refreshTokens = {
 const resendMail = {
   body: Joi.object().keys({
     email: Joi.string().email().lowercase().required(),
-    type: Joi.number().required().valid(...Object.values(ACCOUNT_TYPES)),
+    type: Joi.number()
+      .required()
+      .valid(...Object.values(ACCOUNT_TYPES)),
   }),
 };
 
