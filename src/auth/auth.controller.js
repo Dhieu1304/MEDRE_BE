@@ -1,18 +1,24 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const userService = require('../user/user.service');
+const staffService = require('../staff/staff.service');
 const authService = require('./auth.service');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
+const {sendSMS} = require('../otp/sms');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const mail = req.body.email;
+  const phone = req.body.phone_number;
   res.status(httpStatus.CREATED).json(responseData(user, i18next.t('auth.registerSuccess')));
   // only running underground
   if (mail) {
-    await authService.sendMailVerification(mail);
+    await authService.sendMailVerification(mail, 1);
   }
+  // if(phone) {
+  //   await sendSMS();
+  // }
 });
 
 const loginEmailPassword = catchAsync(async (req, res) => {
@@ -89,28 +95,58 @@ const verifySuccess = catchAsync(async (req, res) => {
 });
 
 const resendMail = catchAsync(async (req, res) => {
-  const email = req.body.email;
-  const user = await userService.findOneByFilter({ email: email });
-  if (user) {
-    try {
-      await authService.sendMailVerification(email);
-      return res.status(httpStatus.OK).json(responseMessage(i18next.t('email.success'), true));
-    } catch (error) {
-      return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
+  const {email, type} = req.body;
+  if(type == 1)
+  {
+    const user = await userService.findOneByFilter({ email: email });
+    if (user) {
+      try {
+        await authService.sendMailVerification(email, type);
+        return res.status(httpStatus.OK).json(responseMessage(i18next.t('email.success'), true));
+      } catch (error) {
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
+      }
+    }
+  }
+  else if(type == 2)
+  {
+    const staff = await staffService.findOneByFilter({ email: email });
+    if (staff) {
+      try {
+        await authService.sendMailVerification(email, type);
+        return res.status(httpStatus.OK).json(responseMessage(i18next.t('email.success'), true));
+      } catch (error) {
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
+      }
     }
   }
   return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.emailNotFound'), false));
 });
 
 const sendResetPasswordMail = catchAsync(async (req, res) => {
-  const email = req.body.email;
-  const user = await userService.findOneByFilter({ email: email });
-  if (user) {
-    try {
-      await authService.sendMailResetPassword(email);
-      return res.status(httpStatus.OK).json(responseMessage(i18next.t('email.success'), true));
-    } catch (error) {
-      return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
+  const {email, type} = req.body;
+  if(type == 1)
+  {
+    const user = await userService.findOneByFilter({ email: email });
+    if (user) {
+      try {
+        await authService.sendMailResetPassword(email, type);
+        return res.status(httpStatus.OK).json(responseMessage(i18next.t('email.success'), true));
+      } catch (error) {
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
+      }
+    }
+  }
+  else if(type == 2)
+  {
+    const staff = await staffService.findOneByFilter({ email: email });
+    if (staff) {
+      try {
+        await authService.sendMailResetPassword(email, type);
+        return res.status(httpStatus.OK).json(responseMessage(i18next.t('email.success'), true));
+      } catch (error) {
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.fail'), false));
+      }
     }
   }
   return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('email.emailNotFound'), false));

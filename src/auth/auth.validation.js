@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const { password } = require('../utils/validateCustom');
 const { GENDERS } = require('../user/user.constant');
+const { ACCOUNT_TYPES } = require('./auth.constant');
 const { phoneNumberFormat } = require('../utils/messageCustom');
 
 const register = {
@@ -45,6 +46,7 @@ const refreshTokens = {
 const resendMail = {
   body: Joi.object().keys({
     email: Joi.string().email().lowercase().required(),
+    type: Joi.number().required().valid(...Object.values(ACCOUNT_TYPES)),
   }),
 };
 
