@@ -2,20 +2,21 @@ const i18next = require('i18next');
 const { phoneNumberRegex, timeScheduleRegex } = require('./validateCustom');
 
 const phoneNumberFormat = (value, helpers) => {
-  if (!value.match(phoneNumberRegex)) {
+  let result = value;
+  if (!result.match(phoneNumberRegex)) {
     return helpers.message(i18next.t('phoneNumber.phoneFormatInvalid'));
   }
 
   // convert to start with 0
   const startPhoneNumber = ['+84', '84', '0084'];
-  for (let i = 0;  i < startPhoneNumber.length; i++) {
-    if (value.startsWith(startPhoneNumber[i])) {
-      value = value.replace(startPhoneNumber[i], '0');
+  for (let i = 0; i < startPhoneNumber.length; i++) {
+    if (result.startsWith(startPhoneNumber[i])) {
+      result = result.replace(startPhoneNumber[i], '0');
       break;
     }
   }
 
-  return value;
+  return result;
 };
 
 const timeScheduleFormat = (value, helpers) => {

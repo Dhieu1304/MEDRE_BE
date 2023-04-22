@@ -46,8 +46,8 @@ function initModels(sequelize) {
   user.hasMany(booking, { as: 'id_user_bookings', foreignKey: 'id_user' });
   booking.belongsTo(patient, { as: 'booking_of_patient', foreignKey: 'id_patient' });
   patient.hasMany(booking, { as: 'bookings', foreignKey: 'id_patient' });
-  schedule.belongsTo(time_schedule, { as: 'time_schedule', foreignKey: 'id_time' });
-  time_schedule.hasMany(schedule, { as: 'schedules', foreignKey: 'id_time' });
+  schedule.belongsTo(expertise, { as: 'schedule_expertise', foreignKey: 'id_expertise' });
+  expertise.hasMany(schedule, { as: 'expertise_schedule', foreignKey: 'id_expertise' });
   schedule.belongsTo(staff, { as: 'schedule_of_staff', foreignKey: 'id_doctor' });
   staff.hasMany(schedule, { as: 'staff_schedules', foreignKey: 'id_doctor' });
   doctor_time_off.belongsTo(staff, { as: 'staff_doctor_time_offs', foreignKey: 'id_doctor' });
@@ -58,6 +58,8 @@ function initModels(sequelize) {
   booking_payment.belongsTo(booking, { as: 'payment_of_booking', foreignKey: 'id_booking' });
   user.hasMany(booking_payment, { as: 'user_payments', foreignKey: 'id_user' });
   booking_payment.belongsTo(user, { as: 'payment_of_user', foreignKey: 'id_user' });
+  booking.belongsTo(time_schedule, { as: 'booking_time_schedule', foreignKey: 'id_time' });
+  time_schedule.hasMany(booking, { as: 'time_schedule_of_booking', foreignKey: 'id_time' });
 
   return {
     sequelize,

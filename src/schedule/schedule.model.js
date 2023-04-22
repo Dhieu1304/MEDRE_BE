@@ -1,5 +1,7 @@
-const { SCHEDULE_TYPE } = require('./schedule.constant');
+const { SCHEDULE_TYPE, SCHEDULE_SESSION } = require('./schedule.constant');
 const moment = require('moment');
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'schedule',
@@ -8,6 +10,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+        defaultValue: uuidv4(),
       },
       id_doctor: {
         type: DataTypes.UUID,
@@ -17,22 +20,29 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
-      day_of_week: {
-        type: DataTypes.INTEGER,
+      session: {
+        type: DataTypes.STRING,
         allowNull: false,
-      },
-      id_time: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'time_schedule',
-          key: 'id',
-        },
+        enum: SCHEDULE_SESSION,
+        defaultValue: SCHEDULE_SESSION.MORNING,
       },
       type: {
         type: DataTypes.STRING,
         allowNull: false,
+        enum: SCHEDULE_TYPE,
         defaultValue: SCHEDULE_TYPE.ONLINE,
+      },
+      id_expertise: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'expertise',
+          key: 'id',
+        },
+      },
+      repeat_on: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       apply_from: {
         type: DataTypes.DATEONLY,

@@ -1,4 +1,6 @@
 const { BOOKING_STATUS } = require('./booking.constant');
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'booking',
@@ -7,6 +9,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+        defaultValue: uuidv4(),
       },
       id_schedule: {
         type: DataTypes.UUID,
@@ -26,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       id_patient: {
         type: DataTypes.UUID,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'patient',
           key: 'id',
@@ -51,6 +54,14 @@ module.exports = function (sequelize, DataTypes) {
       date: {
         type: DataTypes.DATEONLY,
         allowNull: false,
+      },
+      id_time: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'time_schedule',
+          key: 'id',
+        },
       },
       booking_status: {
         type: DataTypes.STRING(10),

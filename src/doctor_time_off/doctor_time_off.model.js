@@ -15,7 +15,11 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
-      date: {
+      from: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
+      to: {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
