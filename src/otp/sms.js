@@ -54,4 +54,4 @@ const sendSMS = (Phone) => {
   req.end();
 };
 
-// sendSMS('0933021021');
+module.exports = sendSMS;

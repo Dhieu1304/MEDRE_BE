@@ -5,7 +5,7 @@ const staffService = require('../staff/staff.service');
 const authService = require('./auth.service');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
-// const { sendSMS } = require('../otp/sms');
+// const sendSMS = require('../otp/sms');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);

@@ -5,6 +5,16 @@ const phoneNumberFormat = (value, helpers) => {
   if (!value.match(phoneNumberRegex)) {
     return helpers.message(i18next.t('phoneNumber.phoneFormatInvalid'));
   }
+
+  // convert to start with 0
+  const startPhoneNumber = ['+84', '84', '0084'];
+  for (let i = 0;  i < startPhoneNumber.length; i++) {
+    if (value.startsWith(startPhoneNumber[i])) {
+      value = value.replace(startPhoneNumber[i], '0');
+      break;
+    }
+  }
+
   return value;
 };
 
