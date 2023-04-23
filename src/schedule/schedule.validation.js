@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { SCHEDULE_TYPE, SCHEDULE_SESSION} = require('./schedule.constant');
+const { SCHEDULE_TYPE, SCHEDULE_SESSION } = require('./schedule.constant');
 const moment = require('moment');
 
 const listByDay = {
@@ -19,12 +19,20 @@ const listAll = {
 
 const createSchedule = {
   body: Joi.object().keys({
-    data: Joi.array().items(Joi.object().keys({
-      id_expertise: Joi.string().uuid().required(),
-      type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)).required(),
-      session: Joi.string().valid(...Object.values(SCHEDULE_SESSION)).required(),
-      repeat_on: Joi.array().items(Joi.number().integer().min(0).max(6).required()),
-    })).required(),
+    data: Joi.array()
+      .items(
+        Joi.object().keys({
+          id_expertise: Joi.string().uuid().required(),
+          type: Joi.string()
+            .valid(...Object.values(SCHEDULE_TYPE))
+            .required(),
+          session: Joi.string()
+            .valid(...Object.values(SCHEDULE_SESSION))
+            .required(),
+          repeat_on: Joi.array().items(Joi.number().integer().min(0).max(6).required()),
+        })
+      )
+      .required(),
     id_doctor: Joi.string().uuid().required(),
     apply_from: Joi.date().default(moment()),
     apply_to: Joi.date().default(moment().add(1, 'years')),

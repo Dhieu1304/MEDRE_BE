@@ -6,7 +6,6 @@ const { Op } = require('sequelize');
 const models = require('../models');
 const moment = require('moment');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
-const { v4: uuidv4 } = require('uuid');
 const i18next = require('i18next');
 
 const listByDay = catchAsync(async (req, res) => {
@@ -58,13 +57,13 @@ const createSchedule = catchAsync(async (req, res) => {
 });
 
 const changeApplyToAllSchedule = catchAsync(async (req, res) => {
-  const {id_doctor, apply_to} = req.body;
+  const { id_doctor, apply_to } = req.body;
   await scheduleService.changeApplyToAllSchedule(id_doctor, apply_to);
   return res.status(httpStatus.OK).json(responseMessage('Update apply to all schedule successfully'));
 });
 
 const changeApplyToSchedule = catchAsync(async (req, res) => {
-  const {id, apply_to} = req.body;
+  const { id, apply_to } = req.body;
   await scheduleService.changeApplyToSchedule(id, apply_to);
   return res.status(httpStatus.OK).json(responseMessage('Update apply to schedule successfully'));
 });
