@@ -11,6 +11,7 @@ const moment = require('moment');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const i18next = require('i18next');
 const authService = require('../auth/auth.service');
+const { regexpRepeatOnFromTo } = require('../utils/regexpRepeatOnFromTo');
 
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
@@ -99,7 +100,11 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
       {
         model: models.schedule,
         as: 'staff_schedules',
-        where: { day_of_week: moment(date).day(), apply_to: { [Op.gte]: date } },
+        where: {
+          repeat_on: { [Op.substring]: moment(date).day() },
+          apply_from: { [Op.lte]: date },
+          apply_to: { [Op.gte]: date },
+        },
         include: [
           {
             model: models.booking,
@@ -107,17 +112,13 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
             required: false,
             where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date },
           },
-          {
-            model: models.time_schedule,
-            as: 'time_schedule',
-          },
         ],
       },
       {
         model: models.doctor_time_off,
         as: 'time_offs',
         required: false,
-        where: { date },
+        where: { [Op.and]: [{ from: { [Op.lte]: date } }, { to: { [Op.gte]: date } }] },
       },
     ],
     distinct: true,
@@ -131,13 +132,22 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
 
 const getDetailStaff = catchAsync(async (req, res) => {
   const { from, to } = req.query;
+  const filterSchedule = { [Op.or]: [{ apply_from: { [Op.lte]: to } }, { apply_to: { [Op.gte]: from } }] };
+
+  const regexpRepeatOn = regexpRepeatOnFromTo(from, to);
+  if (!regexpRepeatOn.status) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(regexpRepeatOn.data, false));
+  } else if (regexpRepeatOn.data) {
+    filterSchedule.repeat_on = { [Op.regexp]: regexpRepeatOn.data };
+  }
+
   const options = {
     where: { id: req.params.id },
     include: [
       {
         model: models.schedule,
         as: 'staff_schedules',
-        where: { apply_to: { [Op.gte]: to } },
+        where: filterSchedule,
         required: false,
         include: [
           {
@@ -148,18 +158,22 @@ const getDetailStaff = catchAsync(async (req, res) => {
               booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
               [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
             },
+            include: [
+              {
+                model: models.time_schedule,
+                as: 'booking_time_schedule',
+                attributes: { exclude: ['createdAt', 'updatedAt'] },
+              },
+            ],
           },
-          {
-            model: models.time_schedule,
-            as: 'time_schedule',
-          },
+          { model: models.expertise, as: 'schedule_expertise', attributes: { exclude: ['createdAt', 'updatedAt'] } },
         ],
       },
       {
         model: models.doctor_time_off,
         as: 'time_offs',
         required: false,
-        where: { [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }] },
+        where: { [Op.or]: [{ from: { [Op.lte]: to } }, { to: { [Op.gte]: from } }] },
       },
       {
         model: models.expertise,
@@ -180,7 +194,11 @@ const getDetailStaffByDate = catchAsync(async (req, res) => {
       {
         model: models.schedule,
         as: 'staff_schedules',
-        where: { day_of_week: moment(date).day() },
+        where: {
+          apply_from: { [Op.lte]: date },
+          apply_to: { [Op.gte]: date },
+          repeat_on: { [Op.substring]: moment(date).day() },
+        },
         required: false,
         include: [
           {
@@ -191,18 +209,22 @@ const getDetailStaffByDate = catchAsync(async (req, res) => {
               booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
               date,
             },
+            include: [
+              {
+                model: models.time_schedule,
+                as: 'booking_time_schedule',
+                attributes: { exclude: ['createdAt', 'updatedAt'] },
+              },
+            ],
           },
-          {
-            model: models.time_schedule,
-            as: 'time_schedule',
-          },
+          { model: models.expertise, as: 'schedule_expertise', attributes: { exclude: ['createdAt', 'updatedAt'] } },
         ],
       },
       {
         model: models.doctor_time_off,
         as: 'time_offs',
         required: false,
-        where: { date },
+        where: { [Op.and]: [{ from: { [Op.lte]: date } }, { to: { [Op.gte]: date } }] },
       },
       {
         model: models.expertise,

@@ -7,6 +7,7 @@ const models = require('../models');
 const moment = require('moment');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const i18next = require('i18next');
+const { regexpRepeatOnFromTo } = require('../utils/regexpRepeatOnFromTo');
 
 const listByDay = catchAsync(async (req, res) => {
   const { id_doctor, date } = req.query;
@@ -36,32 +37,14 @@ const listAll = catchAsync(async (req, res) => {
 
   const filter = {
     id_doctor,
-    // apply_from: { [Op.lte]: from },
-    apply_to: { [Op.gte]: to },
+    [Op.or]: [{ apply_from: { [Op.lte]: to } }, { apply_to: { [Op.gte]: from } }],
   };
 
-  // subtract date
-  const range = moment(to).diff(moment(from), 'days');
-  if (range < 0) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date from to', false));
-  } else if (range < 6) {
-    let repeat_on = [];
-    for (let i = from; i <= to; i = moment(i).add(1, 'days')) {
-      repeat_on.push(moment(i).day());
-    }
-
-    // sort repeat_on
-    repeat_on = repeat_on.sort((a, b) => {
-      return a - b;
-    });
-
-    // convert regexp string
-    let regexp = '^[';
-    repeat_on.map((item) => {
-      regexp += item + '|';
-    });
-    regexp = regexp.slice(0, -1) + ']';
-    filter.repeat_on = { [Op.regexp]: regexp };
+  const regexpRepeatOn = regexpRepeatOnFromTo(from, to);
+  if (!regexpRepeatOn.status) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(regexpRepeatOn.data, false));
+  } else if (regexpRepeatOn.data) {
+    filter.repeat_on = { [Op.regexp]: regexpRepeatOn.data };
   }
 
   const options = {

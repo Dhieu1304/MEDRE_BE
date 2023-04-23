@@ -38,6 +38,7 @@ const listBookings = catchAsync(async (req, res) => {
     {
       model: models.time_schedule,
       as: 'booking_time_schedule',
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     },
   ];
   include.push({
@@ -109,6 +110,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     {
       model: models.time_schedule,
       as: 'booking_time_schedule',
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     },
   ];
   include.push({
@@ -152,6 +154,7 @@ const getDetailBooking = catchAsync(async (req, res) => {
       {
         model: models.time_schedule,
         as: 'booking_time_schedule',
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
       },
       {
         model: models.schedule,
@@ -181,6 +184,7 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
       {
         model: models.time_schedule,
         as: 'booking_time_schedule',
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
       },
       {
         model: models.schedule,
