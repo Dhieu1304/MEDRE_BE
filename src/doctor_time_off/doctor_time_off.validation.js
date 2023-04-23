@@ -13,7 +13,8 @@ const list = {
 
 const createTimeOff = {
   body: Joi.object().keys({
-    date: Joi.date().required(),
+    from: Joi.date().required(),
+    to: Joi.date().required(),
     time_start: Joi.string().required().custom(timeScheduleFormat),
     time_end: Joi.string().required().custom(timeScheduleFormat),
   }),

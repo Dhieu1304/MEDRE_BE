@@ -10,12 +10,15 @@ const i18next = require('i18next');
 
 const listByDay = catchAsync(async (req, res) => {
   const { id_doctor, date } = req.query;
-  const filter = { id_doctor };
-  filter.day_of_week = moment(date).day();
+  const filter = {
+    id_doctor,
+    repeat_on: { [Op.substring]: moment(date).day() },
+    apply_to: { [Op.gte]: date },
+  };
   const options = {
     where: filter,
     include: [
-      { model: models.time_schedule, as: 'time_schedule', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+      { model: models.expertise, as: 'schedule_expertise', attributes: { exclude: ['createdAt', 'updatedAt'] } },
       {
         model: models.booking,
         as: 'bookings',
@@ -29,13 +32,42 @@ const listByDay = catchAsync(async (req, res) => {
 });
 
 const listAll = catchAsync(async (req, res) => {
-  // todo: add from -> list booking, day_off
   const { id_doctor, from, to } = req.query;
-  const filter = { id_doctor, apply_to: { [Op.gte]: to } };
+
+  const filter = {
+    id_doctor,
+    // apply_from: { [Op.lte]: from },
+    apply_to: { [Op.gte]: to },
+  };
+
+  // subtract date
+  const range = moment(to).diff(moment(from), 'days');
+  if (range < 0) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date from to', false));
+  } else if (range < 6) {
+    let repeat_on = [];
+    for (let i = from; i <= to; i = moment(i).add(1, 'days')) {
+      repeat_on.push(moment(i).day());
+    }
+
+    // sort repeat_on
+    repeat_on = repeat_on.sort((a, b) => {
+      return a - b;
+    });
+
+    // convert regexp string
+    let regexp = '^[';
+    repeat_on.map((item) => {
+      regexp += item + '|';
+    });
+    regexp = regexp.slice(0, -1) + ']';
+    filter.repeat_on = { [Op.regexp]: regexp };
+  }
+
   const options = {
     where: filter,
     include: [
-      { model: models.time_schedule, as: 'time_schedule', attributes: { exclude: ['createdAt', 'updatedAt'] } },
+      { model: models.expertise, as: 'schedule_expertise', attributes: { exclude: ['createdAt', 'updatedAt'] } },
       {
         model: models.booking,
         as: 'bookings',
