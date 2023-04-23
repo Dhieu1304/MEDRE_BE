@@ -1,5 +1,5 @@
 const models = require('../models');
-const {Op} = require("sequelize");
+const { Op } = require('sequelize');
 
 const findAllByFilter = async (filter) => {
   return await models.doctor_time_off.findAll(filter);
@@ -46,7 +46,7 @@ const createTimeOff = async (data) => {
 };
 
 (async () => {
-  const time = await models.time_schedule.findAll({ where: { time_start: { [Op.gte]: '17:00' } }, raw: true});
+  const time = await models.time_schedule.findAll({ where: { time_start: { [Op.gte]: '17:00' } }, raw: true });
   console.log(time);
 })();
 

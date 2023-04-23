@@ -34,18 +34,20 @@ const listBookings = catchAsync(async (req, res) => {
     }
   }
 
-  const include = [{
-    model: models.time_schedule,
-    as: 'booking_time_schedule',
-  }];
+  const include = [
+    {
+      model: models.time_schedule,
+      as: 'booking_time_schedule',
+    },
+  ];
   include.push({
     model: models.schedule,
     as: 'booking_schedule',
     include: [
-        {
-      model: models.expertise,
-      as: 'schedule_expertise',
-    },
+      {
+        model: models.expertise,
+        as: 'schedule_expertise',
+      },
       {
         model: models.staff,
         as: 'schedule_of_staff',
@@ -103,10 +105,12 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     }
   }
 
-  const include = [{
-    model: models.time_schedule,
-    as: 'booking_time_schedule',
-  }];
+  const include = [
+    {
+      model: models.time_schedule,
+      as: 'booking_time_schedule',
+    },
+  ];
   include.push({
     model: models.schedule,
     as: 'booking_schedule',

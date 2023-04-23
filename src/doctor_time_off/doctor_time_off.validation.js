@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { timeScheduleFormat } = require('../utils/messageCustom');
-const moment = require("moment");
+const moment = require('moment');
 
 const list = {
   query: Joi.object().keys({

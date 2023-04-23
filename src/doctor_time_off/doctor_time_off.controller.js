@@ -3,10 +3,9 @@ const httpStatus = require('http-status');
 const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
 const doctorTimeOffService = require('./doctor_time_off.service');
 const { Op } = require('sequelize');
-const i18next = require('i18next');
 const { v4: uuidv4 } = require('uuid');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
-const moment = require("moment");
+const moment = require('moment');
 
 const getDoctorTimeOff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;

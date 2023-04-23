@@ -1,6 +1,4 @@
 const models = require('../models');
-const { v4: uuidv4 } = require('uuid');
-const scheduleService = require('../schedule/schedule.service');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const { Op } = require('sequelize');
@@ -27,8 +25,8 @@ const createNewBooking = async (data) => {
     where: {
       id: data.id_schedule,
       apply_to: { [Op.gte]: data.date },
-      repeat_on: { [Op.substring]: moment(data.date).day() }
-    }
+      repeat_on: { [Op.substring]: moment(data.date).day() },
+    },
   });
   if (!schedule) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidScheduleId'));
