@@ -53,24 +53,26 @@ const listAll = catchAsync(async (req, res) => {
 });
 
 const createSchedule = catchAsync(async (req, res) => {
-  const { id_doctor, apply_from, apply_to, data } = req.body;
-  const schedules = data.map((item) => {
-    return {
-      id: uuidv4(),
-      id_doctor,
-      apply_from,
-      apply_to,
-      id_time: item.id_time,
-      day_of_week: item.day_of_week,
-      type: item.type,
-    };
-  });
-  await scheduleService.createSchedule(schedules);
+  await scheduleService.createSchedule(req.body);
   return res.status(httpStatus.OK).json(responseMessage(i18next.t('schedule.create')));
+});
+
+const changeApplyToAllSchedule = catchAsync(async (req, res) => {
+  const {id_doctor, apply_to} = req.body;
+  await scheduleService.changeApplyToAllSchedule(id_doctor, apply_to);
+  return res.status(httpStatus.OK).json(responseMessage('Update apply to all schedule successfully'));
+});
+
+const changeApplyToSchedule = catchAsync(async (req, res) => {
+  const {id, apply_to} = req.body;
+  await scheduleService.changeApplyToSchedule(id, apply_to);
+  return res.status(httpStatus.OK).json(responseMessage('Update apply to schedule successfully'));
 });
 
 module.exports = {
   listByDay,
   listAll,
   createSchedule,
+  changeApplyToAllSchedule,
+  changeApplyToSchedule,
 };

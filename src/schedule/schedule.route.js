@@ -19,4 +19,18 @@ router.post(
   validate(scheduleValidation.createSchedule),
   scheduleController.createSchedule
 );
+router.post(
+  '/change-apply-to-all',
+  auth(),
+  staffPermission([STAFF_ROLES.ADMIN]),
+  validate(scheduleValidation.changeApplyToAll),
+  scheduleController.changeApplyToAllSchedule
+);
+router.post(
+  '/change-apply-to-id',
+  auth(),
+  staffPermission([STAFF_ROLES.ADMIN]),
+  validate(scheduleValidation.changeApplyTo),
+  scheduleController.changeApplyToSchedule
+);
 module.exports = router;
