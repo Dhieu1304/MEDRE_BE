@@ -33,6 +33,7 @@ const listForStaff = {
 const booking = {
   body: Joi.object().keys({
     id_schedule: Joi.string().uuid().required(),
+    id_time: Joi.string().uuid().required(),
     date: Joi.date().required(),
     reason: Joi.string(),
     id_patient: Joi.string().uuid(),
@@ -43,7 +44,6 @@ const updateBooking = {
   body: Joi.object().keys({
     id: Joi.string().uuid().required(),
     booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
-    type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),
     is_payment: Joi.boolean(),
   }),
 };

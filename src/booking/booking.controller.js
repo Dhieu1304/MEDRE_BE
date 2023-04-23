@@ -34,17 +34,18 @@ const listBookings = catchAsync(async (req, res) => {
     }
   }
 
-  const include = [];
+  const include = [{
+    model: models.time_schedule,
+    as: 'booking_time_schedule',
+  }];
   include.push({
     model: models.schedule,
     as: 'booking_schedule',
-    required: false,
-    where: {},
     include: [
-      {
-        model: models.time_schedule,
-        as: 'time_schedule',
-      },
+        {
+      model: models.expertise,
+      as: 'schedule_expertise',
+    },
       {
         model: models.staff,
         as: 'schedule_of_staff',
@@ -58,7 +59,7 @@ const listBookings = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.type;
   }
-  // include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
+
   include.push({ model: models.patient, as: 'booking_of_patient' });
   const condition = {
     where: filter,
@@ -102,16 +103,17 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     }
   }
 
-  const include = [];
+  const include = [{
+    model: models.time_schedule,
+    as: 'booking_time_schedule',
+  }];
   include.push({
     model: models.schedule,
     as: 'booking_schedule',
-    required: false,
-    where: {},
     include: [
       {
-        model: models.time_schedule,
-        as: 'time_schedule',
+        model: models.expertise,
+        as: 'schedule_expertise',
       },
       {
         model: models.staff,
@@ -144,27 +146,24 @@ const getDetailBooking = catchAsync(async (req, res) => {
     where: { id: req.params.id, id_user: req.user.id },
     include: [
       {
+        model: models.time_schedule,
+        as: 'booking_time_schedule',
+      },
+      {
         model: models.schedule,
         as: 'booking_schedule',
-        required: false,
-        where: {},
         include: [
           {
-            model: models.time_schedule,
-            as: 'time_schedule',
+            model: models.expertise,
+            as: 'schedule_expertise',
           },
           {
             model: models.staff,
             as: 'schedule_of_staff',
             attributes: { exclude: ['password', 'refresh_token'] },
-            include: {
-              model: models.expertise,
-              as: 'expertises',
-            },
           },
         ],
       },
-      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } },
       { model: models.patient, as: 'booking_of_patient' },
     ],
   });
@@ -176,23 +175,23 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
     where: { id: req.params.id },
     include: [
       {
+        model: models.time_schedule,
+        as: 'booking_time_schedule',
+      },
+      {
         model: models.schedule,
         as: 'booking_schedule',
         required: false,
         where: {},
         include: [
           {
-            model: models.time_schedule,
-            as: 'time_schedule',
+            model: models.expertise,
+            as: 'schedule_expertise',
           },
           {
             model: models.staff,
             as: 'schedule_of_staff',
             attributes: { exclude: ['password', 'refresh_token'] },
-            include: {
-              model: models.expertise,
-              as: 'expertises',
-            },
           },
         ],
       },
@@ -207,7 +206,7 @@ const booking = catchAsync(async (req, res) => {
   const data = req.body;
 
   // check booking date ( > 1 day)
-  if (data.date < moment(new Date()).add(1, 'd')) {
+  if (data.date < moment().add(1, 'd')) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
   data.id_user = req.user.id;
@@ -223,7 +222,7 @@ const booking = catchAsync(async (req, res) => {
 });
 
 const updateBooking = catchAsync(async (req, res) => {
-  const data = pick(req.body, ['id', 'booking_status', 'type', 'is_payment']);
+  const data = pick(req.body, ['id', 'booking_status', 'is_payment']);
   const updateBooking = await bookingService.updateBooking(data);
   return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
 });

@@ -1,11 +1,12 @@
 const Joi = require('joi');
 const { timeScheduleFormat } = require('../utils/messageCustom');
+const moment = require("moment");
 
 const list = {
   query: Joi.object().keys({
     id_doctor: Joi.string().uuid(),
-    from: Joi.date().default(new Date()),
-    to: Joi.date().default(new Date()),
+    from: Joi.date().default(moment()),
+    to: Joi.date().default(moment()),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),
