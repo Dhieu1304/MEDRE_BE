@@ -4,7 +4,7 @@ module.exports.createMockData = (data) => {
   for (let i = 1; i < data.length; i++) {
     const row = {};
     for (let j = 0; j < data[0].length; j++) {
-      if (data[i][j]) {
+      if (data[i][j] || data[i][j] === false) {
         if (row[keys[j]] === 'dob') {
           row[keys[j]] = new Date(data[i][j]);
         }

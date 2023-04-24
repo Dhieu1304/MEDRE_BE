@@ -58,7 +58,6 @@ const createPaymentUrl = catchAsync(async (req, res) => {
   const signData = querystring.stringify(vnp_Params, { encode: false });
   const hmac = crypto.createHmac('sha512', vn_pay.hashSecret);
   vnp_Params['vnp_SecureHash'] = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
-  console.log(vnp_Params);
 
   let vnpUrl = vn_pay.url;
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });

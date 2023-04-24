@@ -31,11 +31,14 @@ const { createMockData } = require('../utils/createMockData');
       logger.info('---------------------- INIT STAFF_EXPERTISE ----------------------');
       const staff_expertise = xlsx.parse(__dirname + '/data/staff_expertise.xlsx');
       await models.staff_expertise.bulkCreate(createMockData(staff_expertise[0].data));
-      /*
 
       logger.info('---------------------- INIT SCHEDULE ----------------------');
       const schedule = xlsx.parse(__dirname + '/data/schedule.xlsx');
       await models.schedule.bulkCreate(createMockData(schedule[0].data));
+
+      logger.info('---------------------- INIT PATIENT ----------------------');
+      const patient = xlsx.parse(__dirname + '/data/patient.xlsx');
+      await models.patient.bulkCreate(createMockData(patient[0].data));
 
       logger.info('---------------------- INIT BOOKING ----------------------');
       const booking = xlsx.parse(__dirname + '/data/booking.xlsx');
@@ -44,7 +47,6 @@ const { createMockData } = require('../utils/createMockData');
       logger.info('-------------------- DOCTOR TIME OFF ---------------------');
       const doctorTimeOff = xlsx.parse(__dirname + '/data/doctor_time_off.xlsx');
       await models.doctor_time_off.bulkCreate(createMockData(doctorTimeOff[0].data));
-*/
 
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
