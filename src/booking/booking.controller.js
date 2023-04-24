@@ -84,6 +84,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     'is_payment',
     'id_user',
     'id_patient',
+    'id_doctor',
     'id_staff_booking',
     'id_staff_cancel',
   ]);
@@ -125,9 +126,12 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
         model: models.staff,
         as: 'schedule_of_staff',
         attributes: { exclude: ['password', 'refresh_token'] },
+        where: filter.id_doctor ? { id: filter.id_doctor } : {},
       },
     ],
   });
+  delete filter.id_doctor;
+
   // convert filter type
   if (filter.type) {
     include[include.length - 1].where.type = filter.type;

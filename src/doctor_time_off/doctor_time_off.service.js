@@ -1,5 +1,9 @@
 const models = require('../models');
 const { Op } = require('sequelize');
+const { BOOKING_STATUS } = require('../booking/booking.constant');
+const ApiError = require('../utils/ApiError');
+const { BAD_REQUEST } = require('http-status');
+const i18next = require('i18next');
 
 const findAllByFilter = async (filter) => {
   return await models.doctor_time_off.findAll(filter);
@@ -9,46 +13,39 @@ const findAndCountAllByCondition = async (condition) => {
   return await models.doctor_time_off.findAndCountAll(condition);
 };
 
+// data: {id, id_doctor, from, to, time_start, time_end}
 const createTimeOff = async (data) => {
-  // todo: check time is have any booking
-  /*const booking = await models.booking.findAll({
+  // check time is have any booking
+  const booking = await models.booking.findAll({
     where: {
-      date: data.date,
+      [Op.and]: [{ date: { [Op.gte]: data.from } }, { date: { [Op.lte]: data.to } }],
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     },
-    include: {
-      model: models.schedule,
-      as: 'booking_schedule',
-      include: {
+    include: [
+      {
         model: models.time_schedule,
-        as: 'time_schedule',
+        as: 'booking_time_schedule',
         where: {
-          time_start: { [Op.gte]: data.time_start },
-          time_end: { [Op.lte]: data.time_end }
-        }
-      }
-    }
+          [Op.and]: [{ time_end: { [Op.gte]: data.time_start } }, { time_start: { [Op.lte]: data.time_end } }],
+        },
+      },
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        include: { model: models.staff, as: 'schedule_of_staff', where: { id: data.id_doctor } },
+      },
+    ],
   });
-  if (booking) {
-    console.log(data);
-    console.log(booking.length);
-    booking.map(item => {
-      console.log(item.id);
-    })
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('timeSchedule.haveBooking'))
-  }*/
+  if (booking && booking.length > 0) {
+    throw new ApiError(BAD_REQUEST, i18next.t('timeSchedule.haveBooking'));
+  }
 
-  // todo: check is have schedule at this time
+  // check is have schedule at this time --> no need, only replace above schedule
 
-  // todo: check is have time off at this time
+  // check is have time off at this time --> no need, only loop this time
 
   return await models.doctor_time_off.create(data);
 };
-
-(async () => {
-  const time = await models.time_schedule.findAll({ where: { time_start: { [Op.gte]: '17:00' } }, raw: true });
-  console.log(time);
-})();
 
 module.exports = {
   findAllByFilter,
