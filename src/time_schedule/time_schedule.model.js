@@ -1,3 +1,5 @@
+const { SCHEDULE_SESSION } = require('../schedule/schedule.constant');
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'time_schedule',
@@ -14,6 +16,11 @@ module.exports = function (sequelize, DataTypes) {
       time_end: {
         type: DataTypes.TIME,
         allowNull: false,
+      },
+      session: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        enum: SCHEDULE_SESSION,
       },
     },
     {
