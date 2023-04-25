@@ -133,7 +133,7 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
 const getDetailStaff = catchAsync(async (req, res) => {
   const { from, to } = req.query;
   const filterSchedule = {
-    [Op.not]: {[Op.or]: [{ apply_from: { [Op.gt]: to} }, { apply_to: { [Op.lt]: from} }]}
+    [Op.not]: { [Op.or]: [{ apply_from: { [Op.gt]: to } }, { apply_to: { [Op.lt]: from } }] },
   };
 
   const regexpRepeatOn = regexpRepeatOnFromTo(from, to);
@@ -158,7 +158,7 @@ const getDetailStaff = catchAsync(async (req, res) => {
             required: false,
             where: {
               booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
-              date: {[Op.between]: [from, to]},
+              date: { [Op.between]: [from, to] },
             },
             include: [
               {
@@ -175,7 +175,7 @@ const getDetailStaff = catchAsync(async (req, res) => {
         model: models.doctor_time_off,
         as: 'time_offs',
         required: false,
-        where: { [Op.not]: {[Op.or]: [{ from: { [Op.gt]: to} }, { to: { [Op.lt]: from} }]} },
+        where: { [Op.not]: { [Op.or]: [{ from: { [Op.gt]: to } }, { to: { [Op.lt]: from } }] } },
       },
       {
         model: models.expertise,

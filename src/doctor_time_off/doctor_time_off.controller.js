@@ -11,7 +11,7 @@ const getDoctorTimeOff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
   const { id_doctor, from, to } = req.query;
   const filter = {
-    [Op.not]: {[Op.or]: [{ from: { [Op.gt]: to} }, { to: { [Op.lt]: from} }]},
+    [Op.not]: { [Op.or]: [{ from: { [Op.gt]: to } }, { to: { [Op.lt]: from } }] },
   };
   if (id_doctor) {
     filter.id_doctor = id_doctor;

@@ -18,7 +18,7 @@ const listBookings = catchAsync(async (req, res) => {
 
   // convert filter from to
   if (filter.from && filter.to) {
-    filter = Object.assign(filter, { date: {[Op.between]: [filter.from, filter.to]} });
+    filter = Object.assign(filter, { date: { [Op.between]: [filter.from, filter.to] } });
     delete filter.from;
     delete filter.to;
   } else {
@@ -89,7 +89,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
 
   // convert filter from to
   if (filter.from && filter.to) {
-    filter = Object.assign(filter, { date: {[Op.between]: [filter.from, filter.to]}});
+    filter = Object.assign(filter, { date: { [Op.between]: [filter.from, filter.to] } });
     delete filter.from;
     delete filter.to;
   } else {
@@ -168,6 +168,13 @@ const getDetailBooking = catchAsync(async (req, res) => {
             model: models.staff,
             as: 'schedule_of_staff',
             attributes: { exclude: ['password', 'refresh_token'] },
+            include: [
+              {
+                model: models.expertise,
+                as: 'expertises',
+                attributes: ['id', 'name'],
+              },
+            ],
           },
         ],
       },
