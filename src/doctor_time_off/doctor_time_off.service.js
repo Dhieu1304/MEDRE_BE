@@ -18,7 +18,7 @@ const createTimeOff = async (data) => {
   // check time is have any booking
   const booking = await models.booking.findAll({
     where: {
-      [Op.and]: [{ date: { [Op.gte]: data.from } }, { date: { [Op.lte]: data.to } }],
+      date: { [Op.between]: [data.from, data.to] },
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     },
     include: [

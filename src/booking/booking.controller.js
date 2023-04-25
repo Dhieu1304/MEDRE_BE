@@ -18,9 +18,7 @@ const listBookings = catchAsync(async (req, res) => {
 
   // convert filter from to
   if (filter.from && filter.to) {
-    filter = Object.assign(filter, {
-      [Op.and]: [[{ date: { [Op.gte]: filter.from } }, { date: { [Op.lte]: filter.to } }]],
-    });
+    filter = Object.assign(filter, { date: {[Op.between]: [filter.from, filter.to]} });
     delete filter.from;
     delete filter.to;
   } else {
@@ -91,9 +89,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
 
   // convert filter from to
   if (filter.from && filter.to) {
-    filter = Object.assign(filter, {
-      [Op.and]: [[{ date: { [Op.gte]: filter.from } }, { date: { [Op.lte]: filter.to } }]],
-    });
+    filter = Object.assign(filter, { date: {[Op.between]: [filter.from, filter.to]}});
     delete filter.from;
     delete filter.to;
   } else {

@@ -37,7 +37,7 @@ const listAll = catchAsync(async (req, res) => {
 
   const filter = {
     id_doctor,
-    [Op.or]: [{ apply_from: { [Op.lte]: to } }, { apply_to: { [Op.gte]: from } }],
+    [Op.not]: {[Op.or]: [{ apply_from: { [Op.gt]: to} }, { apply_to: { [Op.lt]: from} }]},
   };
 
   const regexpRepeatOn = regexpRepeatOnFromTo(from, to);
@@ -57,7 +57,7 @@ const listAll = catchAsync(async (req, res) => {
         required: false,
         where: {
           booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
-          [Op.and]: [{ date: { [Op.gte]: from } }, { date: { [Op.lte]: to } }],
+          date: {[Op.between]: [from, to]},
         },
       },
     ],
