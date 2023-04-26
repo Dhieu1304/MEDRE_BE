@@ -264,7 +264,8 @@ const unblockingAccount = catchAsync(async (req, res) => {
 });
 
 const editAccountInfo = catchAsync(async (req, res) => {
-  const staff = await staffService.editStaff(req.params.id, req.body);
+  const staffId = req.user.id;
+  const staff = await staffService.editStaff(staffId, req.params.id, req.body);
   return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.update')));
 });
 

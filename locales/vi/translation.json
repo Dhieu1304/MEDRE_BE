@@ -81,7 +81,8 @@
     "emailIsExist": "Email này đã tồn tại trong hệ thống.",
     "phoneNumberIsExist": "Số điện thoại này đã tồn tại trong hệ thống.",
     "verifyEmail": "Vui lòng xác thực email.",
-    "verifyPhoneNumber": "Vui lòng xác thực số điện thoại."
+    "verifyPhoneNumber": "Vui lòng xác thực số điện thoại.",
+    "canNotUpdateInfo": "Không thể thay đổi thông tin. Vui lòng chỉnh sửa thông tin tài khoản chính mình ở mục 'Chỉnh sửa hồ sơ'."
   },
   "block": {
     "blockAccount": "Tài khoản đã bị khóa.",
