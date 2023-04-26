@@ -81,7 +81,8 @@
     "emailIsExist": "Email này đã tồn tại trong hệ thống.",
     "phoneNumberIsExist": "Số điện thoại này đã tồn tại trong hệ thống.",
     "verifyEmail": "Vui lòng xác thực email.",
-    "verifyPhoneNumber": "Vui lòng xác thực số điện thoại."
+    "verifyPhoneNumber": "Vui lòng xác thực số điện thoại.",
+    "canNotUpdateInfo": "Không thể thay đổi thông tin. Vui lòng chỉnh sửa thông tin tài khoản chính mình ở mục 'Chỉnh sửa hồ sơ'."
   },
   "block": {
     "blockAccount": "Tài khoản đã bị khóa.",
@@ -125,6 +126,9 @@
       "75": "Ngân hàng thanh toán đang bảo trì.",
       "79": "Sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch.",
       "99": "Lỗi không xác định."
+    },
+    "mobileNotification": {
+      "test": "Thử nghiệm gửi thông báo cho điện thoại."
     }
   }
 }

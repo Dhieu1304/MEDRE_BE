@@ -186,9 +186,19 @@ const findDetailStaff = async (filter) => {
   });
 };
 
-const editStaff = async (id, data) => {
+const editStaff = async (staffId, id, data) => {
   // find staff and update
   const staff = await findOneByFilter({ id });
+
+  //check if staff is admin
+  if (staff.role === STAFF_ROLES.ADMIN) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('unCategory.permission'));
+  }
+
+  //check if staffId= staff's id
+  if(staffId === staff.id) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotUpdateInfo'));
+  }
 
   // check phone number is exists
   if (data.phone_number && staff.phone_number !== data.phone_number) {

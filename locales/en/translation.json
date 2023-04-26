@@ -81,7 +81,8 @@
     "emailIsExist": "This email already exists in the system.",
     "phoneNumberIsExist": "This phone number already exists in the system.",
     "verifyEmail": "Please verify your email.",
-    "verifyPhoneNumber": "Please verify your phone number."
+    "verifyPhoneNumber": "Please verify your phone number.",
+    "canNotUpdateInfo": "Cannot update. Please go to 'Edit profile' to update your account's information."
   },
   "block": {
     "blockAccount": "Your account is blocked.",
@@ -125,6 +126,9 @@
       "75": "Payment bank under maintenance.",
       "79": "Wrong password to pay more than the specified number of times. Please repeat the transaction.",
       "99": "Unknown error."
+    },
+    "mobileNotification": {
+      "test": "Mobile notification testing."
     }
   }
 }
