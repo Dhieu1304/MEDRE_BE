@@ -196,7 +196,7 @@ const editStaff = async (staffId, id, data) => {
   }
 
   //check if staffId= staff's id
-  if(staffId === staff.id) {
+  if (staffId === staff.id) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.canNotUpdateInfo'));
   }
 
