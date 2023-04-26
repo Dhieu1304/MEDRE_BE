@@ -9,6 +9,7 @@ const { STAFF_ROLES } = require('./staff.constant');
 const { BLOCK_ACCOUNT_TYPE } = require('../blocking_account/blocking_account.constant');
 const i18next = require('i18next');
 const logger = require('../config/logger');
+const { blockAccount, unBlockAccount } = require('../nodeCache/account');
 
 const createStaff = async (data) => {
   // check email is exists
@@ -109,22 +110,30 @@ const blockingAccount = async (staffId, data) => {
     }
   }
 
-  // Block the account and write into block_account table
-  const blockAccount = await models.blocking_account.create({
-    id: uuidv4(),
-    id_staff: staffId,
-    id_account: data.id_account,
-    role: blockingAccountRole,
-    type: BLOCK_ACCOUNT_TYPE.BLOCK,
-    reason: data.reason,
-  });
+  try {
+    // Block the account and write into block_account table
+    const blockingAccount = await models.blocking_account.create({
+      id: uuidv4(),
+      id_staff: staffId,
+      id_account: data.id_account,
+      role: blockingAccountRole,
+      type: BLOCK_ACCOUNT_TYPE.BLOCK,
+      reason: data.reason,
+    });
 
-  // update blocked status
-  account.blocked = true;
-  account.refresh_token = '';
-  await account.save();
+    // update blocked status
+    account.blocked = true;
+    account.refresh_token = '';
+    await account.save();
 
-  return blockAccount;
+    // add to cache
+    blockAccount(data.id_account);
+
+    return blockingAccount;
+  } catch (e) {
+    logger.error(e.message);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Oops... Error');
+  }
 };
 
 const unblockingAccount = async (staffId, data) => {
@@ -145,21 +154,29 @@ const unblockingAccount = async (staffId, data) => {
     throw new ApiError(httpStatus.OK, i18next.t('block.alreadyUnblocked'));
   }
 
-  // Unblock the account and write into block_account table
-  const unBlockAccount = await models.blocking_account.create({
-    id: uuidv4(),
-    id_staff: staffId,
-    id_account: data.id_account,
-    role: unblockingAccountRole,
-    type: BLOCK_ACCOUNT_TYPE.UNBLOCK,
-    reason: data.reason,
-  });
+  try {
+    // Unblock the account and write into block_account table
+    const unBlockingAccount = await models.blocking_account.create({
+      id: uuidv4(),
+      id_staff: staffId,
+      id_account: data.id_account,
+      role: unblockingAccountRole,
+      type: BLOCK_ACCOUNT_TYPE.UNBLOCK,
+      reason: data.reason,
+    });
 
-  // update blocked status
-  account.blocked = false;
-  await account.save();
+    // update blocked status
+    account.blocked = false;
+    await account.save();
 
-  return unBlockAccount;
+    // add to cache
+    unBlockAccount(data.id_account);
+
+    return unBlockingAccount;
+  } catch (e) {
+    logger.error(e.message);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Oops... Error');
+  }
 };
 
 const findDetailStaff = async (filter) => {
