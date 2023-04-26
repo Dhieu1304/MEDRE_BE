@@ -30,6 +30,8 @@ const envVarsSchema = Joi.object()
     VNP_HASH_SECRET: Joi.string().required().description('VNPay hash secret'),
     SMS_API_KEY: Joi.string().required().description('SMS API key'),
     SMS_SECRET_KEY: Joi.string().required().description('SMS secret key'),
+    OS_APP_ID: Joi.string().required().description('One signal app id'),
+    OS_API_KEY: Joi.string().required().description('One signal api key'),
   })
   .unknown();
 
@@ -95,5 +97,9 @@ module.exports = {
   sms: {
     apiKey: envVars.SMS_API_KEY,
     secretKey: envVars.SMS_SECRET_KEY,
+  },
+  one_signal: {
+    app_id: envVars.OS_APP_ID,
+    api_key: envVars.OS_API_KEY,
   },
 };

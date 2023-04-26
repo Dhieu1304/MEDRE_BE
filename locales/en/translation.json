@@ -125,6 +125,9 @@
       "75": "Payment bank under maintenance.",
       "79": "Wrong password to pay more than the specified number of times. Please repeat the transaction.",
       "99": "Unknown error."
+    },
+    "mobileNotification": {
+      "test": "Mobile notification testing."
     }
   }
 }
