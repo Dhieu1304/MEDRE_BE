@@ -6,6 +6,8 @@ const debug = require('debug')('medre-be:server');
 const http = require('http');
 const logger = require("../src/config/logger");
 const sequelize = require('../src/config/database');
+const {SocketServer} = require("../src/socket");
+const {Server} = require("socket.io");
 
 app.set('port', config.port);
 
@@ -55,6 +57,15 @@ function onListening() {
     server.on('error', onError);
     server.on('listening', onListening);
 
+    // socket have specific namespace
+    const io = new Server(server, {
+      cors: { origin: '*' }
+    }).of('/socket');
+
+    SocketServer(io);
+    global._io = io;
+
+    logger.info(`Socket Server is running: http://localhost:${config.port}/socket`);
   } catch (error) {
     logger.error('Unable to connect to the database:', error);
   }
