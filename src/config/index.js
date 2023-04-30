@@ -50,21 +50,7 @@ module.exports = {
     password: envVars.NODE_ENV === 'production' ? envVars.HDB_PASSWORD : envVars.DB_PASSWORD,
     host: envVars.NODE_ENV === 'production' ? envVars.HDB_HOST : envVars.DB_HOST,
     port: envVars.NODE_ENV === 'production' ? envVars.HDB_PORT : envVars.DB_PORT,
-    dialectOptions:
-      envVars.NODE_ENV === 'production'
-        ? {
-            ssl: {
-              require: true,
-              rejectUnauthorized: false,
-            },
-          }
-        : {},
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
-    },
+    pool: { max: 5, min: 0, acquire: 30000, idle: 10000 },
     logging: false,
     db_sync: envVars.DB_SYNC,
   },
