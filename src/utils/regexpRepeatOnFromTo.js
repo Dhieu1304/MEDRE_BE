@@ -16,7 +16,7 @@ const regexpRepeatOnFromTo = (from, to) => {
     });
 
     // convert regexp string
-    let regexp = '^[';
+    let regexp = '[';
     repeat_on.map((item) => {
       regexp += item + '|';
     });

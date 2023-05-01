@@ -61,18 +61,32 @@ const getAll = catchAsync(async (req, res) => {
   }
   if (filter.type) {
     include[0].where.type = filter.type;
-    delete filter.type;
   }
 
-  if (filter.from) {
-    // include[0].where.apply_to = { [Op.gte]: filter.from };
-    delete filter.from;
-  }
+  if (filter.from && filter.to) {
+    const filterSchedule = {
+      [Op.not]: { [Op.or]: [{ apply_from: { [Op.gt]: filter.to } }, { apply_to: { [Op.lt]: filter.from } }] },
+    };
 
-  if (filter.to) {
-    include[0].where.apply_to = { [Op.gte]: filter.to };
-    delete filter.to;
+    const regexpRepeatOn = regexpRepeatOnFromTo(filter.from, filter.to);
+    if (!regexpRepeatOn.status) {
+      return res.status(httpStatus.BAD_REQUEST).json(responseMessage(regexpRepeatOn.data, false));
+    } else if (regexpRepeatOn.data) {
+      filterSchedule.repeat_on = { [Op.regexp]: regexpRepeatOn.data };
+    }
+    include[0].where = filterSchedule;
+  } else {
+    if (filter.from) {
+      include[0].where.apply_to = { [Op.gte]: filter.from };
+    }
+
+    if (filter.to) {
+      include[0].where.apply_to = { [Op.gte]: filter.to };
+    }
   }
+  delete filter.type;
+  delete filter.from;
+  delete filter.to;
 
   include.push({ model: models.expertise, as: 'expertises', required: false, where: {} });
   if (filter.expertise) {
@@ -80,6 +94,9 @@ const getAll = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.expertise;
   }
+
+  console.log(filter);
+  console.log(include);
 
   const condition = {
     where: filter,
