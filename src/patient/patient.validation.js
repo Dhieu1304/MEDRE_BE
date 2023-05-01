@@ -45,7 +45,8 @@ const create = {
     name: Joi.string().required().trim(),
     gender: Joi.string()
       .valid(...Object.values(GENDERS))
-      .default(GENDERS.OTHER).required(),
+      .default(GENDERS.OTHER)
+      .required(),
     address: Joi.string().required(),
     dob: Joi.date().required(),
     health_insurance: Joi.string().trim(),

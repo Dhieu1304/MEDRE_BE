@@ -9,6 +9,9 @@ const list = {
     is_payment: Joi.boolean(),
     from: Joi.date(),
     to: Joi.date(),
+    order: Joi.string()
+      .valid('createdAt:asc', 'createdAt:desc', 'updatedAt:asc', 'updatedAt:desc', 'date:asc', 'date:desc')
+      .default('createdAt:desc'),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),
@@ -26,6 +29,9 @@ const listForStaff = {
     is_payment: Joi.boolean(),
     from: Joi.date(),
     to: Joi.date(),
+    order: Joi.string()
+      .valid('createdAt:asc', 'createdAt:desc', 'updatedAt:asc', 'updatedAt:desc', 'date:asc', 'date:desc')
+      .default('createdAt:desc'),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),

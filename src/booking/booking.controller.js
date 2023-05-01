@@ -12,7 +12,7 @@ const moment = require('moment');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  let filter = pick(req.query, ['type', 'booking_status', 'from', 'to', 'is_payment']);
+  let filter = pick(req.query, ['type', 'booking_status', 'from', 'to', 'is_payment', 'order']);
   // add user id
   filter.id_user = req.user.id;
 
@@ -62,11 +62,19 @@ const listBookings = catchAsync(async (req, res) => {
   }
 
   include.push({ model: models.patient, as: 'booking_of_patient' });
+
+  const order = [];
+
+  if (filter.order) {
+    order.push(filter.order.split(':'));
+    delete filter.order;
+  }
+
   const condition = {
     where: filter,
     include,
     ...pageLimit2Offset(page, limit),
-    order: ['createdAt'],
+    order,
   };
   const listBooking = await bookingService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(listBooking, page, limit)));
@@ -85,6 +93,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     'id_doctor',
     'id_staff_booking',
     'id_staff_cancel',
+    'order',
   ]);
 
   // convert filter from to
@@ -137,11 +146,18 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
   include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
   include.push({ model: models.patient, as: 'booking_of_patient' });
 
+  const order = [];
+
+  if (filter.order) {
+    order.push(filter.order.split(':'));
+    delete filter.order;
+  }
+
   const condition = {
     where: filter,
     include,
     ...pageLimit2Offset(page, limit),
-    order: ['createdAt'],
+    order,
   };
   const listBooking = await bookingService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(listBooking, page, limit)));
