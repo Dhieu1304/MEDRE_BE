@@ -5,6 +5,7 @@ const sequelize = new Sequelize(postgresql.database, postgresql.username, postgr
   host: postgresql.host,
   port: postgresql.port,
   dialect: 'postgres',
+  dialectOptions: postgresql.dialectOptions,
   pool: postgresql.pool,
   logging: postgresql.logging,
 });
