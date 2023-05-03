@@ -8,9 +8,14 @@ const i18next = require('i18next');
 // const sendSMS = require('../otp/sms');
 
 const register = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
   const mail = req.body.email;
   const phone = req.body.phone_number;
+
+  if (!mail && !phone) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('auth.missingInput'), false));
+  }
+
+  const user = await userService.createUser(req.body);
   res.status(httpStatus.CREATED).json(responseData(user, i18next.t('auth.registerSuccess')));
   // only running underground
   if (mail) {
