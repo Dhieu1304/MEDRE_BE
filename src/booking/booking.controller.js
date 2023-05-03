@@ -66,7 +66,11 @@ const listBookings = catchAsync(async (req, res) => {
   const order = [];
 
   if (filter.order) {
-    order.push(filter.order.split(':'));
+    const parts = filter.order.split(':');
+    order.push(parts);
+    if (parts[0] === 'date') {
+      order.push([{ model: models.time_schedule, as: 'booking_time_schedule' }, 'time_start', parts[1]]);
+    }
     delete filter.order;
   }
 
