@@ -6,13 +6,13 @@ const { phoneNumberFormat } = require('../utils/messageCustom');
 
 const register = {
   body: Joi.object().keys({
-    phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
-    password: Joi.string().required().custom(password),
+    phone_number: Joi.string().custom(phoneNumberFormat).trim(),
+    email: Joi.string().email().lowercase().trim(),
+    password: Joi.string().required().trim().custom(password),
     name: Joi.string().trim(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     dob: Joi.date(),
-    address: Joi.string(),
+    address: Joi.string().trim(),
   }),
 };
 
