@@ -1,4 +1,3 @@
-const { v4: uuidV4 } = require('uuid');
 const { PAYMENT_STATUS } = require('../booking_payment/booking_payment.constant');
 
 module.exports = function (sequelize, DataTypes) {
@@ -9,7 +8,6 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
-        defaultValue: uuidV4(),
       },
       id_booking: {
         type: DataTypes.UUID,

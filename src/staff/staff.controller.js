@@ -74,7 +74,7 @@ const getAll = catchAsync(async (req, res) => {
     } else if (regexpRepeatOn.data) {
       filterSchedule.repeat_on = { [Op.regexp]: regexpRepeatOn.data };
     }
-    include[0].where = filterSchedule;
+    include[0].where = Object.assign(include[0].where, filterSchedule);
   } else {
     if (filter.from) {
       include[0].where.apply_to = { [Op.gte]: filter.from };
@@ -94,9 +94,6 @@ const getAll = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.expertise;
   }
-
-  console.log(filter);
-  console.log(include);
 
   const condition = {
     where: filter,

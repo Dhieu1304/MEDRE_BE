@@ -1,6 +1,5 @@
 const { SCHEDULE_TYPE, SCHEDULE_SESSION } = require('./schedule.constant');
 const moment = require('moment');
-const { v4: uuidv4 } = require('uuid');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -10,7 +9,6 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
-        defaultValue: uuidv4(),
       },
       id_doctor: {
         type: DataTypes.UUID,
