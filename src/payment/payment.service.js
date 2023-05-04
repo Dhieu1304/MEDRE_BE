@@ -5,6 +5,7 @@ const { BOOKING_STATUS } = require('../booking/booking.constant');
 const logger = require('../config/logger');
 const { PAYMENT_STATUS } = require('../booking_payment/booking_payment.constant');
 const i18next = require('i18next');
+const { v4: uuidv4 } = require('uuid');
 
 const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   const booking = await models.booking.findOne({
@@ -21,7 +22,7 @@ const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   }
 
   // create booking payment
-  return await models.booking_payment.create({ id_booking, id_user, txn_ref });
+  return await models.booking_payment.create({ id: uuidv4(), id_booking, id_user, txn_ref });
 };
 
 const handlePaymentSuccess = async (txn_ref) => {

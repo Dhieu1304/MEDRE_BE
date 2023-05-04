@@ -1,3 +1,5 @@
+const { SCHEDULE_SESSION } = require('../schedule/schedule.constant');
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'doctor_time_off',
@@ -23,13 +25,11 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
-      time_start: {
-        type: DataTypes.TIME,
+      session: {
+        type: DataTypes.STRING,
         allowNull: false,
-      },
-      time_end: {
-        type: DataTypes.TIME,
-        allowNull: false,
+        enum: SCHEDULE_SESSION,
+        defaultValue: SCHEDULE_SESSION.WHOLE_DAY,
       },
     },
     {

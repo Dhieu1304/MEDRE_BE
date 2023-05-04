@@ -31,7 +31,8 @@
     "registerSuccess": "Register successfully.",
     "loginSuccess": "Login successfully.",
     "verifySuccess": "Verify successfully.",
-    "verifyFailure": "Cannot verify."
+    "verifyFailure": "Cannot verify.",
+    "missingInput": "PhoneNumber or Email is required."
   },
   "booking": {
     "success": "Successful.",

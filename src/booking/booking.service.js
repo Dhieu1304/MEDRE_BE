@@ -6,6 +6,7 @@ const { BOOKING_STATUS } = require('./booking.constant');
 const i18next = require('i18next');
 const userService = require('../user/user.service');
 const moment = require('moment');
+const { v4: uuidv4 } = require('uuid');
 
 const createNewBooking = async (data) => {
   // check user info
@@ -45,6 +46,7 @@ const createNewBooking = async (data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
 
+  data.id = uuidv4();
   return models.booking.create(data);
 };
 

@@ -25,10 +25,6 @@ const findAndCountAllByCondition = async (condition) => {
   return await models.patient.findAndCountAll(condition);
 };
 
-const create = async (data) => {
-  return await models.patient.create(data);
-};
-
 const updatePatient = async (id, data) => {
   let patient = await findOneByFilter({ id });
   if (!patient) {
@@ -63,7 +59,6 @@ module.exports = {
   createPatient,
   findOneByFilter,
   findAllByFilter,
-  create,
   findAndCountAllByCondition,
   updatePatient,
   findOrCreatePatientFromUser,

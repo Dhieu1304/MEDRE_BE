@@ -64,7 +64,7 @@ const createPatient = catchAsync(async (req, res) => {
   const data = pick(req.body, ['phone_number', 'name', 'gender', 'address', 'dob', 'health_insurance']);
   data.id = uuidv4();
   data.id_user = req.user.id;
-  const newPatient = await patientService.create(data);
+  const newPatient = await patientService.createPatient(data);
   return res.status(httpStatus.OK).json(responseData(newPatient));
 });
 

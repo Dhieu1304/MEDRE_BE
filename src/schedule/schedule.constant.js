@@ -6,6 +6,7 @@ const SCHEDULE_TYPE = Object.freeze({
 const SCHEDULE_SESSION = Object.freeze({
   MORNING: 'Morning',
   AFTERNOON: 'Afternoon',
+  WHOLE_DAY: 'WholeDay',
 });
 
 module.exports = {

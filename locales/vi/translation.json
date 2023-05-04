@@ -31,7 +31,8 @@
     "registerSuccess": "Đăng ký tài khoản thành công.",
     "loginSuccess": "Đăng nhập thành công.",
     "verifySuccess": "Xác thực thành công.",
-    "verifyFailure": "Không thể xác thực."
+    "verifyFailure": "Không thể xác thực.",
+    "missingInput": "Vui lòng cung cấp Số điện thoại hoặc Email."
   },
   "booking": {
     "success": "Tải dữ liệu hành công.",
