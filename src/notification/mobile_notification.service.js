@@ -31,7 +31,7 @@ const sendPushNotification = (data, callback) => {
   req.end();
 };
 
-const sendNotificationTopicFCM = async (topic, payload) => {
+const sendNotificationTopicFCM = async () => {
   try {
     getMessaging()
       .send({

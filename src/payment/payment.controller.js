@@ -1,12 +1,12 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseMessage, responseData } = require('../utils/responseFormat');
+const { responseData } = require('../utils/responseFormat');
 const { vn_pay } = require('../config');
 const querystring = require('qs');
 const crypto = require('crypto');
 const moment = require('moment');
 const paymentService = require('./payment.service');
-const i18next = require('i18next');
+const statusPage = require('../view/statusPage');
 
 const sortObject = (obj) => {
   const sorted = {};
@@ -81,13 +81,16 @@ const returnData = catchAsync(async (req, res) => {
     const { vnp_TxnRef: txn_ref, vnp_ResponseCode: rsp_code } = vnp_Params;
     if (rsp_code === '00') {
       await paymentService.handlePaymentSuccess(txn_ref);
-      return res.status(httpStatus.OK).json(responseMessage(i18next.t('payment.paymentSuccess')));
+      // return res.status(httpStatus.OK).json(responseMessage(i18next.t('payment.paymentSuccess')));
+      return res.send(statusPage('Giao dịch thành công', 'Cảm ơn quý khách đã sử dụng dịch vụ'));
     } else {
       await paymentService.handlePaymentFail(txn_ref, rsp_code);
-      return res.status(httpStatus.OK).json(responseMessage(i18next.t(`payment.paymentFail.${rsp_code}`)));
+      // return res.status(httpStatus.OK).json(responseMessage(i18next.t(`payment.paymentFail.${rsp_code}`)));
+      return res.send(statusPage('Giao dịch thất bại', 'Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ', false));
     }
   }
-  return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('payment.invalidSignature'), false));
+  // return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('payment.invalidSignature'), false));
+  return res.send(statusPage('Giao dịch thất bại', 'Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ', false));
 });
 
 module.exports = {
