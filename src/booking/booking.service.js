@@ -33,6 +33,8 @@ const createNewBooking = async (data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidScheduleId'));
   }
 
+  // todo: check schedule valid time session
+
   // check is any booking at this time
   const booking = await models.booking.findOne({
     where: {

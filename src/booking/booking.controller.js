@@ -253,6 +253,9 @@ const booking = catchAsync(async (req, res) => {
   }
 
   const newBooking = await bookingService.createNewBooking(data);
+
+  // todo: change status to cancel after 30 minute user don't payment
+
   return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 });
 
