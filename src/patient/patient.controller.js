@@ -38,6 +38,7 @@ const listPatient = catchAsync(async (req, res) => {
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
+    order: [['createdAt', 'desc']],
   };
   const patients = await patientService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(patients, page, limit)));
