@@ -21,8 +21,4 @@ firebaseAdmin.initializeApp({
   storageBucket: config.firebaseAdmin.storageBucket,
 });
 
-const bucket = firebaseAdmin.storage().bucket();
-
-module.exports = {
-  bucket,
-};
+module.exports = firebaseAdmin;
