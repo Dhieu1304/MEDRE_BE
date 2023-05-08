@@ -253,11 +253,26 @@ const booking = catchAsync(async (req, res) => {
   }
 
   const newBooking = await bookingService.createNewBooking(data);
+
+  // todo: change status to cancel after 30 minute user don't payment
+
   return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 });
 
 const updateBooking = catchAsync(async (req, res) => {
-  const data = pick(req.body, ['id', 'booking_status', 'is_payment']);
+  const data = pick(req.body, [
+    'id',
+    'booking_status',
+    'is_payment',
+    'code',
+    'reason',
+    'note',
+    'id_patient',
+    'id_schedule',
+    'date',
+    'id_time',
+    'conclusion',
+  ]);
   const updateBooking = await bookingService.updateBooking(data);
   return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
 });
