@@ -7,6 +7,7 @@ const i18next = require('i18next');
 const userService = require('../user/user.service');
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
+const {SCHEDULE_SESSION} = require("../schedule/schedule.constant");
 
 const createNewBooking = async (data) => {
   // check user info
@@ -33,7 +34,18 @@ const createNewBooking = async (data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidScheduleId'));
   }
 
-  // todo: check schedule valid time session
+  // check time
+  const timeSchedule = await models.time_schedule.findOne({where: {id: data.id_time}});
+  if (!timeSchedule) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidTimeID'));
+  }
+
+  // check schedule valid time session
+  if (schedule.session !== SCHEDULE_SESSION.WHOLE_DAY) {
+    if (timeSchedule.session !== schedule.session) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidTimeSession'));
+    }
+  }
 
   // check is any booking at this time
   const booking = await models.booking.findOne({
