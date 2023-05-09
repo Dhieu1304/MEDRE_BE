@@ -359,16 +359,16 @@ const checkAccount = async (token) => {
   const tk = token.substr(0, token.length - 1);
   const decoded = jwt.verify(tk, config.jwt.secret);
   if (type == 1) {
-    const user = await userService.findOneByFilter({email: decoded.mail});
-    if(!user) {
+    const user = await userService.findOneByFilter({ email: decoded.mail });
+    if (!user) {
       return false;
     }
   }
   if (type == 2) {
-    const staff = await staffService.findOneByFilter({email: decoded.mail});
-    if(!staff) {
+    const staff = await staffService.findOneByFilter({ email: decoded.mail });
+    if (!staff) {
       return false;
-    } 
+    }
   } else {
     return true;
   }

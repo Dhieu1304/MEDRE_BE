@@ -137,6 +137,6 @@
   "package": {
     "notFound": "Package not found.",
     "success": "Update successfully.",
-    "delete":"Delete package successfully."
+    "delete": "Delete package successfully."
   }
 }
