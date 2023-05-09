@@ -10,6 +10,7 @@ const { BLOCK_ACCOUNT_TYPE } = require('../blocking_account/blocking_account.con
 const i18next = require('i18next');
 const logger = require('../config/logger');
 const { blockAccount, unBlockAccount } = require('../nodeCache/account');
+const { Op } = require('sequelize');
 
 const createStaff = async (data) => {
   // check email is exists
@@ -123,8 +124,18 @@ const blockingAccount = async (staffId, data) => {
 
     // update blocked status
     account.blocked = true;
-    account.refresh_token = '';
     await account.save();
+
+    // blacklist refresh_token
+    await models.history_login.update(
+      { blacklisted: true },
+      {
+        where: {
+          [Op.or]: [{ id_user: data.id_account }, { id_staff: data.id_account }],
+          expires: { [Op.gte]: new Date() },
+        },
+      }
+    );
 
     // add to cache
     blockAccount(data.id_account);
@@ -169,7 +180,18 @@ const unblockingAccount = async (staffId, data) => {
     account.blocked = false;
     await account.save();
 
-    // add to cache
+    // unBlacklist refresh_token
+    await models.history_login.update(
+      { blacklisted: false },
+      {
+        where: {
+          [Op.or]: [{ id_user: data.id_account }, { id_staff: data.id_account }],
+          expires: { [Op.gte]: new Date() },
+        },
+      }
+    );
+
+    // remove from cache
     unBlockAccount(data.id_account);
 
     return unBlockingAccount;
@@ -309,11 +331,7 @@ const getStaffInfo = async (options) => {
   return user;
 };
 
-const resetPassword = async (email, new_password, confirm_password) => {
-  //check if new password and confirm password is match
-  if (new_password !== confirm_password) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.notMatch'));
-  }
+const resetPassword = async (email, new_password) => {
   const staff = await findOneByFilter({ email: email });
   staff.password = await bcrypt.hash(new_password, 10);
   return await staff.save();

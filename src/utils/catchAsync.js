@@ -6,7 +6,7 @@ const catchAsync = (fn) => {
       if (err.statusCode < 400) {
         return res.status(err.statusCode).json(responseMessage(err.message, false));
       }
-      console.log(err);
+      // console.log(err);
       return next(err);
     });
   };

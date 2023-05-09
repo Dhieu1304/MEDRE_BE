@@ -10,6 +10,8 @@ const staffService = require('../staff/staff.service');
 const i18next = require('i18next');
 const nodemailer = require('nodemailer');
 const logger = require('../config/logger');
+const models = require('../models');
+const { Op } = require('sequelize');
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
@@ -151,7 +153,7 @@ const staffLoginUserWithUsernameAndPassword = async (username, password) => {
   // check staff
   const staff = await staffService.findOneByFilter({ username });
   if (!staff) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('username.usernameInccorect'));
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('username.usernameIncorrect'));
   }
 
   // check password
@@ -168,24 +170,30 @@ const staffLoginUserWithUsernameAndPassword = async (username, password) => {
 };
 
 const refreshAuth = async (refresh_token) => {
-  const user = await userService.findOneByFilter({ refresh_token });
-  if (!user) {
+  const historyLogin = await models.history_login.findOne({
+    where: { refresh_token, blacklisted: false, expires: { [Op.gte]: new Date() } },
+  });
+  if (!historyLogin || !historyLogin.id_user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
+  const user = await userService.findOneByFilter({ id: historyLogin.id_user });
   const tokens = await generateAuthTokens(user);
-  user.refresh_token = tokens.refresh.token;
-  await user.save();
+  tokens.refresh.token = historyLogin.refresh_token;
+  tokens.refresh.expires = historyLogin.expires;
   return { user, tokens };
 };
 
 const staffRefreshAuth = async (refresh_token) => {
-  const staff = await staffService.findOneByFilter({ refresh_token });
-  if (!staff) {
+  const historyLogin = await models.history_login.findOne({
+    where: { refresh_token, blacklisted: false, expires: { [Op.gte]: new Date() } },
+  });
+  if (!historyLogin || !historyLogin.id_staff) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
+  const staff = await staffService.findOneByFilter({ id: historyLogin.id_staff });
   const tokens = await generateAuthTokens(staff);
-  staff.refresh_token = tokens.refresh.token;
-  await staff.save();
+  tokens.refresh.token = historyLogin.refresh_token;
+  tokens.refresh.expires = historyLogin.expires;
   return { staff, tokens };
 };
 
@@ -323,9 +331,9 @@ const sendMailResetPassword = async (email, type) => {
     let token = generateVerifyToken(email);
     var url = '';
     if (type == 1) {
-      url = config.base_url.fe_user_url + '/reset-password/' + token + type;
+      url = config.base_url.be_url + '/auth/reset-password/' + token + type;
     } else if (type == 2) {
-      url = config.base_url.fe_admin_url + '/reset-password/' + token + type;
+      url = config.base_url.be_url + '/auth/reset-password/' + token + type;
     }
     const mailOptions = {
       from: config.nodemailer.nm_email,
@@ -346,17 +354,37 @@ const sendMailResetPassword = async (email, type) => {
   }
 };
 
-const resetPassword = async (token, new_password, confirm_password) => {
+const checkAccount = async (token) => {
+  const type = token[token.length - 1];
+  const tk = token.substr(0, token.length - 1);
+  const decoded = jwt.verify(tk, config.jwt.secret);
+  if (type == 1) {
+    const user = await userService.findOneByFilter({ email: decoded.mail });
+    if (!user) {
+      return false;
+    }
+  }
+  if (type == 2) {
+    const staff = await staffService.findOneByFilter({ email: decoded.mail });
+    if (!staff) {
+      return false;
+    }
+  } else {
+    return true;
+  }
+};
+
+const resetPassword = async (token, new_password) => {
   try {
     const type = token[token.length - 1];
     const tk = token.substr(0, token.length - 1);
     const decoded = jwt.verify(tk, config.jwt.secret);
     if (type == 1) {
-      await userService.resetPassword(decoded.mail, new_password, confirm_password);
+      await userService.resetPassword(decoded.mail, new_password);
       return true;
     }
     if (type == 2) {
-      await staffService.resetPassword(decoded.mail, new_password, confirm_password);
+      await staffService.resetPassword(decoded.mail, new_password);
       return true;
     } else {
       return false;
@@ -379,7 +407,7 @@ module.exports = {
   resetPassEmailTemplate,
   sendMailResetPassword,
   resetPassword,
-
+  checkAccount,
   // admin
   staffLoginUserWithEmailAndPassword,
   staffLoginUserWithPhoneNumberAndPassword,
