@@ -331,11 +331,7 @@ const getStaffInfo = async (options) => {
   return user;
 };
 
-const resetPassword = async (email, new_password, confirm_password) => {
-  //check if new password and confirm password is match
-  if (new_password !== confirm_password) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.notMatch'));
-  }
+const resetPassword = async (email, new_password) => {
   const staff = await findOneByFilter({ email: email });
   staff.password = await bcrypt.hash(new_password, 10);
   return await staff.save();

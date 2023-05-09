@@ -5,7 +5,7 @@ const { password } = require('../utils/validateCustom');
 
 const editUser = {
   body: Joi.object().keys({
-    phone_number: Joi.string().required().custom(phoneNumberFormat),
+    phone_number: Joi.string().custom(phoneNumberFormat),
     email: Joi.string().email().lowercase(),
     name: Joi.string().trim(),
     image: Joi.string().trim(),

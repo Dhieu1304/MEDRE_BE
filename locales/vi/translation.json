@@ -129,9 +129,14 @@
       "75": "Ngân hàng thanh toán đang bảo trì.",
       "79": "Sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch.",
       "99": "Lỗi không xác định."
-    },
-    "mobileNotification": {
-      "test": "Thử nghiệm gửi thông báo cho điện thoại."
     }
+  },
+  "mobileNotification": {
+    "test": "Thử nghiệm gửi thông báo cho điện thoại."
+  },
+  "package": {
+    "notFound": "Không tìm thấy gói khám.",
+    "success": "Thay đổi thông tin thành công.",
+    "delete":"Xóa gói thành công."
   }
 }
