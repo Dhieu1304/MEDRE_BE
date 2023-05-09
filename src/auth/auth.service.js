@@ -323,9 +323,9 @@ const sendMailResetPassword = async (email, type) => {
     let token = generateVerifyToken(email);
     var url = '';
     if (type == 1) {
-      url = config.base_url.fe_user_url + '/reset-password/' + token + type;
+      url = config.base_url.be_url + '/auth/reset-password/' + token + type;
     } else if (type == 2) {
-      url = config.base_url.fe_admin_url + '/reset-password/' + token + type;
+      url = config.base_url.be_url + '/auth/reset-password/' + token + type;
     }
     const mailOptions = {
       from: config.nodemailer.nm_email,
@@ -346,17 +346,37 @@ const sendMailResetPassword = async (email, type) => {
   }
 };
 
-const resetPassword = async (token, new_password, confirm_password) => {
+const checkAccount = async (token) => {
+  const type = token[token.length - 1];
+  const tk = token.substr(0, token.length - 1);
+  const decoded = jwt.verify(tk, config.jwt.secret);
+  if (type == 1) {
+    const user = await userService.findOneByFilter({email: decoded.mail});
+    if(!user) {
+      return false;
+    }
+  }
+  if (type == 2) {
+    const staff = await staffService.findOneByFilter({email: decoded.mail});
+    if(!staff) {
+      return false;
+    } 
+  } else {
+    return true;
+  }
+};
+
+const resetPassword = async (token, new_password) => {
   try {
     const type = token[token.length - 1];
     const tk = token.substr(0, token.length - 1);
     const decoded = jwt.verify(tk, config.jwt.secret);
     if (type == 1) {
-      await userService.resetPassword(decoded.mail, new_password, confirm_password);
+      await userService.resetPassword(decoded.mail, new_password);
       return true;
     }
     if (type == 2) {
-      await staffService.resetPassword(decoded.mail, new_password, confirm_password);
+      await staffService.resetPassword(decoded.mail, new_password);
       return true;
     } else {
       return false;
@@ -379,7 +399,7 @@ module.exports = {
   resetPassEmailTemplate,
   sendMailResetPassword,
   resetPassword,
-
+  checkAccount,
   // admin
   staffLoginUserWithEmailAndPassword,
   staffLoginUserWithPhoneNumberAndPassword,

@@ -5,6 +5,8 @@ const staffService = require('../staff/staff.service');
 const authService = require('./auth.service');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
+const { handle } = require('i18next-http-middleware');
+const path = require('path');
 // const sendSMS = require('../otp/sms');
 
 const register = catchAsync(async (req, res) => {
@@ -152,14 +154,39 @@ const sendResetPasswordMail = catchAsync(async (req, res) => {
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  const { token, new_password, confirm_password } = req.body;
-  const result = await authService.resetPassword(token, new_password, confirm_password);
-  if (result) {
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePassword'), true));
-  } else {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('password.changePasswordFailure'), false));
+  const token = req.params.token;
+  const new_password= req.body.new_password;
+  const checkAccount = authService.checkAccount(token);
+  if (!checkAccount) {
+    return res.status(httpStatus.OK).json(responseMessage(i18next.t('account.notFound'), false))
   }
+  const result = await authService.resetPassword(token, new_password);
+  if(result) {
+    return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePassword'), true))
+  } else {
+    return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePasswordFailure'), false))
+  }
+  // if (result) {
+  //   res.send(
+  //     `<h1 style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+  //     ${i18next.t('password.changePassword')}
+  //     </h1>`
+  //   );
+  // } else {
+  //   res.send(
+  //     `<h1 style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+  //     ${i18next.t('password.changePasswordFailure')}
+  //     </h1>`
+  //   );
+  // }
 });
+
+const resetPasswordForm = catchAsync(async(req, res) => {
+  //const token = req.params.token;
+  res.sendFile('reset_password.html',{ root: path.join(__dirname, '../reset_password') });
+});
+
+
 
 module.exports = {
   register,
@@ -169,6 +196,7 @@ module.exports = {
   verifySuccess,
   resendMail,
   sendResetPasswordMail,
+  resetPasswordForm,
   resetPassword,
 
   // staff

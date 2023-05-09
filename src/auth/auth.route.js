@@ -14,7 +14,8 @@ router.post('/login-by-email', validate(authValidation.loginByEmail), authContro
 router.post('/login-by-phone-number', validate(authValidation.loginByPhoneNumber), authController.loginPhonePassword);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/reset-password/send-mail', validate(authValidation.resendMail), authController.sendResetPasswordMail);
-router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
+router.get('/reset-password/:token', authController.resetPasswordForm);
+router.post('/reset-password/:token', authController.resetPassword);
 
 // -------------------------------- STAFF ROUTE ------------------------------------
 router.post('/staff/login-by-email', validate(authValidation.loginByEmail), authController.staffLoginEmailPassword);
