@@ -10,6 +10,8 @@ const staffService = require('../staff/staff.service');
 const i18next = require('i18next');
 const nodemailer = require('nodemailer');
 const logger = require('../config/logger');
+const models = require('../models');
+const { Op } = require('sequelize');
 
 const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
@@ -168,24 +170,30 @@ const staffLoginUserWithUsernameAndPassword = async (username, password) => {
 };
 
 const refreshAuth = async (refresh_token) => {
-  const user = await userService.findOneByFilter({ refresh_token });
-  if (!user) {
+  const historyLogin = await models.history_login.findOne({
+    where: { refresh_token, blacklisted: false, expires: { [Op.gte]: new Date() } },
+  });
+  if (!historyLogin || !historyLogin.id_user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
+  const user = await userService.findOneByFilter({ id: historyLogin.id_user });
   const tokens = await generateAuthTokens(user);
-  user.refresh_token = tokens.refresh.token;
-  await user.save();
+  tokens.refresh.token = historyLogin.refresh_token;
+  tokens.refresh.expires = historyLogin.expires;
   return { user, tokens };
 };
 
 const staffRefreshAuth = async (refresh_token) => {
-  const staff = await staffService.findOneByFilter({ refresh_token });
-  if (!staff) {
+  const historyLogin = await models.history_login.findOne({
+    where: { refresh_token, blacklisted: false, expires: { [Op.gte]: new Date() } },
+  });
+  if (!historyLogin || !historyLogin.id_staff) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
+  const staff = await staffService.findOneByFilter({ id: historyLogin.id_staff });
   const tokens = await generateAuthTokens(staff);
-  staff.refresh_token = tokens.refresh.token;
-  await staff.save();
+  tokens.refresh.token = historyLogin.refresh_token;
+  tokens.refresh.expires = historyLogin.expires;
   return { staff, tokens };
 };
 

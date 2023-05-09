@@ -5,6 +5,8 @@ const staffService = require('../staff/staff.service');
 const authService = require('./auth.service');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
+const historyLoginService = require('../history_login/history_login.service');
+const { LOGIN_TYPE } = require('../history_login/history_login.constant');
 // const sendSMS = require('../otp/sms');
 
 const register = catchAsync(async (req, res) => {
@@ -30,8 +32,7 @@ const loginEmailPassword = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(user);
-  user.refresh_token = tokens.refresh.token;
-  await user.save();
+  await historyLoginService.createNew(user.id, null, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
   return res.status(httpStatus.OK).json(responseData({ user, tokens }, i18next.t('auth.loginSuccess')));
 });
 
@@ -39,8 +40,7 @@ const staffLoginEmailPassword = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const staff = await authService.staffLoginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(staff);
-  staff.refresh_token = tokens.refresh.token;
-  await staff.save();
+  await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
   return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
 });
 
@@ -48,8 +48,7 @@ const loginPhonePassword = catchAsync(async (req, res) => {
   const { phone_number, password } = req.body;
   const user = await authService.loginUserWithPhoneNumberAndPassword(phone_number, password);
   const tokens = await authService.generateAuthTokens(user);
-  user.refresh_token = tokens.refresh.token;
-  await user.save();
+  await historyLoginService.createNew(user.id, null, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
   return res.status(httpStatus.OK).json(responseData({ user, tokens }, i18next.t('auth.loginSuccess')));
 });
 
@@ -57,8 +56,7 @@ const staffLoginPhonePassword = catchAsync(async (req, res) => {
   const { phone_number, password } = req.body;
   const staff = await authService.staffLoginUserWithPhoneNumberAndPassword(phone_number, password);
   const tokens = await authService.generateAuthTokens(staff);
-  staff.refresh_token = tokens.refresh.token;
-  await staff.save();
+  await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
   return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
 });
 
@@ -66,8 +64,7 @@ const staffLoginUsernamePassword = catchAsync(async (req, res) => {
   const { username, password } = req.body;
   const staff = await authService.staffLoginUserWithUsernameAndPassword(username, password);
   const tokens = await authService.generateAuthTokens(staff);
-  staff.refresh_token = tokens.refresh.token;
-  await staff.save();
+  await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.USERNAME, tokens.refresh.token, tokens.refresh.expires);
   return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
 });
 

@@ -16,7 +16,6 @@ const { regexpRepeatOnFromTo } = require('../utils/regexpRepeatOnFromTo');
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
   delete result.password;
-  delete result.refresh_token;
   return result;
 };
 
@@ -100,7 +99,7 @@ const getAll = catchAsync(async (req, res) => {
     include,
     distinct: true,
     ...pageLimit2Offset(page, limit),
-    attributes: { exclude: ['password', 'refresh_token'] },
+    attributes: { exclude: ['password'] },
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
@@ -137,7 +136,7 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
     ],
     distinct: true,
     ...pageLimit2Offset(page, limit),
-    attributes: { exclude: ['password', 'refresh_token'] },
+    attributes: { exclude: ['password'] },
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
@@ -196,7 +195,7 @@ const getDetailStaff = catchAsync(async (req, res) => {
         as: 'expertises',
       },
     ],
-    attributes: { exclude: ['password', 'refresh_token'] },
+    attributes: { exclude: ['password'] },
   };
   const staff = await staffService.findOneByOption(options);
   return res.status(httpStatus.OK).json(responseData(staff));
@@ -247,7 +246,7 @@ const getDetailStaffByDate = catchAsync(async (req, res) => {
         as: 'expertises',
       },
     ],
-    attributes: { exclude: ['password', 'refresh_token'] },
+    attributes: { exclude: ['password'] },
   };
   const staff = await staffService.findOneByOption(options);
   return res.status(httpStatus.OK).json(responseData(staff));

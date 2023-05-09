@@ -80,10 +80,6 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(500),
         allowNull: true,
       },
-      refresh_token: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-      },
     },
     {
       sequelize,

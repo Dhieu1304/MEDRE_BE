@@ -11,7 +11,6 @@ const { Op } = require('sequelize');
 const toResponseObject = (user) => {
   const result = user.toJSON();
   delete result.password;
-  delete result.refresh_token;
   return result;
 };
 

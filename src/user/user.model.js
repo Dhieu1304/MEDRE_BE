@@ -59,10 +59,6 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      refresh_token: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-      },
     },
     {
       sequelize,
