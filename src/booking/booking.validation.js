@@ -52,6 +52,14 @@ const updateBooking = {
     id: Joi.string().uuid().required(),
     booking_status: Joi.string().valid(...Object.values(BOOKING_STATUS)),
     is_payment: Joi.boolean(),
+    id_schedule: Joi.string().uuid(),
+    id_patient: Joi.string().uuid(),
+    date: Joi.date(),
+    id_time: Joi.string().uuid(),
+    code: Joi.string().trim(),
+    reason: Joi.string().trim(),
+    note: Joi.string().trim(),
+    conclusion: Joi.string().trim(),
   }),
 };
 

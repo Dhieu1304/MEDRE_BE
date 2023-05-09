@@ -1,5 +1,7 @@
 const config = require('../config');
 const https = require('https');
+const logger = require('../config/logger');
+const { getMessaging } = require('firebase-admin/messaging');
 
 const sendPushNotification = (data, callback) => {
   const headers = {
@@ -29,6 +31,40 @@ const sendPushNotification = (data, callback) => {
   req.end();
 };
 
+const sendNotificationTopicFCM = async () => {
+  try {
+    getMessaging()
+      .send({
+        data: {
+          score: '850',
+          time: '2:45',
+        },
+        topic: 'highScores',
+      })
+      .then((response) => {
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error);
+      });
+    /*
+    const firebaseAdmin = require("../config/firebaseAdmin");
+    firebaseAdmin
+      .messaging()
+      .sendToTopic(topic, payload)
+      .then((response) => {
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error);
+      });
+    */
+  } catch (e) {
+    logger.error(e.message);
+  }
+};
+
 module.exports = {
   sendPushNotification,
+  sendNotificationTopicFCM,
 };

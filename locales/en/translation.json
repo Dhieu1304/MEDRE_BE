@@ -41,6 +41,8 @@
     "notFound": "Not found.",
     "cancel": "Cancel booking successful.",
     "invalidID": "Invalid booking id.",
+    "invalidTimeID": "Invalid time schedule id.",
+    "invalidTimeSession": "Invalid time schedule session.",
     "missingUserInfo": "Please update your personal information.",
     "invalidScheduleId": "Invalid schedule id.",
     "invalidDate": "You need to booking 1 day in advance."

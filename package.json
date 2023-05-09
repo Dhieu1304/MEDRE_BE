@@ -48,6 +48,7 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "autocannon": "^7.11.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.5.0",
