@@ -151,7 +151,7 @@ const staffLoginUserWithUsernameAndPassword = async (username, password) => {
   // check staff
   const staff = await staffService.findOneByFilter({ username });
   if (!staff) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('username.usernameInccorect'));
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('username.usernameIncorrect'));
   }
 
   // check password
