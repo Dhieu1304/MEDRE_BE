@@ -25,7 +25,8 @@ function initModels(sequelize) {
   const blocking_account = _blocking_account(sequelize, DataTypes);
   const doctor_time_off = _doctor_time_off(sequelize, DataTypes);
   const booking_payment = _booking_payment(sequelize, DataTypes);
-  const package = _package(sequelize, DataTypes);
+  const history_login = _history_login(sequelize, DataTypes);
+  const checkup_package = _checkup_package(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
