@@ -10,6 +10,7 @@ const _booking_payment = require('../booking_payment/booking_payment.model');
 const _time_schedule = require('../time_schedule/time_schedule.model');
 const _blocking_account = require('../blocking_account/blocking_account.model');
 const _doctor_time_off = require('../doctor_time_off/doctor_time_off.model');
+const _history_login = require('../history_login/history_login.model');
 const _checkup_package = require('../checkup_package/checkup_package.model');
 
 function initModels(sequelize) {
@@ -24,7 +25,7 @@ function initModels(sequelize) {
   const blocking_account = _blocking_account(sequelize, DataTypes);
   const doctor_time_off = _doctor_time_off(sequelize, DataTypes);
   const booking_payment = _booking_payment(sequelize, DataTypes);
-  const checkup_package = _checkup_package(sequelize, DataTypes);
+  const package = _package(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -62,6 +63,10 @@ function initModels(sequelize) {
   booking_payment.belongsTo(user, { as: 'payment_of_user', foreignKey: 'id_user' });
   booking.belongsTo(time_schedule, { as: 'booking_time_schedule', foreignKey: 'id_time' });
   time_schedule.hasMany(booking, { as: 'time_schedule_of_booking', foreignKey: 'id_time' });
+  user.hasMany(history_login, { as: 'user_logins', foreignKey: 'id_user' });
+  history_login.belongsTo(user, { as: 'login_of_user', foreignKey: 'id_user' });
+  staff.hasMany(history_login, { as: 'staff_logins', foreignKey: 'id_staff' });
+  history_login.belongsTo(staff, { as: 'login_of_staff', foreignKey: 'id_staff' });
 
   return {
     sequelize,
@@ -76,6 +81,7 @@ function initModels(sequelize) {
     booking,
     doctor_time_off,
     booking_payment,
+    history_login,
     checkup_package,
   };
 }

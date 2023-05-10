@@ -50,7 +50,7 @@ const listBookings = catchAsync(async (req, res) => {
       {
         model: models.staff,
         as: 'schedule_of_staff',
-        attributes: { exclude: ['password', 'refresh_token'] },
+        attributes: { exclude: ['password'] },
       },
     ],
   });
@@ -134,7 +134,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
       {
         model: models.staff,
         as: 'schedule_of_staff',
-        attributes: { exclude: ['password', 'refresh_token'] },
+        attributes: { exclude: ['password'] },
         where: filter.id_doctor ? { id: filter.id_doctor } : {},
       },
     ],
@@ -147,7 +147,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     include[include.length - 1].required = true;
     delete filter.type;
   }
-  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } });
+  include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } });
   include.push({ model: models.patient, as: 'booking_of_patient' });
 
   const order = [];
@@ -187,7 +187,7 @@ const getDetailBooking = catchAsync(async (req, res) => {
           {
             model: models.staff,
             as: 'schedule_of_staff',
-            attributes: { exclude: ['password', 'refresh_token'] },
+            attributes: { exclude: ['password'] },
             include: [
               {
                 model: models.expertise,
@@ -226,11 +226,11 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
           {
             model: models.staff,
             as: 'schedule_of_staff',
-            attributes: { exclude: ['password', 'refresh_token'] },
+            attributes: { exclude: ['password'] },
           },
         ],
       },
-      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password', 'refresh_token'] } },
+      { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } },
       { model: models.patient, as: 'booking_of_patient' },
     ],
   });
