@@ -30,7 +30,7 @@ const createPackage = {
 
 const deletePackage = {
   query: Joi.object().keys({
-    id_package: Joi.string().uuid().required(),
+    id_checkup_package: Joi.string().uuid().required(),
   }),
 };
 

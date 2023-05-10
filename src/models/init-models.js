@@ -10,7 +10,7 @@ const _booking_payment = require('../booking_payment/booking_payment.model');
 const _time_schedule = require('../time_schedule/time_schedule.model');
 const _blocking_account = require('../blocking_account/blocking_account.model');
 const _doctor_time_off = require('../doctor_time_off/doctor_time_off.model');
-const _package = require('../package/package.model');
+const _checkup_package = require('../checkup_package/checkup_package.model');
 
 function initModels(sequelize) {
   const staff = _staff(sequelize, DataTypes);
@@ -24,7 +24,7 @@ function initModels(sequelize) {
   const blocking_account = _blocking_account(sequelize, DataTypes);
   const doctor_time_off = _doctor_time_off(sequelize, DataTypes);
   const booking_payment = _booking_payment(sequelize, DataTypes);
-  const package = _package(sequelize, DataTypes);
+  const checkup_package = _checkup_package(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -76,7 +76,7 @@ function initModels(sequelize) {
     booking,
     doctor_time_off,
     booking_payment,
-    package,
+    checkup_package,
   };
 }
 
