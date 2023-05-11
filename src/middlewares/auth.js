@@ -5,6 +5,7 @@ const i18next = require('i18next');
 const { isBlockedAccount } = require('../nodeCache/account');
 const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
 const { STAFF_ROLES } = require('../staff/staff.constant');
+const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 
 const verifyCallback = (req, resolve, reject) => {
   return async (err, user, info) => {
@@ -13,7 +14,7 @@ const verifyCallback = (req, resolve, reject) => {
     }
 
     if (user.role !== STAFF_ROLES.ADMIN) {
-      if (getGlobalSettingByName('maintain') === '1') {
+      if (getGlobalSettingByName(GLOBAL_SETTING.MAINTAIN) === '1') {
         return reject(new ApiError(httpStatus.BAD_REQUEST, i18next.t('error.maintain')));
       }
     }
