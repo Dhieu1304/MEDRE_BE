@@ -26,9 +26,6 @@ const getDoctorTimeOff = catchAsync(async (req, res) => {
 
 const createTimeOff = catchAsync(async (req, res) => {
   const data = req.body;
-  if (data.time_start >= data.time_end) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid time', false));
-  }
   if (data.from > data.to || data.from < moment()) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date', false));
   }

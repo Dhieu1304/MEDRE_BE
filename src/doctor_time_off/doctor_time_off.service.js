@@ -4,6 +4,7 @@ const { BOOKING_STATUS } = require('../booking/booking.constant');
 const ApiError = require('../utils/ApiError');
 const { BAD_REQUEST } = require('http-status');
 const i18next = require('i18next');
+const { SCHEDULE_SESSION } = require('../schedule/schedule.constant');
 
 const findAllByFilter = async (filter) => {
   return await models.doctor_time_off.findAll(filter);
@@ -15,7 +16,22 @@ const findAndCountAllByCondition = async (condition) => {
 
 // data: {id, id_doctor, from, to, time_start, time_end}
 const createTimeOff = async (data) => {
+  // check is have time off at this time
+  const existTimeOff = await models.doctor_time_off.findOne({
+    where: {
+      id_doctor: data.id_doctor,
+      [Op.not]: { [Op.or]: [{ from: { [Op.gt]: data.to } }, { to: { [Op.lt]: data.from } }] },
+    },
+  });
+  if (existTimeOff) {
+    throw new ApiError(BAD_REQUEST, i18next.t('timeSchedule.haveTimeOff'));
+  }
+
   // check time is have any booking
+  const filterTimeSchedule = {};
+  if (data.session !== SCHEDULE_SESSION.WHOLE_DAY) {
+    filterTimeSchedule.session = data.session;
+  }
   const booking = await models.booking.findAll({
     where: {
       date: { [Op.between]: [data.from, data.to] },
@@ -25,14 +41,12 @@ const createTimeOff = async (data) => {
       {
         model: models.time_schedule,
         as: 'booking_time_schedule',
-        where: {
-          [Op.and]: [{ time_end: { [Op.gte]: data.time_start } }, { time_start: { [Op.lte]: data.time_end } }],
-        },
+        where: filterTimeSchedule,
       },
       {
         model: models.schedule,
         as: 'booking_schedule',
-        include: { model: models.staff, as: 'schedule_of_staff', where: { id: data.id_doctor } },
+        where: { id_doctor: data.id_doctor },
       },
     ],
   });
@@ -41,8 +55,6 @@ const createTimeOff = async (data) => {
   }
 
   // check is have schedule at this time --> no need, only replace above schedule
-
-  // check is have time off at this time --> no need, only loop this time
 
   return await models.doctor_time_off.create(data);
 };

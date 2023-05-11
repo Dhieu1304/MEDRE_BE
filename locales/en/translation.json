@@ -72,7 +72,8 @@
     "success": "Successful.",
     "timeFormatInvalid": "Invalid time format.",
     "invalidTime": "Invalid time.",
-    "haveBooking": "This time is booked"
+    "haveBooking": "This time is booked.",
+    "haveTimeOff": "This time has another time off."
   },
   "account": {
     "create": "Create new account successfully.",

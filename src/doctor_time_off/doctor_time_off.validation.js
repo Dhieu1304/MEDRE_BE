@@ -1,6 +1,6 @@
 const Joi = require('joi');
-const { timeScheduleFormat } = require('../utils/messageCustom');
 const moment = require('moment');
+const { SCHEDULE_SESSION } = require('../schedule/schedule.constant');
 
 const list = {
   query: Joi.object().keys({
@@ -16,8 +16,9 @@ const createTimeOff = {
   body: Joi.object().keys({
     from: Joi.date().required(),
     to: Joi.date().required(),
-    time_start: Joi.string().required().custom(timeScheduleFormat),
-    time_end: Joi.string().required().custom(timeScheduleFormat),
+    session: Joi.string()
+      .required()
+      .valid(...Object.values(SCHEDULE_SESSION)),
   }),
 };
 
