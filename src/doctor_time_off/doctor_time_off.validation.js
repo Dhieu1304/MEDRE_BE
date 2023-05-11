@@ -22,7 +22,24 @@ const createTimeOff = {
   }),
 };
 
+const editTimeOff = {
+  body: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+    from: Joi.date(),
+    to: Joi.date(),
+    session: Joi.string().valid(...Object.values(SCHEDULE_SESSION)),
+  }),
+};
+
+const deleteTimeOff = {
+  body: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+};
+
 module.exports = {
   list,
   createTimeOff,
+  editTimeOff,
+  deleteTimeOff,
 };

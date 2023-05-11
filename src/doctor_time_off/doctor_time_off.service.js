@@ -59,8 +59,60 @@ const createTimeOff = async (data) => {
   return await models.doctor_time_off.create(data);
 };
 
+const updateTimeOff = async (data) => {
+  // check is have time off at this time
+  let timeOff = await models.doctor_time_off.findOne({
+    where: { id: data.id },
+  });
+  if (!timeOff) {
+    throw new ApiError(BAD_REQUEST, 'Invalid time off id');
+  }
+
+  timeOff = Object.assign(timeOff, data);
+  if (timeOff.from > timeOff.to) {
+    throw new ApiError(BAD_REQUEST, 'Invalid date');
+  }
+
+  // check time is have any booking
+  const filterTimeSchedule = {};
+  if (timeOff.session !== SCHEDULE_SESSION.WHOLE_DAY) {
+    filterTimeSchedule.session = timeOff.session;
+  }
+  const booking = await models.booking.findAll({
+    where: {
+      date: { [Op.between]: [timeOff.from, timeOff.to] },
+      booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+    },
+    include: [
+      {
+        model: models.time_schedule,
+        as: 'booking_time_schedule',
+        where: filterTimeSchedule,
+      },
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        where: { id_doctor: timeOff.id_doctor },
+      },
+    ],
+  });
+  if (booking && booking.length > 0) {
+    throw new ApiError(BAD_REQUEST, i18next.t('timeSchedule.haveBooking'));
+  }
+
+  // check is have schedule at this time --> no need, only replace above schedule
+
+  return await timeOff.save();
+};
+
+const deleteTimeOff = async (id) => {
+  return await models.doctor_time_off.destroy({ where: { id } });
+};
+
 module.exports = {
   findAllByFilter,
   createTimeOff,
   findAndCountAllByCondition,
+  updateTimeOff,
+  deleteTimeOff,
 };
