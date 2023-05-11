@@ -135,7 +135,7 @@
   "mobileNotification": {
     "test": "Mobile notification testing."
   },
-  "package": {
+  "checkupPackage": {
     "notFound": "Package not found.",
     "success": "Update successfully.",
     "delete": "Delete package successfully."

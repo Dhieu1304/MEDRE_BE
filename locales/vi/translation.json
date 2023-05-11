@@ -135,7 +135,7 @@
   "mobileNotification": {
     "test": "Thử nghiệm gửi thông báo cho điện thoại."
   },
-  "package": {
+  "checkupPackage": {
     "notFound": "Không tìm thấy gói khám.",
     "success": "Thay đổi thông tin thành công.",
     "delete": "Xóa gói thành công."

@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    'package',
+    'checkup_package',
     {
       id: {
         type: DataTypes.UUID,
@@ -30,12 +30,12 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
       sequelize,
-      tableName: 'package',
+      tableName: 'checkup_package',
       schema: 'public',
       timestamps: true,
       indexes: [
         {
-          name: 'package_pkey',
+          name: 'checkup_package_pkey',
           unique: true,
           fields: [{ name: 'id' }],
         },
