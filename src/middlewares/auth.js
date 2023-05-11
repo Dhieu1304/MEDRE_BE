@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const i18next = require('i18next');
 const { isBlockedAccount } = require('../nodeCache/account');
-const { getGlobalSetting } = require('../nodeCache/globalSetting');
+const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
 const { STAFF_ROLES } = require('../staff/staff.constant');
 
 const verifyCallback = (req, resolve, reject) => {
@@ -13,14 +13,8 @@ const verifyCallback = (req, resolve, reject) => {
     }
 
     if (user.role !== STAFF_ROLES.ADMIN) {
-      const globalSetting = await getGlobalSetting();
-      for (let i = 0; i < globalSetting.length; i++) {
-        if (globalSetting[i].name === 'maintain') {
-          if (globalSetting[i].value === '1') {
-            return reject(new ApiError(httpStatus.BAD_REQUEST, i18next.t('error.maintain')));
-          }
-          break;
-        }
+      if (getGlobalSettingByName('maintain') === '1') {
+        return reject(new ApiError(httpStatus.BAD_REQUEST, i18next.t('error.maintain')));
       }
     }
 
