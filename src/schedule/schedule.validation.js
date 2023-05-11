@@ -53,10 +53,17 @@ const changeApplyTo = {
   }),
 };
 
+const deleteSchedule = {
+  body: Joi.object().keys({
+    id: Joi.array().items(Joi.string().uuid().required()).required(),
+  }),
+};
+
 module.exports = {
   listByDay,
   listAll,
   createSchedule,
   changeApplyToAll,
   changeApplyTo,
+  deleteSchedule,
 };

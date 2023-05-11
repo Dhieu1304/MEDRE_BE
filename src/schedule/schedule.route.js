@@ -20,6 +20,13 @@ router.post(
   scheduleController.createSchedule
 );
 router.post(
+  '/delete-schedule',
+  auth(),
+  staffPermission([STAFF_ROLES.ADMIN]),
+  validate(scheduleValidation.deleteSchedule),
+  scheduleController.deleteSchedule
+);
+router.post(
   '/change-apply-to-all',
   auth(),
   staffPermission([STAFF_ROLES.ADMIN]),
