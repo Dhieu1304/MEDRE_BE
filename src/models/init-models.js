@@ -12,6 +12,7 @@ const _blocking_account = require('../blocking_account/blocking_account.model');
 const _doctor_time_off = require('../doctor_time_off/doctor_time_off.model');
 const _history_login = require('../history_login/history_login.model');
 const _checkup_package = require('../checkup_package/checkup_package.model');
+const _global_setting = require('../global_setting/global_setting.model');
 
 function initModels(sequelize) {
   const staff = _staff(sequelize, DataTypes);
@@ -27,6 +28,7 @@ function initModels(sequelize) {
   const booking_payment = _booking_payment(sequelize, DataTypes);
   const history_login = _history_login(sequelize, DataTypes);
   const checkup_package = _checkup_package(sequelize, DataTypes);
+  const global_setting = _global_setting(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -84,6 +86,7 @@ function initModels(sequelize) {
     booking_payment,
     history_login,
     checkup_package,
+    global_setting,
   };
 }
 

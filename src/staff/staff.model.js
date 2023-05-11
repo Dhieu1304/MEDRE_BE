@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       phone_number: {
         type: DataTypes.STRING(20),
-        allowNull: false,
+        allowNull: true,
         unique: 'staff_phone_number_key',
       },
       email: {

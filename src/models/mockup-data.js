@@ -4,6 +4,7 @@ const db = require('../config/database');
 const models = require('./index');
 const xlsx = require('node-xlsx');
 const { createMockData } = require('../utils/createMockData');
+const { initGlobalSetting } = require('../nodeCache/globalSetting');
 
 (async () => {
   try {
@@ -48,8 +49,15 @@ const { createMockData } = require('../utils/createMockData');
       const doctorTimeOff = xlsx.parse(__dirname + '/data/doctor_time_off.xlsx');
       await models.doctor_time_off.bulkCreate(createMockData(doctorTimeOff[0].data));
 
+      logger.info('-------------------- GLOBAL SETTING ---------------------');
+      const globalSetting = xlsx.parse(__dirname + '/data/global_setting.xlsx');
+      await models.global_setting.bulkCreate(createMockData(globalSetting[0].data));
+
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
+
+    // init cache default from db
+    await initGlobalSetting();
   } catch (e) {
     logger.error(e.message);
   }
