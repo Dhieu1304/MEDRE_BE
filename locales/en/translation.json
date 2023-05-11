@@ -58,7 +58,8 @@
     "notExisted": "Expertise not existed."
   },
   "error": {
-    "unauthorized": "Please authenticate."
+    "unauthorized": "Please authenticate.",
+    "maintain": "Server is maintaining."
   },
   "unCategory": {
     "permission": "You do not have this permission.",

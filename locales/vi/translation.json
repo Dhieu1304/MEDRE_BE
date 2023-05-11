@@ -58,7 +58,8 @@
     "notExisted": "Chuyên khoa không tồn tại."
   },
   "error": {
-    "unauthorized": "Vui lòng xác thực."
+    "unauthorized": "Vui lòng xác thực.",
+    "maintain": "Server đang bảo trì."
   },
   "unCategory": {
     "permission": "Bạn không có quyền truy cập.",
