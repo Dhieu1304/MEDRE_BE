@@ -1,7 +1,7 @@
 const CURRENCY = Object.freeze({
-    VND: 'vnd',
+  VND: 'vnd',
 });
-  
-  module.exports = {
-    CURRENCY,
-  };
+
+module.exports = {
+  CURRENCY,
+};
