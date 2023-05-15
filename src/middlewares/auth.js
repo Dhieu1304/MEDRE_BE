@@ -6,6 +6,7 @@ const { isBlockedAccount } = require('../nodeCache/account');
 const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
 const { STAFF_ROLES } = require('../staff/staff.constant');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
+const { responseMessage } = require('../utils/responseFormat');
 
 const verifyCallback = (req, resolve, reject) => {
   return async (err, user, info) => {
@@ -37,7 +38,9 @@ const auth = () => {
         return next();
       })
       .catch((err) => {
-        return next(err);
+        const httpCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+        const status = httpCode < 400;
+        return res.status(httpCode).json(responseMessage(err.message, status));
       });
   };
 };

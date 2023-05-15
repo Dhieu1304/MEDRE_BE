@@ -44,6 +44,7 @@ const getAll = catchAsync(async (req, res) => {
 
   const condition = {
     where: filter,
+    attributes: { exclude: ['password'] },
     ...pageLimit2Offset(page, limit),
   };
   const users = await userService.findAndCountAllByCondition(condition);
