@@ -4,7 +4,7 @@ const validate = require('../middlewares/validate');
 const bookingValidation = require('./booking.validation');
 const auth = require('../middlewares/auth');
 const { staffPermission } = require('../middlewares/staffPermission');
-const { ALL_STAFF_ROLES } = require('../staff/staff.constant');
+const { ALL_STAFF_ROLES, STAFF_ROLES } = require('../staff/staff.constant');
 
 const router = express.Router();
 router.use(auth());
@@ -33,6 +33,12 @@ router.post(
   staffPermission(ALL_STAFF_ROLES),
   validate(bookingValidation.updateBooking),
   bookingController.updateBooking
+);
+router.post(
+  '/update-for-doctor',
+  staffPermission([STAFF_ROLES.DOCTOR, STAFF_ROLES.ADMIN]),
+  validate(bookingValidation.updateBookingDoctor),
+  bookingController.updateBookingDoctor
 );
 
 module.exports = router;

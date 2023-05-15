@@ -277,6 +277,12 @@ const updateBooking = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
 });
 
+const updateBookingDoctor = catchAsync(async (req, res) => {
+  const data = pick(req.body, ['id', 'note', 'conclusion', 'prescription']);
+  const updateBooking = await bookingService.updateBookingDoctor(data);
+  return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
+});
+
 const cancelBooking = catchAsync(async (req, res) => {
   await bookingService.cancelBooking(req.user.id, req.body.id);
   return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.cancel'), true));
@@ -290,4 +296,5 @@ module.exports = {
   getDetailBooking,
   getDetailBookingForStaff,
   cancelBooking,
+  updateBookingDoctor,
 };

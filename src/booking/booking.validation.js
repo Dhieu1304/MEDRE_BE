@@ -58,8 +58,15 @@ const updateBooking = {
     id_time: Joi.string().uuid(),
     code: Joi.string().trim(),
     reason: Joi.string().trim(),
+  }),
+};
+
+const updateBookingDoctor = {
+  body: Joi.object().keys({
+    id: Joi.string().uuid().required(),
     note: Joi.string().trim(),
     conclusion: Joi.string().trim(),
+    prescription: Joi.string().trim(),
   }),
 };
 
@@ -82,4 +89,5 @@ module.exports = {
   updateBooking,
   cancelBooking,
   detailBooking,
+  updateBookingDoctor,
 };
