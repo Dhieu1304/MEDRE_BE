@@ -1,6 +1,6 @@
 FROM node:16-alpine3.16
-RUN mkdir -p /usr/src/medre-be && chown -R node:node /usr/src/medre-be
-WORKDIR /usr/src/medre-be
+RUN mkdir -p /home/dhieu/MEDRE_BE && chown -R node:node /home/dhieu/MEDRE_BE
+WORKDIR /home/dhieu/MEDRE_BE
 COPY package.json .
 USER node
 RUN npm install --production
