@@ -39,13 +39,13 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
       sequelize,
-      tableName: 'notification',
+      tableName: 'notification_user',
       schema: 'public',
       timestamps: true,
       paranoid: true,
       indexes: [
         {
-          name: 'notification_pkey',
+          name: 'notification_user_pkey',
           unique: true,
           fields: [{ name: 'id' }],
         },
