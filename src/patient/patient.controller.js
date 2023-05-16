@@ -5,7 +5,6 @@ const patientService = require('./patient.service');
 const pick = require('../utils/pick');
 const sequelize = require('../config/database');
 const { Op } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
 const i18next = require('i18next');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 
@@ -63,8 +62,13 @@ const listPatientForStaff = catchAsync(async (req, res) => {
 
 const createPatient = catchAsync(async (req, res) => {
   const data = pick(req.body, ['phone_number', 'name', 'gender', 'address', 'dob', 'health_insurance']);
-  data.id = uuidv4();
   data.id_user = req.user.id;
+  const newPatient = await patientService.createPatient(data);
+  return res.status(httpStatus.OK).json(responseData(newPatient));
+});
+
+const createPatientForStaff = catchAsync(async (req, res) => {
+  const data = pick(req.body, ['phone_number', 'name', 'gender', 'address', 'dob', 'health_insurance']);
   const newPatient = await patientService.createPatient(data);
   return res.status(httpStatus.OK).json(responseData(newPatient));
 });
@@ -82,4 +86,5 @@ module.exports = {
   listPatientForStaff,
   createPatient,
   editPatient,
+  createPatientForStaff,
 };

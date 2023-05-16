@@ -34,5 +34,6 @@ router.post(
   staffPermission(ALL_STAFF_ROLES),
   patientController.editPatient
 );
+router.post('/create-for-staff', validate(patientValidation.create), patientController.createPatientForStaff);
 
 module.exports = router;
