@@ -11,15 +11,13 @@ const { SCHEDULE_SESSION } = require('../schedule/schedule.constant');
 
 const createNewBooking = async (data) => {
   // check user info
-  if (!(await userService.checkUserInfo(data.id_user))) {
+  if (data.id_user && !(await userService.checkUserInfo(data.id_user))) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.missingUserInfo'));
   }
 
-  // check booking
-  if (data.id_patient) {
-    if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {
-      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('patient.notFound'));
-    }
+  // check patient
+  if (!(await models.patient.findOne({ where: { id: data.id_patient } }))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('patient.notFound'));
   }
 
   // check day_of_week of schedule is valid date booking

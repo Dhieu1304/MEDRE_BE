@@ -18,7 +18,7 @@ const generateToken = (user, expires, type, secret = config.jwt.secret) => {
     sub: user.id,
     email: user.email,
     phone_number: user.phone_number,
-    role: user.role || 'user',
+    role: user.role || 'User',
     iat: moment().unix(),
     exp: expires.unix(),
     type,

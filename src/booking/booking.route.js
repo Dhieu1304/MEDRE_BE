@@ -40,5 +40,11 @@ router.post(
   validate(bookingValidation.updateBookingDoctor),
   bookingController.updateBookingDoctor
 );
+router.post(
+  '/create-booking-for-staff',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(bookingValidation.bookingForStaff),
+  bookingController.staffCreateBooking
+);
 
 module.exports = router;

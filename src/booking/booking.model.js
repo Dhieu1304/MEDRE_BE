@@ -41,7 +41,7 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
-      id_staff_cancel: {
+      id_staff_update: {
         type: DataTypes.UUID,
         allowNull: true,
         references: {

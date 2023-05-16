@@ -23,7 +23,7 @@ const listForStaff = {
     id_patient: Joi.string().uuid(),
     id_doctor: Joi.string().uuid(),
     id_staff_booking: Joi.string().uuid(),
-    id_staff_cancel: Joi.string().uuid(),
+    id_staff_update: Joi.string().uuid(),
     type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),
     booking_status: Joi.array().items(Joi.string().valid(...Object.values(BOOKING_STATUS))),
     is_payment: Joi.boolean(),
@@ -82,6 +82,16 @@ const detailBooking = {
   }),
 };
 
+const bookingForStaff = {
+  body: Joi.object().keys({
+    id_schedule: Joi.string().uuid().required(),
+    id_time: Joi.string().uuid().required(),
+    date: Joi.date().required(),
+    reason: Joi.string(),
+    id_patient: Joi.string().uuid().required(),
+  }),
+};
+
 module.exports = {
   list,
   listForStaff,
@@ -90,4 +100,5 @@ module.exports = {
   cancelBooking,
   detailBooking,
   updateBookingDoctor,
+  bookingForStaff,
 };
