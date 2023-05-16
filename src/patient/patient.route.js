@@ -30,10 +30,15 @@ router.get(
 
 router.post(
   '/edit/:id',
-  validate(patientValidation.editPatient),
   staffPermission(ALL_STAFF_ROLES),
+  validate(patientValidation.editPatient),
   patientController.editPatient
 );
-router.post('/create-for-staff', validate(patientValidation.create), patientController.createPatientForStaff);
+router.post(
+  '/create-for-staff',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(patientValidation.create),
+  patientController.createPatientForStaff
+);
 
 module.exports = router;
