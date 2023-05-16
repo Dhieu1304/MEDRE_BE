@@ -1,9 +1,6 @@
 const config = require('../config');
 const https = require('https');
 const { getMessaging } = require('firebase-admin/messaging');
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 const firebaseAdmin = require('../config/firebaseAdmin');
 
 const sendPushNotification = (data, callback) => {
@@ -35,48 +32,15 @@ const sendPushNotification = (data, callback) => {
 };
 
 const sendNotificationTopicFCM = async (topic, payload) => {
-  firebaseAdmin
-    .messaging()
-    .sendToTopic(topic, payload)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
+  return await firebaseAdmin.messaging().sendToTopic(topic, payload);
 };
 
-const subscribeTopic = async (registrationToken, user) => {
-  getMessaging()
-    .subscribeToTopic([registrationToken], user.id)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
-  getMessaging()
-    .subscribeToTopic([registrationToken], user.role)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
-  getMessaging()
-    .subscribeToTopic([registrationToken], NOTIFICATION_FOR.ALL_SYSTEM)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
+const subscribeTopic = async (registrationToken, topic) => {
+  return await getMessaging().subscribeToTopic(registrationToken, topic);
 };
 
-const unSubscribeTopic = async (registrationToken, user) => {
-  getMessaging()
-    .unsubscribeFromTopic([registrationToken], user.id)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
-  getMessaging()
-    .unsubscribeFromTopic([registrationToken], user.role)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
-  getMessaging()
-    .unsubscribeFromTopic([registrationToken], NOTIFICATION_FOR.ALL_SYSTEM)
-    .catch((error) => {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-    });
+const unSubscribeTopic = async (registrationToken, topic) => {
+  return await getMessaging().unsubscribeFromTopic(registrationToken, topic);
 };
 
 module.exports = {

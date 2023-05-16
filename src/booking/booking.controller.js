@@ -9,6 +9,9 @@ const models = require('../models');
 const i18next = require('i18next');
 const patientService = require('../patient/patient.service');
 const moment = require('moment');
+const scheduleService = require('../schedule/schedule.service');
+const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
+const { BOOKING_STATUS } = require('./booking.constant');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -96,7 +99,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     'id_patient',
     'id_doctor',
     'id_staff_booking',
-    'id_staff_cancel',
+    'id_staff_update',
     'order',
   ]);
 
@@ -266,13 +269,19 @@ const updateBooking = catchAsync(async (req, res) => {
     'is_payment',
     'code',
     'reason',
-    'note',
     'id_patient',
     'id_schedule',
     'date',
     'id_time',
-    'conclusion',
   ]);
+
+  data.id_staff_update = req.user.id;
+  if (data.booking_status === BOOKING_STATUS.BOOKED) {
+    data.bookedAt = new Date();
+  } else if (data.booking_status === BOOKING_STATUS.CANCELED) {
+    data.canceledAt = new Date();
+  }
+
   const updateBooking = await bookingService.updateBooking(data);
   return res.status(httpStatus.OK).json(responseData(updateBooking, i18next.t('booking.update')));
 });
@@ -288,6 +297,30 @@ const cancelBooking = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage(i18next.t('booking.cancel'), true));
 });
 
+// only create booking offline (for user not have account)
+const staffCreateBooking = catchAsync(async (req, res) => {
+  const data = req.body;
+
+  // check booking date ( > 1 day)
+  if (data.date < moment().add(1, 'd')) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
+  }
+
+  // check schedule is offline
+  const schedule = await scheduleService.findOneByFilter({ id: data.id_schedule });
+  if (!schedule || schedule.type !== SCHEDULE_TYPE.OFFLINE) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidScheduleId'), false));
+  }
+
+  data.id_staff_booking = req.user.id;
+  data.booking_status = BOOKING_STATUS.BOOKED;
+  data.bookedAt = new Date();
+
+  const newBooking = await bookingService.createNewBooking(data);
+
+  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
+});
+
 module.exports = {
   booking,
   updateBooking,
@@ -297,4 +330,5 @@ module.exports = {
   getDetailBookingForStaff,
   cancelBooking,
   updateBookingDoctor,
+  staffCreateBooking,
 };

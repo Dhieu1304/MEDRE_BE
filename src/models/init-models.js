@@ -82,6 +82,10 @@ function initModels(sequelize) {
   notification_user.belongsTo(user, { as: 'notifications_of_user', foreignKey: 'id_user' });
   notification.hasMany(notification_user, { as: 'notifications_child', foreignKey: 'id_notification' });
   notification_user.belongsTo(notification, { as: 'notifications_parent', foreignKey: 'id_notification' });
+  staff.hasMany(booking, { as: 'staff_create_booking', foreignKey: 'id_staff_booking' });
+  booking.belongsTo(staff, { as: 'booking_created_by_staff', foreignKey: 'id_staff_booking' });
+  staff.hasMany(booking, { as: 'staff_update_booking', foreignKey: 'id_staff_update' });
+  booking.belongsTo(staff, { as: 'booking_updated_by_staff', foreignKey: 'id_staff_update' });
 
   return {
     sequelize,
