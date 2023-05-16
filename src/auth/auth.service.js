@@ -174,7 +174,7 @@ const refreshAuth = async (refresh_token) => {
     where: { refresh_token, blacklisted: false, expires: { [Op.gte]: new Date() } },
   });
   if (!historyLogin || !historyLogin.id_user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
   const user = await userService.findOneByFilter({ id: historyLogin.id_user });
   const tokens = await generateAuthTokens(user);
@@ -188,7 +188,7 @@ const staffRefreshAuth = async (refresh_token) => {
     where: { refresh_token, blacklisted: false, expires: { [Op.gte]: new Date() } },
   });
   if (!historyLogin || !historyLogin.id_staff) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, i18next.t('refreshToken.refreshTokenIncorrect'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('refreshToken.refreshTokenIncorrect'));
   }
   const staff = await staffService.findOneByFilter({ id: historyLogin.id_staff });
   const tokens = await generateAuthTokens(staff);

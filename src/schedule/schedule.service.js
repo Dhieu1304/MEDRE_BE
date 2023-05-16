@@ -4,6 +4,8 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Op } = require('sequelize');
 const moment = require('moment');
+const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
+const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 
 const findOneByFilter = async (filter) => {
   return await models.schedule.findOne({ where: filter });
@@ -20,6 +22,12 @@ const findAllByOption = async (options = {}) => {
 // input: { id_doctor, apply_from, apply_to, data: [{id_expertise, type, session, repeat_on: [number]}] }
 const createSchedule = async (body) => {
   const { id_doctor, apply_from, apply_to, data } = body;
+
+  const dateCreateAdvance = parseInt(getGlobalSettingByName(GLOBAL_SETTING.CREATE_SCHEDULE_ADVANCE_DAY), 10);
+  if (moment().add(dateCreateAdvance, 'days') >= apply_from) {
+    throw new ApiError(httpStatus.BAD_REQUEST, `New schedule must create ${dateCreateAdvance} days in advance`);
+  }
+
   // check apply_date
   const checkSchedule = await models.schedule.findOne({
     where: { id_doctor, apply_to: { [Op.gte]: apply_from } },
@@ -86,6 +94,14 @@ const changeApplyToSchedule = async (id, apply_to) => {
   return await models.schedule.update({ apply_to }, { where: { id } });
 };
 
+const deleteSchedule = async (id) => {
+  const booking = await models.booking.findOne({ where: { id_schedule: id } });
+  if (booking) {
+    throw new ApiError(httpStatus.BAD_REQUEST, `Can not delete this schedule (has booking)`);
+  }
+  return await models.schedule.destroy({ where: { id } });
+};
+
 module.exports = {
   findOneByFilter,
   findAllByFilter,
@@ -93,4 +109,5 @@ module.exports = {
   createSchedule,
   changeApplyToAllSchedule,
   changeApplyToSchedule,
+  deleteSchedule,
 };

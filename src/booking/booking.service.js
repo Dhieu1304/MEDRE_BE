@@ -152,6 +152,20 @@ const cancelBooking = async (id_user, id) => {
   return await booking.save();
 };
 
+const updateBookingDoctor = async (data) => {
+  let booking = await findOneByFilter({ id: data.id });
+  if (!booking) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
+  }
+  delete data.id;
+  Object.keys(data).forEach((key) => {
+    if (!booking[key]) {
+      booking[key] = data[key];
+    }
+  });
+  return await booking.save();
+};
+
 module.exports = {
   findOneByFilter,
   findOneByOption,
@@ -160,4 +174,5 @@ module.exports = {
   cancelBooking,
   createNewBooking,
   findAndCountAllByCondition,
+  updateBookingDoctor,
 };

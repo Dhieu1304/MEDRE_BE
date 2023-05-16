@@ -83,10 +83,16 @@ const changeApplyToSchedule = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage('Update apply to schedule successfully'));
 });
 
+const deleteSchedule = catchAsync(async (req, res) => {
+  await scheduleService.deleteSchedule(req.body.id);
+  return res.status(httpStatus.OK).json(responseMessage('Delete schedule successfully'));
+});
+
 module.exports = {
   listByDay,
   listAll,
   createSchedule,
   changeApplyToAllSchedule,
   changeApplyToSchedule,
+  deleteSchedule,
 };

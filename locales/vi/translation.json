@@ -58,7 +58,8 @@
     "notExisted": "Chuyên khoa không tồn tại."
   },
   "error": {
-    "unauthorized": "Vui lòng xác thực."
+    "unauthorized": "Vui lòng xác thực.",
+    "maintain": "Server đang bảo trì."
   },
   "unCategory": {
     "permission": "Bạn không có quyền truy cập.",
@@ -72,7 +73,8 @@
     "success": "Tải dữ liệu hành công.",
     "timeFormatInvalid": "Định dạng thời gian không hợp lệ.",
     "invalidTime": "Thời gian không hợp lệ.",
-    "haveBooking": "Đã có người đặt khung giờ này"
+    "haveBooking": "Đã có người đặt khung giờ này.",
+    "haveTimeOff": "Đã có lịch nghỉ khác khung giờ này."
   },
   "account": {
     "create": "Tạo tài khoản mới thành công.",
@@ -134,7 +136,7 @@
   "mobileNotification": {
     "test": "Thử nghiệm gửi thông báo cho điện thoại."
   },
-  "package": {
+  "checkupPackage": {
     "notFound": "Không tìm thấy gói khám.",
     "success": "Thay đổi thông tin thành công.",
     "delete": "Xóa gói thành công."

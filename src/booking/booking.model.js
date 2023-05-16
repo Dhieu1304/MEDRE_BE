@@ -87,6 +87,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(2000),
         allowNull: true,
       },
+      prescription: {
+        type: DataTypes.STRING(2000),
+        allowNull: true,
+      },
       bookedAt: {
         type: DataTypes.DATE,
       },

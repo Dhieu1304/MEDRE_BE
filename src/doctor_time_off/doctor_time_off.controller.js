@@ -26,9 +26,6 @@ const getDoctorTimeOff = catchAsync(async (req, res) => {
 
 const createTimeOff = catchAsync(async (req, res) => {
   const data = req.body;
-  if (data.time_start >= data.time_end) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid time', false));
-  }
   if (data.from > data.to || data.from < moment()) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date', false));
   }
@@ -38,7 +35,19 @@ const createTimeOff = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(timeOff, 'Create time off successfully'));
 });
 
+const editTimeOff = catchAsync(async (req, res) => {
+  const updateTimeOff = await doctorTimeOffService.updateTimeOff(req.body);
+  return res.status(httpStatus.OK).json(responseData(updateTimeOff, 'Update time off successfully'));
+});
+
+const deleteTimeOff = catchAsync(async (req, res) => {
+  await doctorTimeOffService.deleteTimeOff(req.body.id);
+  return res.status(httpStatus.OK).json(responseMessage('Delete time off successfully'));
+});
+
 module.exports = {
   getDoctorTimeOff,
   createTimeOff,
+  editTimeOff,
+  deleteTimeOff,
 };

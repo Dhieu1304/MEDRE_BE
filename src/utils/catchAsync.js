@@ -1,13 +1,12 @@
 const { responseMessage } = require('./responseFormat');
+const httpStatus = require('http-status');
 
 const catchAsync = (fn) => {
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch((err) => {
-      if (err.statusCode < 400) {
-        return res.status(err.statusCode).json(responseMessage(err.message, false));
-      }
-      // console.log(err);
-      return next(err);
+      const httpCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+      const status = httpCode < 400;
+      return res.status(httpCode).json(responseMessage(err.message, status));
     });
   };
 };

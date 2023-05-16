@@ -58,7 +58,8 @@
     "notExisted": "Expertise not existed."
   },
   "error": {
-    "unauthorized": "Please authenticate."
+    "unauthorized": "Please authenticate.",
+    "maintain": "Server is maintaining."
   },
   "unCategory": {
     "permission": "You do not have this permission.",
@@ -72,7 +73,8 @@
     "success": "Successful.",
     "timeFormatInvalid": "Invalid time format.",
     "invalidTime": "Invalid time.",
-    "haveBooking": "This time is booked"
+    "haveBooking": "This time is booked.",
+    "haveTimeOff": "This time has another time off."
   },
   "account": {
     "create": "Create new account successfully.",
@@ -134,7 +136,7 @@
   "mobileNotification": {
     "test": "Mobile notification testing."
   },
-  "package": {
+  "checkupPackage": {
     "notFound": "Package not found.",
     "success": "Update successfully.",
     "delete": "Delete package successfully."
