@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
+const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 
 const sendPushNotification = catchAsync(async (req, res, next) => {
   const message = {
@@ -47,22 +48,26 @@ const sendPushNotificationToDevice = catchAsync(async (req, res, next) => {
 });
 
 const subscribeTopic = catchAsync(async (req, res) => {
-  await notificationUserService.subscribeTopic(req.body.registrationToken, req.user);
+  await notificationUserService.subscribeTopic(req.body.registrationToken, req.user.id);
+  await notificationUserService.subscribeTopic(req.body.registrationToken, req.user.role);
+  await notificationUserService.subscribeTopic(req.body.registrationToken, NOTIFICATION_FOR.ALL_SYSTEM);
   return res.status(httpStatus.OK).json(responseMessage(''));
 });
 
 const unSubscribeTopic = catchAsync(async (req, res) => {
-  await notificationUserService.subscribeTopic(req.body.registrationToken, req.user);
+  await notificationUserService.unSubscribeTopic(req.body.registrationToken, req.user.id);
+  await notificationUserService.unSubscribeTopic(req.body.registrationToken, req.user.role);
+  await notificationUserService.unSubscribeTopic(req.body.registrationToken, NOTIFICATION_FOR.ALL_SYSTEM);
   return res.status(httpStatus.OK).json(responseMessage(''));
 });
 
 const testNotification = catchAsync(async (req, res) => {
-  const { title, body } = req.body;
+  const { title, content: body } = req.body;
   const payload = {
     notification: { title, body },
   };
   await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
-  return res.status(httpStatus.OK).json(responseMessage(''));
+  return res.status(httpStatus.OK).json(responseMessage('Successfully FCM'));
 });
 
 module.exports = {

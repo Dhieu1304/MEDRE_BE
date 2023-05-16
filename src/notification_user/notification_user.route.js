@@ -17,6 +17,6 @@ router.post(
   validate(notificationUserValidation.subscribeTopic),
   notificationUserController.unSubscribeTopic
 );
-router.get('/test', validate(notificationUserValidation.testNotification), notificationUserController.testNotification);
+router.post('/test', validate(notificationUserValidation.testNotification), notificationUserController.testNotification);
 
 module.exports = router;
