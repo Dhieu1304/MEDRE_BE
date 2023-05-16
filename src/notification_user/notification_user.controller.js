@@ -1,8 +1,8 @@
 const config = require('../config');
-const mobileNotificationService = require('./mobile_notification.service');
+const notificationUserService = require('./notification_user.service');
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData } = require('../utils/responseFormat');
+const { responseData, responseMessage } = require('../utils/responseFormat');
 const i18next = require('i18next');
 
 const sendPushNotification = catchAsync(async (req, res, next) => {
@@ -17,7 +17,7 @@ const sendPushNotification = catchAsync(async (req, res, next) => {
     },
   };
 
-  mobileNotificationService.sendPushNotification(message, (error, result) => {
+  notificationUserService.sendPushNotification(message, (error, result) => {
     if (error) {
       return next(error);
     }
@@ -38,7 +38,7 @@ const sendPushNotificationToDevice = catchAsync(async (req, res, next) => {
     },
   };
 
-  mobileNotificationService.sendPushNotification(message, (error, result) => {
+  notificationUserService.sendPushNotification(message, (error, result) => {
     if (error) {
       return next(error);
     }
@@ -46,7 +46,29 @@ const sendPushNotificationToDevice = catchAsync(async (req, res, next) => {
   });
 });
 
+const subscribeTopic = catchAsync(async (req, res) => {
+  await notificationUserService.subscribeTopic(req.body.registrationToken, req.user);
+  return res.status(httpStatus.OK).json(responseMessage(''));
+});
+
+const unSubscribeTopic = catchAsync(async (req, res) => {
+  await notificationUserService.subscribeTopic(req.body.registrationToken, req.user);
+  return res.status(httpStatus.OK).json(responseMessage(''));
+});
+
+const testNotification = catchAsync(async (req, res) => {
+  const { title, body } = req.body;
+  const payload = {
+    notification: { title, body },
+  };
+  await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
+  return res.status(httpStatus.OK).json(responseMessage(''));
+});
+
 module.exports = {
   sendPushNotification,
   sendPushNotificationToDevice,
+  subscribeTopic,
+  unSubscribeTopic,
+  testNotification,
 };

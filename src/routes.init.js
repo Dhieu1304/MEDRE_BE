@@ -11,7 +11,7 @@ const language = require('../locales/language');
 const doctorTimeOffRouter = require('./doctor_time_off/doctor_time_off.route');
 const uploadRouter = require('./upload/upload.route');
 const paymentRouter = require('./payment/payment.route');
-const mobileNotificationRouter = require('./notification/mobile_notification.route');
+const notificationRouter = require('./notification_user/notification_user.route');
 const globalSettingRouter = require('./global_setting/global_setting.route');
 
 module.exports.initRouter = (app) => {
@@ -27,7 +27,7 @@ module.exports.initRouter = (app) => {
   app.use('/doctor-time-off', doctorTimeOffRouter);
   app.use('/upload', uploadRouter);
   app.use('/payment', paymentRouter);
-  app.use('/mobile-notification', mobileNotificationRouter);
+  app.use('/notification', notificationRouter);
   app.use('/setting', globalSettingRouter);
 
   app.use(express.Router().get('/'), (req, res) => {

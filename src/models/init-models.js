@@ -13,6 +13,8 @@ const _doctor_time_off = require('../doctor_time_off/doctor_time_off.model');
 const _history_login = require('../history_login/history_login.model');
 const _checkup_package = require('../checkup_package/checkup_package.model');
 const _global_setting = require('../global_setting/global_setting.model');
+const _notification = require('../notification/notification.model');
+const _notification_user = require('../notification_user/notification_user.model');
 
 function initModels(sequelize) {
   const staff = _staff(sequelize, DataTypes);
@@ -29,6 +31,8 @@ function initModels(sequelize) {
   const history_login = _history_login(sequelize, DataTypes);
   const checkup_package = _checkup_package(sequelize, DataTypes);
   const global_setting = _global_setting(sequelize, DataTypes);
+  const notification = _notification(sequelize, DataTypes);
+  const notification_user = _notification_user(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -70,6 +74,14 @@ function initModels(sequelize) {
   history_login.belongsTo(user, { as: 'login_of_user', foreignKey: 'id_user' });
   staff.hasMany(history_login, { as: 'staff_logins', foreignKey: 'id_staff' });
   history_login.belongsTo(staff, { as: 'login_of_staff', foreignKey: 'id_staff' });
+  staff.hasMany(notification, { as: 'staff_create_notification', foreignKey: 'created_by' });
+  notification.belongsTo(staff, { as: 'notification_staff', foreignKey: 'created_by' });
+  staff.hasMany(notification_user, { as: 'staff_notifications', foreignKey: 'id_staff' });
+  notification_user.belongsTo(staff, { as: 'notifications_of_staff', foreignKey: 'id_staff' });
+  user.hasMany(notification_user, { as: 'user_notifications', foreignKey: 'id_user' });
+  notification_user.belongsTo(user, { as: 'notifications_of_user', foreignKey: 'id_user' });
+  notification.hasMany(notification_user, { as: 'notifications_child', foreignKey: 'id_notification' });
+  notification_user.belongsTo(notification, { as: 'notifications_parent', foreignKey: 'id_notification' });
 
   return {
     sequelize,
@@ -87,6 +99,7 @@ function initModels(sequelize) {
     history_login,
     checkup_package,
     global_setting,
+    notification,
   };
 }
 
