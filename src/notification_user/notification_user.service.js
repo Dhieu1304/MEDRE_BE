@@ -2,7 +2,11 @@ const config = require('../config');
 const https = require('https');
 const { getMessaging } = require('firebase-admin/messaging');
 const firebaseAdmin = require('../config/firebaseAdmin');
-const models = require("../models");
+const models = require('../models');
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
+const { v4: uuidv4 } = require('uuid');
+const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 
 const sendPushNotification = (data, callback) => {
   const headers = {
@@ -48,10 +52,76 @@ const findAndCountAllByCondition = async (condition) => {
   return await models.notification_user.findAndCountAll(condition);
 };
 
+const createUserNotification = async (tableName, id_notification, filter = {}) => {
+  const result = [];
+  const listAccountId = await models[tableName].findAll({ where: filter, attributes: ['id'], raw: true });
+  for (let i = 0; i < listAccountId.length; i++) {
+    result.push({
+      id: uuidv4(),
+      id_notification,
+      [`id_${tableName}`]: listAccountId[i].id,
+    });
+  }
+  return result;
+};
+
+const createNotification = async (data, notificationUser) => {
+  // todo: send FCM
+  const transaction = await models.sequelize.transaction();
+  try {
+    data.id = uuidv4();
+    const notification = await models.notification.create(data, { transaction });
+    switch (data.notification_for) {
+      case NOTIFICATION_FOR.PERSONAL: {
+        await models.notification_user.create(
+          {
+            id: uuidv4(),
+            id_notification: notification.id,
+            ...notificationUser, // id_user, id_staff
+          },
+          { transaction }
+        );
+        break;
+      }
+      case NOTIFICATION_FOR.USER: {
+        const userNotificationData = await createUserNotification('user', notification.id);
+        await models.notification_user.bulkCreate(userNotificationData, { transaction });
+        break;
+      }
+      case NOTIFICATION_FOR.STAFF: {
+        const staffNotificationData = await createUserNotification('staff', notification.id);
+        await models.notification_user.bulkCreate(staffNotificationData, { transaction });
+        break;
+      }
+      case NOTIFICATION_FOR.ALL_SYSTEM: {
+        const allNotificationDataUser = await createUserNotification('user', notification.id);
+        const allNotificationDataStaff = await createUserNotification('staff', notification.id);
+        await models.notification_user.bulkCreate([...allNotificationDataUser, ...allNotificationDataStaff], {
+          transaction,
+        });
+        break;
+      }
+      default: {
+        const staffRoleNotification = await createUserNotification('staff', notification.id, {
+          role: data.notification_for,
+        });
+        await models.notification_user.bulkCreate(staffRoleNotification, { transaction });
+        break;
+      }
+    }
+
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw new ApiError(httpStatus.BAD_REQUEST, e.message);
+  }
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
   subscribeTopic,
   unSubscribeTopic,
   findAndCountAllByCondition,
+  createNotification,
 };
