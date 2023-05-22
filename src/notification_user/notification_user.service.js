@@ -2,6 +2,7 @@ const config = require('../config');
 const https = require('https');
 const { getMessaging } = require('firebase-admin/messaging');
 const firebaseAdmin = require('../config/firebaseAdmin');
+const models = require("../models");
 
 const sendPushNotification = (data, callback) => {
   const headers = {
@@ -43,9 +44,14 @@ const unSubscribeTopic = async (registrationToken, topic) => {
   return await getMessaging().unsubscribeFromTopic(registrationToken, topic);
 };
 
+const findAndCountAllByCondition = async (condition) => {
+  return await models.notification_user.findAndCountAll(condition);
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
   subscribeTopic,
   unSubscribeTopic,
+  findAndCountAllByCondition,
 };

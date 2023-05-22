@@ -19,4 +19,7 @@ router.post(
 );
 router.post('/test', validate(notificationUserValidation.testNotification), notificationUserController.testNotification);
 
+router.get('/list', validate(notificationUserValidation.listNotification), notificationUserController.listNotification);
+
+
 module.exports = router;

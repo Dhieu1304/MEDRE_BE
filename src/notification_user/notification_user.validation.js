@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const {NOTIFICATION_TYPE} = require("../notification/notification.constant");
 
 const testNotification = {
   body: Joi.object().keys({
@@ -13,7 +14,17 @@ const subscribeTopic = {
   }),
 };
 
+const listNotification = {
+  query: Joi.object().keys({
+    type: Joi.string().valid(...Object.values(NOTIFICATION_TYPE)),
+    read: Joi.boolean(),
+    page: Joi.number().integer().default(1).min(1),
+    limit: Joi.number().integer().default(10).min(1),
+  }),
+};
+
 module.exports = {
   testNotification,
   subscribeTopic,
+  listNotification,
 };

@@ -104,6 +104,7 @@ function initModels(sequelize) {
     checkup_package,
     global_setting,
     notification,
+    notification_user,
   };
 }
 
