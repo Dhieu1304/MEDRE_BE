@@ -283,7 +283,17 @@ const editAccountInfo = catchAsync(async (req, res) => {
 });
 
 const editProfile = catchAsync(async (req, res) => {
-  const data = pick(req.body, ['name', 'image', 'address', 'gender', 'dob', 'health_insurance', 'description', 'education', 'certificate'])
+  const data = pick(req.body, [
+    'name',
+    'image',
+    'address',
+    'gender',
+    'dob',
+    'health_insurance',
+    'description',
+    'education',
+    'certificate',
+  ]);
   data.id = req.user.id;
   const staff = await staffService.editProfile(data);
   return res.status(httpStatus.OK).json(responseData(toResponseObject(staff), i18next.t('account.changeProfile')));

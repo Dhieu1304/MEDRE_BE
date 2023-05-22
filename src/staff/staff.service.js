@@ -254,7 +254,6 @@ const editStaff = async (staffId, id, data) => {
   return await result.save();
 };
 
-
 const editProfile = async (data) => {
   // find staff and update
   const staff = await findOneByFilter({ id: data.id });
@@ -282,7 +281,7 @@ const editProfile = async (data) => {
   // check username is exists
   if (data.username) {
     const checkUsername = await findOneByFilter({ username: data.username });
-    if (checkUsername && checkUsername.id !== id) {
+    if (checkUsername && checkUsername.id !== data.id) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('username.usernameExisted'));
     }
   }
@@ -290,7 +289,6 @@ const editProfile = async (data) => {
   const result = Object.assign(staff, data);
   return await result.save();
 };
-
 
 const changePassword = async (id, data) => {
   const staff = await findOneByFilter({ id: id });
