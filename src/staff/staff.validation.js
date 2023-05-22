@@ -102,15 +102,15 @@ const editStaff = {
 
 const editProfile = {
   body: Joi.object().keys({
-    name: Joi.string(),
-    image: Joi.string(),
-    address: Joi.string(),
+    name: Joi.string().trim(),
+    image: Joi.string().trim(),
+    address: Joi.string().trim(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     dob: Joi.date(),
-    health_insurance: Joi.string(),
-    description: Joi.string(),
-    education: Joi.string(),
-    certificate: Joi.string(),
+    health_insurance: Joi.string().trim(),
+    description: Joi.string().trim(),
+    education: Joi.string().trim(),
+    certificate: Joi.string().trim(),
   }),
 };
 
