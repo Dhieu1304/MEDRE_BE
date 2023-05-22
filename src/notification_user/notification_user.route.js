@@ -23,6 +23,13 @@ router.post('/test', validate(notificationUserValidation.testNotification), noti
 
 router.get('/list', validate(notificationUserValidation.listNotification), notificationUserController.listNotification);
 router.post(
+  '/mark-read',
+  validate(notificationUserValidation.markReadNotification),
+  notificationUserController.markReadNotification
+);
+
+// -------------------------------- ADMIN ROUTE ------------------------------------
+router.post(
   '/create',
   staffPermission([STAFF_ROLES.ADMIN]),
   validate(notificationUserValidation.createNotification),

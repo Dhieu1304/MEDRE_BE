@@ -117,6 +117,15 @@ const createNotification = async (data, notificationUser) => {
   }
 };
 
+const markReadNotification = async (filter) => {
+  const userNotification = await models.notification_user.findOne({ where: filter });
+  if (!userNotification) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid notification');
+  }
+  userNotification.read = true;
+  return await userNotification.save();
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
@@ -124,4 +133,5 @@ module.exports = {
   unSubscribeTopic,
   findAndCountAllByCondition,
   createNotification,
+  markReadNotification,
 };

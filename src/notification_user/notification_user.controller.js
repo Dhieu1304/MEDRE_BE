@@ -101,6 +101,13 @@ const createNotification = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage('Create notification successfully'));
 });
 
+const markReadNotification = catchAsync(async (req, res) => {
+  const data = { id: req.body.id };
+  req.user.role === NOTIFICATION_FOR.USER ? (data.id_user = req.user.id) : (data.id_staff = req.user.id);
+  await notificationUserService.markReadNotification(data);
+  return res.status(httpStatus.OK).json(responseMessage('Read notification successfully'));
+});
+
 module.exports = {
   sendPushNotification,
   sendPushNotificationToDevice,
@@ -109,4 +116,5 @@ module.exports = {
   testNotification,
   listNotification,
   createNotification,
+  markReadNotification,
 };
