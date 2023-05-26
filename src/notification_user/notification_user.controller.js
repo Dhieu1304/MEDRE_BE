@@ -1,3 +1,5 @@
+/*global _io*/
+/*eslint no-undef: "error"*/
 const config = require('../config');
 const notificationUserService = require('./notification_user.service');
 const catchAsync = require('../utils/catchAsync');
@@ -8,6 +10,7 @@ const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 const pick = require('../utils/pick');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
+const { NOTIFICATION_EVENT } = require('../socket/socket.constant');
 
 const sendPushNotification = catchAsync(async (req, res, next) => {
   const message = {
@@ -69,6 +72,7 @@ const testNotification = catchAsync(async (req, res) => {
   const payload = {
     notification: { title, body },
   };
+  _io.in(req.user.id).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
   await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
   return res.status(httpStatus.OK).json(responseMessage('Successfully FCM'));
 });
