@@ -126,6 +126,10 @@ const markReadNotification = async (filter) => {
   return await userNotification.save();
 };
 
+const countByCondition = async (condition) => {
+  return await models.notification_user.count(condition);
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
@@ -134,4 +138,5 @@ module.exports = {
   findAndCountAllByCondition,
   createNotification,
   markReadNotification,
+  countByCondition,
 };

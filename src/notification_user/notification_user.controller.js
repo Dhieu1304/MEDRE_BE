@@ -112,6 +112,17 @@ const markReadNotification = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage('Read notification successfully'));
 });
 
+const countUnReadNotification = catchAsync(async (req, res) => {
+  const filter = { read: false };
+  req.user.role === NOTIFICATION_FOR.USER ? (filter.id_user = req.user.id) : (filter.id_staff = req.user.id);
+  const condition = {
+    where: filter,
+    distinct: true,
+  };
+  const amount = await notificationUserService.countByCondition(condition);
+  return res.status(httpStatus.OK).json(responseData(amount));
+});
+
 module.exports = {
   sendPushNotification,
   sendPushNotificationToDevice,
@@ -121,4 +132,5 @@ module.exports = {
   listNotification,
   createNotification,
   markReadNotification,
+  countUnReadNotification,
 };
