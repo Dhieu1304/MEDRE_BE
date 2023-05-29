@@ -15,6 +15,7 @@ const _checkup_package = require('../checkup_package/checkup_package.model');
 const _global_setting = require('../global_setting/global_setting.model');
 const _notification = require('../notification/notification.model');
 const _notification_user = require('../notification_user/notification_user.model');
+const _re_examination = require('../re_examination/re_examination.model');
 
 function initModels(sequelize) {
   const staff = _staff(sequelize, DataTypes);
@@ -33,6 +34,7 @@ function initModels(sequelize) {
   const global_setting = _global_setting(sequelize, DataTypes);
   const notification = _notification(sequelize, DataTypes);
   const notification_user = _notification_user(sequelize, DataTypes);
+  const re_examination = _re_examination(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -86,6 +88,10 @@ function initModels(sequelize) {
   booking.belongsTo(staff, { as: 'booking_created_by_staff', foreignKey: 'id_staff_booking' });
   staff.hasMany(booking, { as: 'staff_update_booking', foreignKey: 'id_staff_update' });
   booking.belongsTo(staff, { as: 'booking_updated_by_staff', foreignKey: 'id_staff_update' });
+  booking.hasOne(re_examination, { as: 'booking_re_exam', foreignKey: 'id_booking' });
+  re_examination.belongsTo(booking, { as: 're_exam_of_booking', foreignKey: 'id_booking' });
+  staff.hasMany(re_examination, { as: 'staff_re_exam', foreignKey: 'id_staff_remind' });
+  re_examination.belongsTo(staff, { as: 're_exam_by_staff', foreignKey: 'id_staff_remind' });
 
   return {
     sequelize,
@@ -105,6 +111,7 @@ function initModels(sequelize) {
     global_setting,
     notification,
     notification_user,
+    re_examination,
   };
 }
 
