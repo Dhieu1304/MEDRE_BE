@@ -26,4 +26,11 @@ router.post(
   reExaminationController.create
 );
 
+router.post(
+  '/update',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(reExaminationValidation.update),
+  reExaminationController.update
+);
+
 module.exports = router;
