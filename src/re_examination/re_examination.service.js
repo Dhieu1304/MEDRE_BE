@@ -17,9 +17,15 @@ const findAndCountAllByCondition = async (condition) => {
   return await models.re_examination.findAndCountAll(condition);
 };
 
+const createReExam = async (data) => {
+  data.id = uuidv4();
+  return models.re_examination.create(data);
+};
+
 module.exports = {
   findOneByFilter,
   findAllByFilter,
   findAllByOption,
   findAndCountAllByCondition,
+  createReExam,
 };

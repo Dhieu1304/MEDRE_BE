@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
+const { responseData, paginationFormat } = require('../utils/responseFormat');
 const reExaminationService = require('./re_examination.service');
 const models = require('../models');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
@@ -25,8 +25,13 @@ const listForStaff = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(paginationFormat(listReExamination, page, limit)));
 });
 
+const create = catchAsync(async (req, res) => {
+  const newReExamination = await reExaminationService.createReExam(req.body);
+  return res.status(httpStatus.OK).json(responseData(newReExamination, 'Create Re-Examination successfully'));
+});
 
 module.exports = {
   list,
   listForStaff,
+  create,
 };

@@ -8,6 +8,14 @@ const list = {
   }),
 };
 
+const create = {
+  body: Joi.object().keys({
+    id_booking: Joi.string().uuid().required(),
+    date_re_exam: Joi.date().required(),
+  }),
+};
+
 module.exports = {
   list,
+  create,
 };

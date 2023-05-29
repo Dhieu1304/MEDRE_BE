@@ -19,4 +19,11 @@ router.get(
   reExaminationController.listForStaff
 );
 
+router.post(
+  '/create',
+  staffPermission(ALL_STAFF_ROLES),
+  validate(reExaminationValidation.create),
+  reExaminationController.create
+);
+
 module.exports = router;
