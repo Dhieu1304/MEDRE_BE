@@ -102,6 +102,24 @@ const createNotification = catchAsync(async (req, res) => {
     }
   }
   await notificationUserService.createNotification(data, notificationUser);
+
+  // send notification
+  const payload = {
+    notification: {
+      title: data.title,
+      body: data.content,
+      type: data.type,
+    },
+  };
+  if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
+    const idAccount = notificationUser.id_user || notificationUser.id_staff;
+    _io.in(idAccount).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(idAccount, payload);
+  } else {
+    _io.in(data.notification_for).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(data.notification_for, payload);
+  }
+
   return res.status(httpStatus.OK).json(responseMessage('Create notification successfully'));
 });
 

@@ -66,7 +66,6 @@ const createUserNotification = async (tableName, id_notification, filter = {}) =
 };
 
 const createNotification = async (data, notificationUser) => {
-  // todo: send FCM
   const transaction = await models.sequelize.transaction();
   try {
     data.id = uuidv4();
