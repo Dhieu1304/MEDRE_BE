@@ -35,7 +35,7 @@ const update = catchAsync(async (req, res) => {
   const data = pick(req.body, ['id', 'is_apply', 'date_re_exam']);
   data.id_staff_remind = req.user.id;
   data.date_remind = new Date();
-  const updateReExam = await reExaminationService.updateReExam(req.body);
+  const updateReExam = await reExaminationService.updateReExam(data);
   return res.status(httpStatus.OK).json(responseData(updateReExam, 'Update Re-Examination successfully'));
 });
 
