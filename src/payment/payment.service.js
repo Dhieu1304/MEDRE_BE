@@ -6,6 +6,8 @@ const logger = require('../config/logger');
 const { PAYMENT_STATUS } = require('../booking_payment/booking_payment.constant');
 const i18next = require('i18next');
 const { v4: uuidv4 } = require('uuid');
+const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
+const randomString = require('../utils/randomString');
 
 const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   const booking = await models.booking.findOne({
@@ -35,9 +37,18 @@ const handlePaymentSuccess = async (txn_ref) => {
     booking_payment.handle = true;
     booking_payment.rsp_code = '00';
 
-    const booking = await models.booking.findOne({ where: { id: booking_payment.id_booking } }, { transaction });
+    const booking = await models.booking.findOne(
+      {
+        where: { id: booking_payment.id_booking },
+        include: [{ model: models.schedule, as: 'booking_schedule' }],
+      },
+      { transaction }
+    );
     booking.is_payment = true;
     booking.booking_status = BOOKING_STATUS.BOOKED;
+    if (booking.booking_schedule.type === SCHEDULE_TYPE.ONLINE) {
+      booking.code = `${booking.id}-${randomString(5)}`;
+    }
 
     await booking_payment.save({ transaction });
     await booking.save({ transaction });

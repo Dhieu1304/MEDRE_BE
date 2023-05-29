@@ -1,3 +1,5 @@
+/*global _io*/
+/*eslint no-undef: "error"*/
 const config = require('../config');
 const notificationUserService = require('./notification_user.service');
 const catchAsync = require('../utils/catchAsync');
@@ -8,6 +10,7 @@ const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 const pick = require('../utils/pick');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
+const { NOTIFICATION_EVENT } = require('../socket/socket.constant');
 
 const sendPushNotification = catchAsync(async (req, res, next) => {
   const message = {
@@ -69,6 +72,7 @@ const testNotification = catchAsync(async (req, res) => {
   const payload = {
     notification: { title, body },
   };
+  _io.in(req.user.id).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
   await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
   return res.status(httpStatus.OK).json(responseMessage('Successfully FCM'));
 });
@@ -98,6 +102,24 @@ const createNotification = catchAsync(async (req, res) => {
     }
   }
   await notificationUserService.createNotification(data, notificationUser);
+
+  // send notification
+  const payload = {
+    notification: {
+      title: data.title,
+      body: data.content,
+      type: data.type,
+    },
+  };
+  if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
+    const idAccount = notificationUser.id_user || notificationUser.id_staff;
+    _io.in(idAccount).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(idAccount, payload);
+  } else {
+    _io.in(data.notification_for).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(data.notification_for, payload);
+  }
+
   return res.status(httpStatus.OK).json(responseMessage('Create notification successfully'));
 });
 
@@ -106,6 +128,17 @@ const markReadNotification = catchAsync(async (req, res) => {
   req.user.role === NOTIFICATION_FOR.USER ? (data.id_user = req.user.id) : (data.id_staff = req.user.id);
   await notificationUserService.markReadNotification(data);
   return res.status(httpStatus.OK).json(responseMessage('Read notification successfully'));
+});
+
+const countUnReadNotification = catchAsync(async (req, res) => {
+  const filter = { read: false };
+  req.user.role === NOTIFICATION_FOR.USER ? (filter.id_user = req.user.id) : (filter.id_staff = req.user.id);
+  const condition = {
+    where: filter,
+    distinct: true,
+  };
+  const amount = await notificationUserService.countByCondition(condition);
+  return res.status(httpStatus.OK).json(responseData(amount));
 });
 
 module.exports = {
@@ -117,4 +150,5 @@ module.exports = {
   listNotification,
   createNotification,
   markReadNotification,
+  countUnReadNotification,
 };

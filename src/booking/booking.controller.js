@@ -12,6 +12,8 @@ const moment = require('moment');
 const scheduleService = require('../schedule/schedule.service');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const { BOOKING_STATUS } = require('./booking.constant');
+const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
+const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -241,10 +243,13 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
 });
 
 const booking = catchAsync(async (req, res) => {
-  const data = req.body;
+  const data = pick(req.body, ['id_schedule', 'id_time', 'date', 'reason', 'id_patient']);
 
   // check booking date ( > 1 day)
-  if (data.date < moment().add(1, 'd')) {
+  if (
+    data.date < moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_ADVANCE_DAY), 'd') ||
+    data.date > moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_AFTER_DAY), 'd')
+  ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
   data.id_user = req.user.id;

@@ -27,6 +27,7 @@ router.post(
   validate(notificationUserValidation.markReadNotification),
   notificationUserController.markReadNotification
 );
+router.get('/count-unread', notificationUserController.countUnReadNotification);
 
 // -------------------------------- ADMIN ROUTE ------------------------------------
 router.post(

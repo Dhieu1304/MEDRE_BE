@@ -66,7 +66,6 @@ const createUserNotification = async (tableName, id_notification, filter = {}) =
 };
 
 const createNotification = async (data, notificationUser) => {
-  // todo: send FCM
   const transaction = await models.sequelize.transaction();
   try {
     data.id = uuidv4();
@@ -126,6 +125,10 @@ const markReadNotification = async (filter) => {
   return await userNotification.save();
 };
 
+const countByCondition = async (condition) => {
+  return await models.notification_user.count(condition);
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
@@ -134,4 +137,5 @@ module.exports = {
   findAndCountAllByCondition,
   createNotification,
   markReadNotification,
+  countByCondition,
 };

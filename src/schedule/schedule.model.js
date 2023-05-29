@@ -1,5 +1,4 @@
 const { SCHEDULE_TYPE, SCHEDULE_SESSION } = require('./schedule.constant');
-const moment = require('moment');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -44,11 +43,9 @@ module.exports = function (sequelize, DataTypes) {
       },
       apply_from: {
         type: DataTypes.DATEONLY,
-        defaultValue: moment(),
       },
       apply_to: {
         type: DataTypes.DATEONLY,
-        defaultValue: moment().add(1, 'years'),
       },
     },
     {
