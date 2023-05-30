@@ -243,7 +243,7 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
 });
 
 const booking = catchAsync(async (req, res) => {
-  const data = pick(req.body, ['id_schedule', 'id_time', 'date', 'reason', 'id_patient']);
+  const data = pick(req.body, ['id_schedule', 'id_time', 'date', 'reason', 'id_patient','id_checkup_package']);
 
   // check booking date ( > 1 day)
   if (
