@@ -137,8 +137,10 @@
     "test": "Mobile notification testing."
   },
   "checkupPackage": {
-    "notFound": "Package not found.",
-    "success": "Update successfully.",
-    "delete": "Delete package successfully."
+    "notFound": "Checkup package not found.",
+    "success": "Update checkup package successfully.",
+    "cannotUpdate": "Checkup package is being used. Cannot update.",
+    "delete": "Delete checkup package successfully.",
+    "cannotDelete": "Checkup package is being used. Cannot delete."
   }
 }
