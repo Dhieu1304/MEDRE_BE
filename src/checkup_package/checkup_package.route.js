@@ -4,8 +4,10 @@ const validate = require('../middlewares/validate');
 const checkupPackageValidation = require('./checkup_package.validation');
 const { staffPermission } = require('../middlewares/staffPermission');
 const { ALL_STAFF_ROLES } = require('../staff/staff.constant');
+const auth = require('../middlewares/auth');
 
 const router = express.Router();
+router.use(auth());
 
 router.get(
   '/list-checkup-package',
