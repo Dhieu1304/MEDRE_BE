@@ -33,6 +33,7 @@ module.exports = function (sequelize, DataTypes) {
       tableName: 'checkup_package',
       schema: 'public',
       timestamps: true,
+      paranoid: true,
       indexes: [
         {
           name: 'checkup_package_pkey',

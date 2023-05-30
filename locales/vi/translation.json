@@ -139,6 +139,8 @@
   "checkupPackage": {
     "notFound": "Không tìm thấy gói khám.",
     "success": "Thay đổi thông tin thành công.",
-    "delete": "Xóa gói thành công."
+    "cannotUpdate": "Gói khám đang được sử dụng. Không thể thay đổi thông tin.",
+    "delete": "Xóa gói khám thành công.",
+    "cannotDelete": "Gói khám đang được sử dụng. Không thể xóa."
   }
 }

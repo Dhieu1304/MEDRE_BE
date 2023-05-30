@@ -49,6 +49,14 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
+      id_checkup_package: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'checkup_package',
+          key: 'id',
+        },
+      },
       date: {
         type: DataTypes.DATEONLY,
         allowNull: false,

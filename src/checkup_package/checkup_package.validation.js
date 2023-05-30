@@ -1,21 +1,11 @@
 const Joi = require('joi');
 
-const getPrice = {
-  query: Joi.object().keys({
-    id_schedule: Joi.string().uuid().required(),
-  }),
-};
-
-const updatePrice = {
-  query: Joi.object().keys({
-    id_package: Joi.string().uuid().required(),
-    price: Joi.number().integer().required(),
-  }),
-};
-
-const getAllPackage = {
-  query: Joi.object().keys({
-    id_expertise: Joi.string().uuid().required(),
+const updateCheckupPackage = {
+  body: Joi.object().keys({
+    id_expertise: Joi.string().uuid(),
+    name: Joi.string(),
+    description: Joi.string(),
+    price: Joi.number().integer(),
   }),
 };
 
@@ -34,10 +24,20 @@ const deletePackage = {
   }),
 };
 
+const listCheckupPackage = {
+  query: Joi.object().keys({
+    id_expertise: Joi.string().uuid(),
+    name: Joi.string(),
+    description: Joi.string(),
+    price: Joi.number().integer(),
+    page: Joi.number().integer().default(1).min(1),
+    limit: Joi.number().integer().default(10).min(1),
+  }),
+};
+
 module.exports = {
-  getPrice,
-  updatePrice,
-  getAllPackage,
+  updateCheckupPackage,
   createPackage,
   deletePackage,
+  listCheckupPackage,
 };
