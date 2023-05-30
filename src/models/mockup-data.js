@@ -49,13 +49,13 @@ const { initGlobalSetting } = require('../nodeCache/globalSetting');
       const doctorTimeOff = xlsx.parse(__dirname + '/data/doctor_time_off.xlsx');
       await models.doctor_time_off.bulkCreate(createMockData(doctorTimeOff[0].data));
 
-      logger.info('-------------------- GLOBAL SETTING ---------------------');
-      const globalSetting = xlsx.parse(__dirname + '/data/global_setting.xlsx');
-      await models.global_setting.bulkCreate(createMockData(globalSetting[0].data));
-
       logger.info('-------------------- CHECK-UP PACKAGE ---------------------');
       const checkupPackage = xlsx.parse(__dirname + '/data/checkup_package.xlsx');
       await models.checkup_package.bulkCreate(createMockData(checkupPackage[0].data));
+      
+      logger.info('-------------------- GLOBAL SETTING ---------------------');
+      const globalSetting = xlsx.parse(__dirname + '/data/global_setting.xlsx');
+      await models.global_setting.bulkCreate(createMockData(globalSetting[0].data));
 
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }

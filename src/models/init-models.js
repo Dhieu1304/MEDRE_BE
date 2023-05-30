@@ -5,13 +5,13 @@ const _expertise = require('../expertise/expertise.model');
 const _staff_expertise = require('../staff_expertise/staff_expertise.model');
 const _schedule = require('../schedule/schedule.model');
 const _patient = require('../patient/patient.model');
+const _checkup_package = require('../checkup_package/checkup_package.model');
 const _booking = require('../booking/booking.model');
 const _booking_payment = require('../booking_payment/booking_payment.model');
 const _time_schedule = require('../time_schedule/time_schedule.model');
 const _blocking_account = require('../blocking_account/blocking_account.model');
 const _doctor_time_off = require('../doctor_time_off/doctor_time_off.model');
 const _history_login = require('../history_login/history_login.model');
-const _checkup_package = require('../checkup_package/checkup_package.model');
 const _global_setting = require('../global_setting/global_setting.model');
 const _notification = require('../notification/notification.model');
 const _notification_user = require('../notification_user/notification_user.model');
@@ -25,12 +25,12 @@ function initModels(sequelize) {
   const time_schedule = _time_schedule(sequelize, DataTypes);
   const schedule = _schedule(sequelize, DataTypes);
   const patient = _patient(sequelize, DataTypes);
+  const checkup_package = _checkup_package(sequelize, DataTypes);
   const booking = _booking(sequelize, DataTypes);
   const blocking_account = _blocking_account(sequelize, DataTypes);
   const doctor_time_off = _doctor_time_off(sequelize, DataTypes);
   const booking_payment = _booking_payment(sequelize, DataTypes);
   const history_login = _history_login(sequelize, DataTypes);
-  const checkup_package = _checkup_package(sequelize, DataTypes);
   const global_setting = _global_setting(sequelize, DataTypes);
   const notification = _notification(sequelize, DataTypes);
   const notification_user = _notification_user(sequelize, DataTypes);
@@ -76,6 +76,10 @@ function initModels(sequelize) {
   history_login.belongsTo(user, { as: 'login_of_user', foreignKey: 'id_user' });
   staff.hasMany(history_login, { as: 'staff_logins', foreignKey: 'id_staff' });
   history_login.belongsTo(staff, { as: 'login_of_staff', foreignKey: 'id_staff' });
+  expertise.hasMany(checkup_package, { as: 'expertise_checkup_package', foreignKey: 'id_expertise' });
+  checkup_package.belongsTo(expertise, { as: 'checkup_package_expertise', foreignKey: 'id_expertise' });
+  checkup_package.hasMany(booking, { as: 'checkup_package_booking', foreignKey: 'id_checkup_package' });
+  booking.belongsTo(checkup_package, { as: 'booking_checkup_package', foreignKey: 'id_checkup_package' });
   staff.hasMany(notification, { as: 'staff_create_notification', foreignKey: 'created_by' });
   notification.belongsTo(staff, { as: 'notification_staff', foreignKey: 'created_by' });
   staff.hasMany(notification_user, { as: 'staff_notifications', foreignKey: 'id_staff' });
@@ -103,11 +107,11 @@ function initModels(sequelize) {
     time_schedule,
     blocking_account,
     patient,
+    checkup_package,
     booking,
     doctor_time_off,
     booking_payment,
     history_login,
-    checkup_package,
     global_setting,
     notification,
     notification_user,
