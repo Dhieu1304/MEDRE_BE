@@ -24,11 +24,10 @@ const updateCheckupPackage = async (id_checkup_package, data) => {
   if (!checkup_package) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('checkupPackage.notFound'));
   }
-  let filter = Object.assign({}, { date: { [Op.gt]: moment().subtract(1, 'd')} });
+  let filter = Object.assign({}, { date: { [Op.gt]: moment().subtract(1, 'd') } });
   filter.id_checkup_package = id_checkup_package;
   const booking = await bookingService.findAllByFilter(filter);
-  if (booking.length > 0)
-  {
+  if (booking.length > 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('checkupPackage.cannotUpdate'));
   }
   checkup_package = Object.assign(checkup_package, data);
@@ -48,12 +47,11 @@ const deleteCheckupPackage = async (data) => {
   if (!checkup_package) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('checkupPackage.notFound'));
   }
-  
-  let filter = Object.assign({}, { date: { [Op.gt]: moment().subtract(1, 'd')} });
+
+  let filter = Object.assign({}, { date: { [Op.gt]: moment().subtract(1, 'd') } });
   filter.id_checkup_package = data;
   const booking = await bookingService.findAllByFilter(filter);
-  if (booking.length > 0)
-  {
+  if (booking.length > 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('checkupPackage.cannotDelete'));
   }
   // delete package
