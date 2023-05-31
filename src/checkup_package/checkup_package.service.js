@@ -38,7 +38,7 @@ const createCheckupPackage = async (data) => {
   // generate uuid
   data.id = uuidv4();
 
-  // create new user
+  // create new checkup package
   return models.checkup_package.create(data);
 };
 
