@@ -42,6 +42,9 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         trim: true,
       },
+      id_redirect: {
+        type: DataTypes.UUID,
+      },
     },
     {
       sequelize,

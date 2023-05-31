@@ -36,6 +36,7 @@ const createNotification = {
     title: Joi.string().trim().required(),
     content: Joi.string().trim().required(),
     description: Joi.string().trim().required(),
+    id_redirect: Joi.string().uuid(),
   }),
 };
 

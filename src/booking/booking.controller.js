@@ -1,3 +1,5 @@
+/*global _io*/
+/*eslint no-undef: "error"*/
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
 const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
@@ -15,6 +17,10 @@ const { BOOKING_STATUS } = require('./booking.constant');
 const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 const { waitingBooking } = require('../nodeCache/booking');
+const notificationUserService = require('../notification_user/notification_user.service');
+const { NOTIFICATION_TYPE, NOTIFICATION_FOR } = require('../notification/notification.constant');
+const { NOTIFICATION_EVENT } = require('../socket/socket.constant');
+const logger = require('../config/logger');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -283,11 +289,53 @@ const booking = catchAsync(async (req, res) => {
   }
 
   const newBooking = await bookingService.createNewBooking(data);
+  res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 
-  // add to cache -> cancel automatic
-  await waitingBooking(newBooking.id);
+  // catch error -> not throw error to user
+  try {
+    // add to cache -> cancel automatic
+    await waitingBooking(newBooking.id);
 
-  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
+    // create notification
+    const content =
+      `Bạn vừa đặt lịch thành công, vui lòng chọn hình thức thanh toán trong vòng ` +
+      `${getGlobalSettingByName(GLOBAL_SETTING.CANCEL_ONLINE_BOOKING_AFTER_MINUTE)} phút. ` +
+      `Nếu không sẽ bị hủy tự động.`;
+    const notificationForUser = { id_user: req.user.id };
+    const notificationData = {
+      type: NOTIFICATION_TYPE.BOOKING,
+      notification_for: NOTIFICATION_FOR.PERSONAL,
+      title: 'Đặt lịch',
+      content,
+      id_redirect: newBooking.id,
+    };
+    const { notification } = await notificationUserService.createNotification(notificationData, notificationForUser);
+
+    // send notification to user
+    const payload = {
+      notification: {
+        title: 'Đặt lịch',
+        body: content,
+        type: NOTIFICATION_TYPE.BOOKING,
+        id_redirect: newBooking.id,
+      },
+    };
+    _io.in(req.user.id).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
+
+    // create notification for CS
+    const notificationUserData = {
+      id_notification: notification.id,
+      notification_for: NOTIFICATION_FOR.CUSTOMER_SERVICE,
+    };
+    await notificationUserService.createNotificationUser(notificationUserData, null);
+
+    // send notification to user customer service
+    _io.in(NOTIFICATION_FOR.CUSTOMER_SERVICE).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(NOTIFICATION_FOR.CUSTOMER_SERVICE, payload);
+  } catch (e) {
+    logger.error('Error create notification of new booking: ', e.message);
+  }
 });
 
 const updateBooking = catchAsync(async (req, res) => {

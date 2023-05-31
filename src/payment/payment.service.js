@@ -8,7 +8,7 @@ const i18next = require('i18next');
 const { v4: uuidv4 } = require('uuid');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const randomString = require('../utils/randomString');
-const {rmWaitingBooking} = require("../nodeCache/booking");
+const { rmWaitingBooking } = require('../nodeCache/booking');
 
 const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   const booking = await models.booking.findOne({
