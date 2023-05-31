@@ -33,12 +33,13 @@ module.exports = function (sequelize, DataTypes) {
         trim: true,
       },
       content: {
-        type: DataTypes.STRING(1024),
+        type: DataTypes.STRING(2048),
         allowNull: false,
         trim: true,
       },
       description: {
         type: DataTypes.STRING(2048),
+        allowNull: false,
         trim: true,
       },
       id_redirect: {

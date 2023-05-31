@@ -334,7 +334,7 @@ const booking = catchAsync(async (req, res) => {
     _io.in(NOTIFICATION_FOR.CUSTOMER_SERVICE).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
     await notificationUserService.sendNotificationTopicFCM(NOTIFICATION_FOR.CUSTOMER_SERVICE, payload);
   } catch (e) {
-    logger.error('Error create notification of new booking: ', e);
+    logger.error('Error create notification of new booking: ', e.message);
   }
 });
 
