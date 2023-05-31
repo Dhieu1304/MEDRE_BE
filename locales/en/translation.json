@@ -45,7 +45,7 @@
     "invalidTimeSession": "Invalid time schedule session.",
     "missingUserInfo": "Please update your personal information.",
     "invalidScheduleId": "Invalid schedule id.",
-    "invalidDate": "You need to booking 1 day in advance."
+    "invalidDate": "You need to adhere to the prescribed number of booking days."
   },
   "patient": {
     "notFound": "Patient not found."

@@ -14,6 +14,7 @@ const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const { BOOKING_STATUS } = require('./booking.constant');
 const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
+const { waitingBooking } = require('../nodeCache/booking');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -283,7 +284,8 @@ const booking = catchAsync(async (req, res) => {
 
   const newBooking = await bookingService.createNewBooking(data);
 
-  // todo: change status to cancel after 30 minute user don't payment
+  // add to cache -> cancel automatic
+  await waitingBooking(newBooking.id);
 
   return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 });
@@ -328,7 +330,10 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   const data = req.body;
 
   // check booking date ( > 1 day)
-  if (data.date < moment().add(1, 'd')) {
+  if (
+    data.date < moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_ADVANCE_DAY), 'd') ||
+    data.date > moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_AFTER_DAY), 'd')
+  ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
 
