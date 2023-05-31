@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage } = require('../utils/responseFormat');
+const { responseData } = require('../utils/responseFormat');
 const { vn_pay } = require('../config');
 const querystring = require('qs');
 const crypto = require('crypto');
@@ -94,8 +94,8 @@ const returnData = catchAsync(async (req, res) => {
 });
 
 const cashPayment = catchAsync(async (req, res) => {
-  await paymentService.cashPayment(req.body.id_booking, res.user);
-  return res.status(httpStatus.OK).json(responseMessage('Successful'));
+  const updateBooking = await paymentService.cashPayment(req.body.id_booking, req.user);
+  return res.status(httpStatus.OK).json(responseData(updateBooking));
 });
 
 module.exports = {

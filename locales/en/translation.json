@@ -131,7 +131,8 @@
       "75": "Payment bank under maintenance.",
       "79": "Wrong password to pay more than the specified number of times. Please repeat the transaction.",
       "99": "Unknown error."
-    }
+    },
+    "invalidBookingType": "Can not pay later for online booking."
   },
   "mobileNotification": {
     "test": "Mobile notification testing."

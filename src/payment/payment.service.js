@@ -75,7 +75,10 @@ const handlePaymentFail = async (txn_ref, rsp_code) => {
 
 const cashPayment = async (id_booking, user) => {
   // check booking is exist
-  const booking = await models.booking.findOne({ where: { id: id_booking } });
+  const booking = await models.booking.findOne({
+    where: { id: id_booking },
+    include: [{ model: models.schedule, as: 'booking_schedule' }],
+  });
   if (!booking || booking.booking_status !== BOOKING_STATUS.WAITING || booking.is_payment) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
@@ -83,6 +86,11 @@ const cashPayment = async (id_booking, user) => {
   // check user booking
   if (booking.id_user !== user.id) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.invalidUserBooking'));
+  }
+
+  // check offline
+  if (booking.booking_schedule.type !== SCHEDULE_TYPE.OFFLINE) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.invalidBookingType'));
   }
 
   booking.booking_status = BOOKING_STATUS.BOOKED;
