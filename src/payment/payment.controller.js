@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData } = require('../utils/responseFormat');
+const { responseData, responseMessage } = require('../utils/responseFormat');
 const { vn_pay } = require('../config');
 const querystring = require('qs');
 const crypto = require('crypto');
@@ -93,7 +93,13 @@ const returnData = catchAsync(async (req, res) => {
   return res.send(statusPage('Giao dịch thất bại', 'Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ', false));
 });
 
+const cashPayment = catchAsync(async (req, res) => {
+  await paymentService.cashPayment(req.body.id_booking, res.user);
+  return res.status(httpStatus.OK).json(responseMessage('Successful'));
+});
+
 module.exports = {
   createPaymentUrl,
   returnData,
+  cashPayment,
 };

@@ -73,8 +73,25 @@ const handlePaymentFail = async (txn_ref, rsp_code) => {
   await booking_payment.save();
 };
 
+const cashPayment = async (id_booking, user) => {
+  // check booking is exist
+  const booking = await models.booking.findOne({ where: { id: id_booking } });
+  if (!booking || booking.booking_status !== BOOKING_STATUS.WAITING || booking.is_payment) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
+  }
+
+  // check user booking
+  if (booking.id_user !== user.id) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.invalidUserBooking'));
+  }
+
+  booking.booking_status = BOOKING_STATUS.BOOKED;
+  return await booking.save();
+};
+
 module.exports = {
   checkBookingPayment,
   handlePaymentSuccess,
   handlePaymentFail,
+  cashPayment,
 };
