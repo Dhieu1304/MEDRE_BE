@@ -15,10 +15,7 @@ router.get(
   validate(checkupPackageValidation.listCheckupPackage),
   checkupPackageController.getAllCheckupPackage
 );
-router.get(
-  '/expertise/:id', 
-  checkupPackageController.getAllCheckupPackageByExpertise
-);
+router.get('/expertise/:id', checkupPackageController.getAllCheckupPackageByExpertise);
 
 router.post(
   '/update-checkup-package/:id',
@@ -32,10 +29,6 @@ router.post(
   validate(checkupPackageValidation.createCheckupPackage),
   checkupPackageController.createCheckupPackage
 );
-router.post(
-  '/delete-checkup-package/:id', 
-  staffPermission(ALL_STAFF_ROLES), 
-  checkupPackageController.deleteCheckupPackage
-);
+router.post('/delete-checkup-package/:id', staffPermission(ALL_STAFF_ROLES), checkupPackageController.deleteCheckupPackage);
 
 module.exports = router;
