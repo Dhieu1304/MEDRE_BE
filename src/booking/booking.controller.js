@@ -59,6 +59,11 @@ const listBookings = catchAsync(async (req, res) => {
       },
     ],
   });
+  include.push({
+    model: models.checkup_package,
+    as: 'booking_checkup_package',
+    attributes: ['name', 'description', 'price'],
+  });
   // convert filter type
   if (filter.type) {
     include[include.length - 1].where.type = filter.type;
@@ -144,6 +149,11 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
       },
     ],
   });
+  include.push({
+    model: models.checkup_package,
+    as: 'booking_checkup_package',
+    attributes: ['name', 'description', 'price'],
+  });
   delete filter.id_doctor;
 
   // convert filter type
@@ -204,6 +214,11 @@ const getDetailBooking = catchAsync(async (req, res) => {
         ],
       },
       { model: models.patient, as: 'booking_of_patient' },
+      {
+        model: models.checkup_package,
+        as: 'booking_checkup_package',
+        attributes: ['name', 'description', 'price'],
+      },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
@@ -237,6 +252,11 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
       },
       { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } },
       { model: models.patient, as: 'booking_of_patient' },
+      {
+        model: models.checkup_package,
+        as: 'booking_checkup_package',
+        attributes: ['name', 'description', 'price'],
+      },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
@@ -252,6 +272,7 @@ const booking = catchAsync(async (req, res) => {
   ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
+  //a6819437-95a5-4492-b682-cb13916d00ee
   data.id_user = req.user.id;
 
   // check book for other people
