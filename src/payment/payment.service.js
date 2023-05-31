@@ -8,6 +8,7 @@ const i18next = require('i18next');
 const { v4: uuidv4 } = require('uuid');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const randomString = require('../utils/randomString');
+const {rmWaitingBooking} = require("../nodeCache/booking");
 
 const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   const booking = await models.booking.findOne({
@@ -53,6 +54,9 @@ const handlePaymentSuccess = async (txn_ref) => {
     await booking_payment.save({ transaction });
     await booking.save({ transaction });
 
+    // delete cache
+    await rmWaitingBooking(booking_payment.id_booking);
+
     await transaction.commit();
   } catch (e) {
     await transaction.rollback();
@@ -92,6 +96,9 @@ const cashPayment = async (id_booking, user) => {
   if (booking.booking_schedule.type !== SCHEDULE_TYPE.OFFLINE) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.invalidBookingType'));
   }
+
+  // delete cache
+  await rmWaitingBooking(id_booking);
 
   booking.booking_status = BOOKING_STATUS.BOOKED;
   return await booking.save();
