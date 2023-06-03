@@ -154,13 +154,13 @@ const resetPassword = catchAsync(async (req, res) => {
   const new_password = req.body.new_password;
   const checkAccount = authService.checkAccount(token);
   if (!checkAccount) {
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('account.notFound'), false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('account.notFound'), false));
   }
   const result = await authService.resetPassword(token, new_password);
   if (result) {
     return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePassword'), true));
   } else {
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePasswordFailure'), false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('password.changePasswordFailure'), false));
   }
   // if (result) {
   //   res.send(
