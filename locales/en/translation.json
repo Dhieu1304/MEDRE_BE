@@ -45,7 +45,7 @@
     "invalidTimeSession": "Invalid time schedule session.",
     "missingUserInfo": "Please update your personal information.",
     "invalidScheduleId": "Invalid schedule id.",
-    "invalidDate": "You need to booking 1 day in advance."
+    "invalidDate": "You need to adhere to the prescribed number of booking days."
   },
   "patient": {
     "notFound": "Patient not found."
@@ -131,7 +131,8 @@
       "75": "Payment bank under maintenance.",
       "79": "Wrong password to pay more than the specified number of times. Please repeat the transaction.",
       "99": "Unknown error."
-    }
+    },
+    "invalidBookingType": "Can not pay later for online booking."
   },
   "mobileNotification": {
     "test": "Mobile notification testing."

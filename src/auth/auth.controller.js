@@ -10,6 +10,12 @@ const { LOGIN_TYPE } = require('../history_login/history_login.constant');
 const path = require('path');
 // const sendSMS = require('../otp/sms');
 
+const toResponseObject = (account) => {
+  const result = account.toJSON();
+  delete result.password;
+  return result;
+};
+
 const register = catchAsync(async (req, res) => {
   const mail = req.body.email;
   const phone = req.body.phone_number;
@@ -34,7 +40,9 @@ const loginEmailPassword = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(user);
   await historyLoginService.createNew(user.id, null, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
-  return res.status(httpStatus.OK).json(responseData({ user, tokens }, i18next.t('auth.loginSuccess')));
+  return res
+    .status(httpStatus.OK)
+    .json(responseData({ user: toResponseObject(user), tokens }, i18next.t('auth.loginSuccess')));
 });
 
 const staffLoginEmailPassword = catchAsync(async (req, res) => {
@@ -42,7 +50,9 @@ const staffLoginEmailPassword = catchAsync(async (req, res) => {
   const staff = await authService.staffLoginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(staff);
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
-  return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
+  return res
+    .status(httpStatus.OK)
+    .json(responseData({ staff: toResponseObject(staff), tokens }, i18next.t('auth.loginSuccess')));
 });
 
 const loginPhonePassword = catchAsync(async (req, res) => {
@@ -50,7 +60,9 @@ const loginPhonePassword = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithPhoneNumberAndPassword(phone_number, password);
   const tokens = await authService.generateAuthTokens(user);
   await historyLoginService.createNew(user.id, null, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
-  return res.status(httpStatus.OK).json(responseData({ user, tokens }, i18next.t('auth.loginSuccess')));
+  return res
+    .status(httpStatus.OK)
+    .json(responseData({ user: toResponseObject(user), tokens }, i18next.t('auth.loginSuccess')));
 });
 
 const staffLoginPhonePassword = catchAsync(async (req, res) => {
@@ -58,7 +70,9 @@ const staffLoginPhonePassword = catchAsync(async (req, res) => {
   const staff = await authService.staffLoginUserWithPhoneNumberAndPassword(phone_number, password);
   const tokens = await authService.generateAuthTokens(staff);
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
-  return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
+  return res
+    .status(httpStatus.OK)
+    .json(responseData({ staff: toResponseObject(staff), tokens }, i18next.t('auth.loginSuccess')));
 });
 
 const staffLoginUsernamePassword = catchAsync(async (req, res) => {
@@ -66,7 +80,9 @@ const staffLoginUsernamePassword = catchAsync(async (req, res) => {
   const staff = await authService.staffLoginUserWithUsernameAndPassword(username, password);
   const tokens = await authService.generateAuthTokens(staff);
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.USERNAME, tokens.refresh.token, tokens.refresh.expires);
-  return res.status(httpStatus.OK).json(responseData({ staff, tokens }, i18next.t('auth.loginSuccess')));
+  return res
+    .status(httpStatus.OK)
+    .json(responseData({ staff: toResponseObject(staff), tokens }, i18next.t('auth.loginSuccess')));
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
@@ -154,13 +170,13 @@ const resetPassword = catchAsync(async (req, res) => {
   const new_password = req.body.new_password;
   const checkAccount = authService.checkAccount(token);
   if (!checkAccount) {
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('account.notFound'), false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('account.notFound'), false));
   }
   const result = await authService.resetPassword(token, new_password);
   if (result) {
     return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePassword'), true));
   } else {
-    return res.status(httpStatus.OK).json(responseMessage(i18next.t('password.changePasswordFailure'), false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('password.changePasswordFailure'), false));
   }
   // if (result) {
   //   res.send(

@@ -45,7 +45,7 @@
     "invalidTimeSession": "Phiên thời gian đặt lịch không đúng.",
     "missingUserInfo": "Vui lòng cập nhật thông tin cá nhân.",
     "invalidScheduleId": "Mã định danh lịch biểu của bác sĩ không đúng.",
-    "invalidDate": "Bạn cần đặt lịch trước 1 ngày."
+    "invalidDateAdvance": "Bạn cần tuân thủ số ngày đặt lịch theo quy định."
   },
   "patient": {
     "notFound": "Không tìm thấy người bệnh."
@@ -131,7 +131,8 @@
       "75": "Ngân hàng thanh toán đang bảo trì.",
       "79": "Sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch.",
       "99": "Lỗi không xác định."
-    }
+    },
+    "invalidBookingType": "Không thể thanh toán sau cho  lịch khám online."
   },
   "mobileNotification": {
     "test": "Thử nghiệm gửi thông báo cho điện thoại."

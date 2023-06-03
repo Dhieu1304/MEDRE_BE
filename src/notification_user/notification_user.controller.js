@@ -93,7 +93,7 @@ const listNotification = catchAsync(async (req, res) => {
 });
 
 const createNotification = catchAsync(async (req, res) => {
-  const data = pick(req.body, ['type', 'notification_for', 'title', 'content', 'description']);
+  const data = pick(req.body, ['type', 'notification_for', 'title', 'content', 'description', 'id_redirect']);
   const notificationUser = pick(req.body, ['id_user', 'id_staff']);
   data.created_by = req.user.id;
   if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
@@ -109,6 +109,7 @@ const createNotification = catchAsync(async (req, res) => {
       title: data.title,
       body: data.content,
       type: data.type,
+      id_redirect: data.id_redirect,
     },
   };
   if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {

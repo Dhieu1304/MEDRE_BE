@@ -1,3 +1,5 @@
+/*global _io*/
+/*eslint no-undef: "error"*/
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
 const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
@@ -14,6 +16,11 @@ const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const { BOOKING_STATUS } = require('./booking.constant');
 const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
+const { waitingBooking } = require('../nodeCache/booking');
+const notificationUserService = require('../notification_user/notification_user.service');
+const { NOTIFICATION_TYPE, NOTIFICATION_FOR } = require('../notification/notification.constant');
+const { NOTIFICATION_EVENT } = require('../socket/socket.constant');
+const logger = require('../config/logger');
 
 const listBookings = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -58,6 +65,11 @@ const listBookings = catchAsync(async (req, res) => {
         attributes: { exclude: ['password'] },
       },
     ],
+  });
+  include.push({
+    model: models.checkup_package,
+    as: 'booking_checkup_package',
+    attributes: ['name', 'description', 'price'],
   });
   // convert filter type
   if (filter.type) {
@@ -144,6 +156,11 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
       },
     ],
   });
+  include.push({
+    model: models.checkup_package,
+    as: 'booking_checkup_package',
+    attributes: ['name', 'description', 'price'],
+  });
   delete filter.id_doctor;
 
   // convert filter type
@@ -204,6 +221,11 @@ const getDetailBooking = catchAsync(async (req, res) => {
         ],
       },
       { model: models.patient, as: 'booking_of_patient' },
+      {
+        model: models.checkup_package,
+        as: 'booking_checkup_package',
+        attributes: ['name', 'description', 'price'],
+      },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
@@ -237,6 +259,11 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
       },
       { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } },
       { model: models.patient, as: 'booking_of_patient' },
+      {
+        model: models.checkup_package,
+        as: 'booking_checkup_package',
+        attributes: ['name', 'description', 'price'],
+      },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
@@ -252,6 +279,7 @@ const booking = catchAsync(async (req, res) => {
   ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
+  //a6819437-95a5-4492-b682-cb13916d00ee
   data.id_user = req.user.id;
 
   // check book for other people
@@ -261,10 +289,53 @@ const booking = catchAsync(async (req, res) => {
   }
 
   const newBooking = await bookingService.createNewBooking(data);
+  res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
 
-  // todo: change status to cancel after 30 minute user don't payment
+  // catch error -> not throw error to user
+  try {
+    // add to cache -> cancel automatic
+    await waitingBooking(newBooking.id);
 
-  return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
+    // create notification
+    const content =
+      `Bạn vừa đặt lịch thành công, vui lòng chọn hình thức thanh toán trong vòng ` +
+      `${getGlobalSettingByName(GLOBAL_SETTING.CANCEL_ONLINE_BOOKING_AFTER_MINUTE)} phút. ` +
+      `Nếu không sẽ bị hủy tự động.`;
+    const notificationForUser = { id_user: req.user.id };
+    const notificationData = {
+      type: NOTIFICATION_TYPE.BOOKING,
+      notification_for: NOTIFICATION_FOR.PERSONAL,
+      title: 'Đặt lịch',
+      content,
+      id_redirect: newBooking.id,
+    };
+    const { notification } = await notificationUserService.createNotification(notificationData, notificationForUser);
+
+    // send notification to user
+    const payload = {
+      notification: {
+        title: 'Đặt lịch',
+        body: content,
+        type: NOTIFICATION_TYPE.BOOKING,
+        id_redirect: newBooking.id,
+      },
+    };
+    _io.in(req.user.id).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
+
+    // create notification for CS
+    const notificationUserData = {
+      id_notification: notification.id,
+      notification_for: NOTIFICATION_FOR.CUSTOMER_SERVICE,
+    };
+    await notificationUserService.createNotificationUser(notificationUserData, null);
+
+    // send notification to user customer service
+    _io.in(NOTIFICATION_FOR.CUSTOMER_SERVICE).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+    await notificationUserService.sendNotificationTopicFCM(NOTIFICATION_FOR.CUSTOMER_SERVICE, payload);
+  } catch (e) {
+    logger.error('Error create notification of new booking: ', e);
+  }
 });
 
 const updateBooking = catchAsync(async (req, res) => {
@@ -307,7 +378,10 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   const data = req.body;
 
   // check booking date ( > 1 day)
-  if (data.date < moment().add(1, 'd')) {
+  if (
+    data.date < moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_ADVANCE_DAY), 'd') ||
+    data.date > moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_AFTER_DAY), 'd')
+  ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
 

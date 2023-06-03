@@ -65,6 +65,10 @@ const { initGlobalSetting } = require('../nodeCache/globalSetting');
       const notification_user = xlsx.parse(__dirname + '/data/notification_user.xlsx');
       await models.notification_user.bulkCreate(createMockData(notification_user[0].data));
 
+      logger.info('-------------------- RE_EXAMINATION ---------------------');
+      const re_examination = xlsx.parse(__dirname + '/data/re_examination.xlsx');
+      await models.re_examination.bulkCreate(createMockData(re_examination[0].data));
+
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
 

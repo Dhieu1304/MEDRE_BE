@@ -93,7 +93,13 @@ const returnData = catchAsync(async (req, res) => {
   return res.send(statusPage('Giao dịch thất bại', 'Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ', false));
 });
 
+const cashPayment = catchAsync(async (req, res) => {
+  const updateBooking = await paymentService.cashPayment(req.body.id_booking, req.user);
+  return res.status(httpStatus.OK).json(responseData(updateBooking));
+});
+
 module.exports = {
   createPaymentUrl,
   returnData,
+  cashPayment,
 };

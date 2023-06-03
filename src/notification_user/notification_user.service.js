@@ -7,6 +7,7 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const { v4: uuidv4 } = require('uuid');
 const { NOTIFICATION_FOR } = require('../notification/notification.constant');
+const logger = require('../config/logger');
 
 const sendPushNotification = (data, callback) => {
   const headers = {
@@ -67,12 +68,13 @@ const createUserNotification = async (tableName, id_notification, filter = {}) =
 
 const createNotification = async (data, notificationUser) => {
   const transaction = await models.sequelize.transaction();
+  let notificationForUser;
   try {
     data.id = uuidv4();
     const notification = await models.notification.create(data, { transaction });
     switch (data.notification_for) {
       case NOTIFICATION_FOR.PERSONAL: {
-        await models.notification_user.create(
+        notificationForUser = await models.notification_user.create(
           {
             id: uuidv4(),
             id_notification: notification.id,
@@ -84,32 +86,36 @@ const createNotification = async (data, notificationUser) => {
       }
       case NOTIFICATION_FOR.USER: {
         const userNotificationData = await createUserNotification('user', notification.id);
-        await models.notification_user.bulkCreate(userNotificationData, { transaction });
+        notificationForUser = await models.notification_user.bulkCreate(userNotificationData, { transaction });
         break;
       }
       case NOTIFICATION_FOR.STAFF: {
         const staffNotificationData = await createUserNotification('staff', notification.id);
-        await models.notification_user.bulkCreate(staffNotificationData, { transaction });
+        notificationForUser = await models.notification_user.bulkCreate(staffNotificationData, { transaction });
         break;
       }
       case NOTIFICATION_FOR.ALL_SYSTEM: {
         const allNotificationDataUser = await createUserNotification('user', notification.id);
         const allNotificationDataStaff = await createUserNotification('staff', notification.id);
-        await models.notification_user.bulkCreate([...allNotificationDataUser, ...allNotificationDataStaff], {
-          transaction,
-        });
+        notificationForUser = await models.notification_user.bulkCreate(
+          [...allNotificationDataUser, ...allNotificationDataStaff],
+          {
+            transaction,
+          }
+        );
         break;
       }
       default: {
         const staffRoleNotification = await createUserNotification('staff', notification.id, {
           role: data.notification_for,
         });
-        await models.notification_user.bulkCreate(staffRoleNotification, { transaction });
+        notificationForUser = await models.notification_user.bulkCreate(staffRoleNotification, { transaction });
         break;
       }
     }
 
     await transaction.commit();
+    return { notification, notificationUser: notificationForUser };
   } catch (e) {
     await transaction.rollback();
     throw new ApiError(httpStatus.BAD_REQUEST, e.message);
@@ -129,6 +135,47 @@ const countByCondition = async (condition) => {
   return await models.notification_user.count(condition);
 };
 
+// data: { id_notification, notification_for }
+const createNotificationUser = async (data, notificationUser) => {
+  try {
+    switch (data.notification_for) {
+      case NOTIFICATION_FOR.PERSONAL: {
+        await models.notification_user.create({
+          id: uuidv4(),
+          id_notification: data.id_notification,
+          ...notificationUser, // id_user, id_staff
+        });
+        break;
+      }
+      case NOTIFICATION_FOR.USER: {
+        const userNotificationData = await createUserNotification('user', data.id_notification);
+        await models.notification_user.bulkCreate(userNotificationData);
+        break;
+      }
+      case NOTIFICATION_FOR.STAFF: {
+        const staffNotificationData = await createUserNotification('staff', data.id_notification);
+        await models.notification_user.bulkCreate(staffNotificationData);
+        break;
+      }
+      case NOTIFICATION_FOR.ALL_SYSTEM: {
+        const allNotificationDataUser = await createUserNotification('user', data.id_notification);
+        const allNotificationDataStaff = await createUserNotification('staff', data.id_notification);
+        await models.notification_user.bulkCreate([...allNotificationDataUser, ...allNotificationDataStaff]);
+        break;
+      }
+      default: {
+        const staffRoleNotification = await createUserNotification('staff', data.id_notification, {
+          role: data.notification_for,
+        });
+        await models.notification_user.bulkCreate(staffRoleNotification);
+        break;
+      }
+    }
+  } catch (e) {
+    logger.error('Error create notification user', e.message);
+  }
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
@@ -138,4 +185,5 @@ module.exports = {
   createNotification,
   markReadNotification,
   countByCondition,
+  createNotificationUser,
 };

@@ -8,7 +8,8 @@
     "_lint": "eslint --config ./.eslintrc.js --ext js --ext ts",
     "lint": "npm run _lint -- ./src/",
     "lint:fix": "npm run _lint -- --fix ./src/",
-    "format": "prettier --write \"./**/*.{js,ts,json}\" --config ./.prettierrc"
+    "format": "prettier --write \"./**/*.{js,ts,json}\" --config ./.prettierrc",
+    "test": "jest"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -54,6 +55,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.5.0",
     "lint-staged": "^13.1.0",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.1",

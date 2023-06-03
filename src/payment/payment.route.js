@@ -17,5 +17,6 @@ router.post(
   paymentController.createPaymentUrl
 );
 router.get('/vnpay-return', paymentController.returnData);
+router.post('/cash-payment', auth(), validate(paymentValidation.cashPayment), paymentController.cashPayment);
 
 module.exports = router;
