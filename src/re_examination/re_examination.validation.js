@@ -3,6 +3,10 @@ const Joi = require('joi');
 const list = {
   query: Joi.object().keys({
     is_apply: Joi.boolean().default(true),
+    date_re_exam: Joi.date(),
+    order: Joi.string()
+        .valid('createdAt:asc', 'createdAt:desc', 'updatedAt:asc', 'updatedAt:desc', 'date_re_exam:asc', 'date_re_exam:desc')
+        .default('date_re_exam:asc'),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),

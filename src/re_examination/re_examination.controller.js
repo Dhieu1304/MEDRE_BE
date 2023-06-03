@@ -17,10 +17,21 @@ const list = catchAsync(async (req, res) => {
 
 const listForStaff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
+  const filter = pick(req.query, ['date_re_exam', 'is_apply', 'order']);
+  const order = [];
+  if (filter.order) {
+    const parts = filter.order.split(':');
+    // same date => sort by createdAt
+    if (filter.date_re_exam) {
+      order.push(['createdAt', parts[1]]);
+    }
+    delete filter.order;
+  }
   const options = {
+    where: filter,
     include: [{ model: models.booking, as: 're_exam_of_booking' }],
     ...pageLimit2Offset(page, limit),
-    order: [['date_re_exam', 'desc']],
+    order,
   };
   const listReExamination = await reExaminationService.findAndCountAllByCondition(options);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(listReExamination, page, limit)));
