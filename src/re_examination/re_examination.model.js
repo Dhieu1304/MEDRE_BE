@@ -22,6 +22,10 @@ module.exports = function (sequelize, DataTypes) {
       date_re_exam: {
         type: DataTypes.DATEONLY,
       },
+      is_remind: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       id_staff_remind: {
         type: DataTypes.UUID,
         references: {

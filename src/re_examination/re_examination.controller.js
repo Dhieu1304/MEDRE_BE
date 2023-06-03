@@ -17,7 +17,7 @@ const list = catchAsync(async (req, res) => {
 
 const listForStaff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, ['date_re_exam', 'is_apply', 'order']);
+  const filter = pick(req.query, ['date_re_exam', 'is_apply', 'order', 'is_remind', 'id_staff_remind', 'date_remind']);
   const order = [];
   if (filter.order) {
     const parts = filter.order.split(':');
@@ -27,12 +27,26 @@ const listForStaff = catchAsync(async (req, res) => {
     }
     delete filter.order;
   }
+
   const options = {
     where: filter,
-    include: [{ model: models.booking, as: 're_exam_of_booking' }],
+    include: [
+      {
+        model: models.booking,
+        as: 're_exam_of_booking',
+        include: [
+          {
+            model: models.user,
+            as: 'booking_of_user',
+            attributes: { exclude: ['password'] },
+          },
+        ],
+      },
+    ],
     ...pageLimit2Offset(page, limit),
     order,
   };
+
   const listReExamination = await reExaminationService.findAndCountAllByCondition(options);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(listReExamination, page, limit)));
 });
