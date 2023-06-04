@@ -24,7 +24,6 @@ const listForStaff = {
     id_doctor: Joi.string().uuid(),
     id_staff_booking: Joi.string().uuid(),
     id_staff_update: Joi.string().uuid(),
-    id_checkup_package: Joi.string().uuid(),
     type: Joi.string().valid(...Object.values(SCHEDULE_TYPE)),
     booking_status: Joi.array().items(Joi.string().valid(...Object.values(BOOKING_STATUS))),
     is_payment: Joi.boolean(),
@@ -41,7 +40,6 @@ const listForStaff = {
 const booking = {
   body: Joi.object().keys({
     id_schedule: Joi.string().uuid().required(),
-    id_checkup_package: Joi.string().uuid().required(),
     id_time: Joi.string().uuid().required(),
     date: Joi.date().required(),
     reason: Joi.string(),
@@ -56,7 +54,6 @@ const updateBooking = {
     is_payment: Joi.boolean(),
     id_schedule: Joi.string().uuid(),
     id_patient: Joi.string().uuid(),
-    id_checkup_package: Joi.string().uuid(),
     date: Joi.date(),
     id_time: Joi.string().uuid(),
     code: Joi.string().trim(),
@@ -89,7 +86,6 @@ const bookingForStaff = {
   body: Joi.object().keys({
     id_schedule: Joi.string().uuid().required(),
     id_time: Joi.string().uuid().required(),
-    id_checkup_package: Joi.string().uuid().required(),
     date: Joi.date().required(),
     reason: Joi.string(),
     id_patient: Joi.string().uuid().required(),

@@ -13,7 +13,6 @@ const uploadRouter = require('./upload/upload.route');
 const paymentRouter = require('./payment/payment.route');
 const notificationRouter = require('./notification_user/notification_user.route');
 const globalSettingRouter = require('./global_setting/global_setting.route');
-const checkupPackageRouter = require('./checkup_package/checkup_package.route');
 const reExaminationRouter = require('./re_examination/re_examination.route');
 
 module.exports.initRouter = (app) => {
@@ -31,7 +30,6 @@ module.exports.initRouter = (app) => {
   app.use('/payment', paymentRouter);
   app.use('/notification', notificationRouter);
   app.use('/setting', globalSettingRouter);
-  app.use('/checkup-package', checkupPackageRouter);
   app.use('/re-examination', reExaminationRouter);
 
   app.use(express.Router().get('/'), (req, res) => {
