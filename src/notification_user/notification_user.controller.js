@@ -11,6 +11,7 @@ const pick = require('../utils/pick');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
 const { NOTIFICATION_EVENT } = require('../socket/socket.constant');
+const logger = require('../config/logger');
 
 const sendPushNotification = catchAsync(async (req, res, next) => {
   const message = {
@@ -102,26 +103,29 @@ const createNotification = catchAsync(async (req, res) => {
     }
   }
   await notificationUserService.createNotification(data, notificationUser);
+  res.status(httpStatus.OK).json(responseMessage('Create notification successfully'));
 
-  // send notification
-  const payload = {
-    notification: {
-      title: data.title,
-      body: data.content,
-      type: data.type,
-      id_redirect: data.id_redirect,
-    },
-  };
-  if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
-    const idAccount = notificationUser.id_user || notificationUser.id_staff;
-    _io.in(idAccount).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
-    await notificationUserService.sendNotificationTopicFCM(idAccount, payload);
-  } else {
-    _io.in(data.notification_for).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
-    await notificationUserService.sendNotificationTopicFCM(data.notification_for, payload);
+  try {
+    // send notification
+    const payload = {
+      notification: {
+        title: data.title,
+        body: data.content,
+        type: data.type,
+        id_redirect: data.id_redirect,
+      },
+    };
+    if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
+      const idAccount = notificationUser.id_user || notificationUser.id_staff;
+      _io.in(idAccount).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+      await notificationUserService.sendNotificationTopicFCM(idAccount, payload);
+    } else {
+      _io.in(data.notification_for).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
+      await notificationUserService.sendNotificationTopicFCM(data.notification_for, payload);
+    }
+  } catch (e) {
+    logger.error('Error send notification after create successful: ', e.message);
   }
-
-  return res.status(httpStatus.OK).json(responseMessage('Create notification successfully'));
 });
 
 const markReadNotification = catchAsync(async (req, res) => {
