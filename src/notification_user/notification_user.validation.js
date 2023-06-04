@@ -46,10 +46,17 @@ const markReadNotification = {
   }),
 };
 
+const detailNotification = {
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+};
+
 module.exports = {
   testNotification,
   subscribeTopic,
   listNotification,
   createNotification,
   markReadNotification,
+  detailNotification,
 };

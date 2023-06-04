@@ -142,6 +142,25 @@ const countUnReadNotification = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(amount));
 });
 
+const detailNotification = catchAsync(async (req, res) => {
+  const filter = { id: req.params.id };
+  req.user.role === NOTIFICATION_FOR.USER ? (filter.id_user = req.user.id) : (filter.id_staff = req.user.id);
+  const detailNotification = await notificationUserService.findOneByCondition({
+    where: filter,
+    include: [{ model: models.notification, as: 'notifications_parent' }],
+  });
+  return res.status(httpStatus.OK).json(responseData(detailNotification));
+});
+
+const detailNotificationForStaff = catchAsync(async (req, res) => {
+  const filter = { id: req.params.id };
+  const detailNotification = await notificationUserService.findOneByCondition({
+    where: filter,
+    include: [{ model: models.notification, as: 'notifications_parent' }],
+  });
+  return res.status(httpStatus.OK).json(responseData(detailNotification));
+});
+
 module.exports = {
   sendPushNotification,
   sendPushNotificationToDevice,
@@ -152,4 +171,6 @@ module.exports = {
   createNotification,
   markReadNotification,
   countUnReadNotification,
+  detailNotification,
+  detailNotificationForStaff,
 };

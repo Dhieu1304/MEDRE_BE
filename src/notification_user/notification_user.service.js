@@ -176,6 +176,10 @@ const createNotificationUser = async (data, notificationUser) => {
   }
 };
 
+const findOneByCondition = async (condition) => {
+  return await models.notification_user.findOne(condition);
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
@@ -186,4 +190,5 @@ module.exports = {
   markReadNotification,
   countByCondition,
   createNotificationUser,
+  findOneByCondition,
 };
