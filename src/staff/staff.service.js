@@ -362,7 +362,7 @@ const editStaffExpertise = async (staffId, expertiseIds) => {
 const getStaffInfo = async (options) => {
   const user = await models.staff.findOne(options);
   if (!user) {
-    throw new ApiError(httpStatus.OK, i18next.t('account.notFound'));
+    throw new ApiError(httpStatus.BAD_GATEWAY, i18next.t('account.notFound'));
   }
   return user;
 };
