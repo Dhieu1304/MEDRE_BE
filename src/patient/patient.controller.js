@@ -63,13 +63,13 @@ const listPatientForStaff = catchAsync(async (req, res) => {
 const createPatient = catchAsync(async (req, res) => {
   const data = pick(req.body, ['phone_number', 'name', 'gender', 'address', 'dob', 'health_insurance']);
   data.id_user = req.user.id;
-  const newPatient = await patientService.createPatient(data);
+  const newPatient = await patientService.findOrCreatePatient(data);
   return res.status(httpStatus.OK).json(responseData(newPatient));
 });
 
 const createPatientForStaff = catchAsync(async (req, res) => {
   const data = pick(req.body, ['phone_number', 'name', 'gender', 'address', 'dob', 'health_insurance']);
-  const newPatient = await patientService.createPatient(data);
+  const newPatient = await patientService.findOrCreatePatient(data);
   return res.status(httpStatus.OK).json(responseData(newPatient));
 });
 

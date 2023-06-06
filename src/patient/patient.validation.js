@@ -41,13 +41,13 @@ const listForStaff = {
 
 const create = {
   body: Joi.object().keys({
-    phone_number: Joi.string().custom(phoneNumberFormat).required(),
+    phone_number: Joi.string().custom(phoneNumberFormat).required().trim(),
     name: Joi.string().required().trim(),
     gender: Joi.string()
       .valid(...Object.values(GENDERS))
       .default(GENDERS.OTHER)
       .required(),
-    address: Joi.string().required(),
+    address: Joi.string().required().trim(),
     dob: Joi.date().required(),
     health_insurance: Joi.string().trim(),
   }),
