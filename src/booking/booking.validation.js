@@ -89,7 +89,7 @@ const bookingForStaff = {
     date: Joi.date().required(),
     reason: Joi.string(),
     id_user: Joi.string().uuid(),
-    id_patient: Joi.string().uuid().required(),
+    id_patient: Joi.string().uuid(),
   }),
 };
 

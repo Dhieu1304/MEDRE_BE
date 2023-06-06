@@ -375,8 +375,18 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   }
 
   data.id_staff_booking = req.user.id;
-  data.booking_status = BOOKING_STATUS.BOOKED;
+  data.booking_status = BOOKING_STATUS.WAITING;
   data.bookedAt = new Date();
+
+  if (!data.id_user && !data.id_patient) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('id_user or id_patient is required', false));
+  }
+
+  // check book for other people
+  if (!data.id_patient) {
+    const patient = await patientService.findOrCreatePatientFromUser(data.id_user);
+    data.id_patient = patient.id;
+  }
 
   const newBooking = await bookingService.createNewBooking(data);
 
