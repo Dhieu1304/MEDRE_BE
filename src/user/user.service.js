@@ -85,7 +85,7 @@ const changePassword = async (id, data) => {
   // check if password is correct
   const isPasswordMatch = await bcrypt.compare(data.old_password, user.password);
   if (!isPasswordMatch) {
-    throw new ApiError(httpStatus.OK, i18next.t('password.passwordIncorrect'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('password.passwordIncorrect'));
   }
 
   user.password = await bcrypt.hash(data.new_password, 10);
@@ -95,7 +95,7 @@ const changePassword = async (id, data) => {
 const getUserInfo = async (options) => {
   const user = await models.user.findOne(options);
   if (!user) {
-    throw new ApiError(httpStatus.OK, i18next.t('account.notFound'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('account.notFound'));
   }
   return user;
 };

@@ -54,6 +54,7 @@ const listBookings = catchAsync(async (req, res) => {
   include.push({
     model: models.schedule,
     as: 'booking_schedule',
+    where: {}, // to add type of booking
     include: [
       {
         model: models.expertise,
@@ -66,11 +67,7 @@ const listBookings = catchAsync(async (req, res) => {
       },
     ],
   });
-  include.push({
-    model: models.checkup_package,
-    as: 'booking_checkup_package',
-    attributes: ['name', 'description', 'price'],
-  });
+
   // convert filter type
   if (filter.type) {
     include[include.length - 1].where.type = filter.type;
@@ -143,6 +140,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
   include.push({
     model: models.schedule,
     as: 'booking_schedule',
+    where: {}, // to add type of booking
     include: [
       {
         model: models.expertise,
@@ -155,11 +153,6 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
         where: filter.id_doctor ? { id: filter.id_doctor } : {},
       },
     ],
-  });
-  include.push({
-    model: models.checkup_package,
-    as: 'booking_checkup_package',
-    attributes: ['name', 'description', 'price'],
   });
   delete filter.id_doctor;
 
@@ -221,11 +214,6 @@ const getDetailBooking = catchAsync(async (req, res) => {
         ],
       },
       { model: models.patient, as: 'booking_of_patient' },
-      {
-        model: models.checkup_package,
-        as: 'booking_checkup_package',
-        attributes: ['name', 'description', 'price'],
-      },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
@@ -259,18 +247,13 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
       },
       { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } },
       { model: models.patient, as: 'booking_of_patient' },
-      {
-        model: models.checkup_package,
-        as: 'booking_checkup_package',
-        attributes: ['name', 'description', 'price'],
-      },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
 });
 
 const booking = catchAsync(async (req, res) => {
-  const data = pick(req.body, ['id_schedule', 'id_time', 'date', 'reason', 'id_patient', 'id_checkup_package']);
+  const data = pick(req.body, ['id_schedule', 'id_time', 'date', 'reason', 'id_patient']);
 
   // check booking date ( > 1 day)
   if (
@@ -392,8 +375,18 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   }
 
   data.id_staff_booking = req.user.id;
-  data.booking_status = BOOKING_STATUS.BOOKED;
+  data.booking_status = BOOKING_STATUS.WAITING;
   data.bookedAt = new Date();
+
+  if (!data.id_user && !data.id_patient) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('id_user or id_patient is required', false));
+  }
+
+  // check book for other people
+  if (!data.id_patient) {
+    const patient = await patientService.findOrCreatePatientFromUser(data.id_user);
+    data.id_patient = patient.id;
+  }
 
   const newBooking = await bookingService.createNewBooking(data);
 

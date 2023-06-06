@@ -5,12 +5,15 @@ const ApiError = require('../utils/ApiError');
 const i18next = require('i18next');
 const logger = require('../config/logger');
 
-const createPatient = async (data) => {
-  // generate uuid
-  data.id = uuidv4();
+const findOrCreatePatient = async (data) => {
+  const [patient, created] = await models.patient.findOrCreate({
+    where: data,
+    defaults: { id: uuidv4() },
+  });
 
-  // create new patient
-  return models.patient.create(data);
+  if (created) logger.info(`Create new patient`);
+
+  return patient;
 };
 
 const findOneByFilter = async (filter) => {
@@ -48,6 +51,7 @@ const findOrCreatePatientFromUser = async (id_user) => {
 
   const [patient, created] = await models.patient.findOrCreate({
     where: dataPatient,
+    defaults: { id: uuidv4() },
   });
 
   if (created) logger.info(`Create patient from user id: ${id_user}`);
@@ -56,7 +60,7 @@ const findOrCreatePatientFromUser = async (id_user) => {
 };
 
 module.exports = {
-  createPatient,
+  findOrCreatePatient,
   findOneByFilter,
   findAllByFilter,
   findAndCountAllByCondition,

@@ -26,6 +26,7 @@ const update = {
   body: Joi.object().keys({
     id: Joi.string().uuid().required(),
     is_apply: Joi.boolean(),
+    is_remind: Joi.boolean(),
     date_re_exam: Joi.date(),
   }),
 };

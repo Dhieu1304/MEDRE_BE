@@ -8,6 +8,7 @@ const httpStatus = require('http-status');
 const { v4: uuidv4 } = require('uuid');
 const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 const logger = require('../config/logger');
+const _ = require('lodash');
 
 const sendPushNotification = (data, callback) => {
   const headers = {
@@ -38,6 +39,7 @@ const sendPushNotification = (data, callback) => {
 };
 
 const sendNotificationTopicFCM = async (topic, payload) => {
+  payload.notification = _.omitBy(payload.notification, _.isNil);
   return await firebaseAdmin.messaging().sendToTopic(topic, payload);
 };
 
@@ -176,6 +178,10 @@ const createNotificationUser = async (data, notificationUser) => {
   }
 };
 
+const findOneByCondition = async (condition) => {
+  return await models.notification_user.findOne(condition);
+};
+
 module.exports = {
   sendPushNotification,
   sendNotificationTopicFCM,
@@ -186,4 +192,5 @@ module.exports = {
   markReadNotification,
   countByCondition,
   createNotificationUser,
+  findOneByCondition,
 };
