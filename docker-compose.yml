@@ -21,18 +21,18 @@ services:
       - medre-be-network
 
   postgres:
-    image: postgres
+    image: postgres:14-alpine
     container_name: medre-db
     env_file:
       - .env
     ports:
-      - '5432:5432'
+      - '5435:5432'
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     expose:
-      - 5432
+      - 5435
     volumes:
       - medre-db:/data/db
     networks:
