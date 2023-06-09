@@ -53,6 +53,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
+      ordinal_number: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       id_time: {
         type: DataTypes.UUID,
         allowNull: false,
