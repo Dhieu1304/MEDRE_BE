@@ -8,6 +8,7 @@ const logger = require("../src/config/logger");
 const sequelize = require('../src/config/database');
 const {SocketServer} = require("../src/socket");
 const {Server} = require("socket.io");
+const {redisClient} = require("../src/config/redis");
 
 app.set('port', config.port);
 
@@ -66,6 +67,8 @@ function onListening() {
     global._io = io;
 
     logger.info(`Socket Server is running: http://localhost:${config.port}/socket`);
+
+    await redisClient.connect();
   } catch (error) {
     logger.error('Unable to connect to the database:', error);
   }

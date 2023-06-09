@@ -32,6 +32,8 @@ const envVarsSchema = Joi.object()
     SMS_SECRET_KEY: Joi.string().required().description('SMS secret key'),
     OS_APP_ID: Joi.string().required().description('One signal app id'),
     OS_API_KEY: Joi.string().required().description('One signal api key'),
+    REDIS_URL: Joi.string().description('One signal api key'),
+    REDIS_PASSWORD: Joi.string().description('One signal api key'),
   })
   .unknown();
 
@@ -87,5 +89,9 @@ module.exports = {
   one_signal: {
     app_id: envVars.OS_APP_ID,
     api_key: envVars.OS_API_KEY,
+  },
+  redis: {
+    url: envVars.REDIS_URL,
+    password: envVars.REDIS_PASSWORD,
   },
 };
