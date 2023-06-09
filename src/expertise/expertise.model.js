@@ -12,6 +12,14 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         unique: 'expertise_name_key',
       },
+      price_offline: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      price_online: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,
