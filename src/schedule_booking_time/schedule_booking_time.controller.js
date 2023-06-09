@@ -1,11 +1,22 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { responseData, responseMessage, paginationFormat } = require('../utils/responseFormat');
+const { responseData, paginationFormat } = require('../utils/responseFormat');
 const pick = require('../utils/pick');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
-const logger = require('../config/logger');
+const scheduleBookingTimeService = require('./schedule_booking_time.service');
 
-const getList = catchAsync(async (req, res, next) => {});
+const getList = catchAsync(async (req, res) => {
+  const { page, limit } = req.query;
+  const filter = pick(req.query, ['id_expertise', 'id_time_schedule']);
+
+  const condition = {
+    where: filter,
+    ...pageLimit2Offset(page, limit),
+  };
+
+  const listScheduleBookingTime = await scheduleBookingTimeService.findAndCountAllByCondition(condition);
+  return res.status(httpStatus.OK).json(responseData(paginationFormat(listScheduleBookingTime, page, limit)));
+});
 
 module.exports = {
   getList,
