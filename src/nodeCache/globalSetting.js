@@ -1,12 +1,10 @@
 const nodeCache = require('../config/nodeCache');
 const models = require('../models');
-const logger = require('../config/logger');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 
 const initGlobalSetting = async () => {
   const globalSetting = await models.global_setting.findAll({ raw: true });
   nodeCache.set(GLOBAL_SETTING.NAME, globalSetting, 0);
-  logger.info('----------------- INIT GLOBAL SETTING -----------------');
 };
 
 const getGlobalSetting = () => {

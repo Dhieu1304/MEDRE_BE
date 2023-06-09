@@ -5,6 +5,7 @@ const models = require('./index');
 const xlsx = require('node-xlsx');
 const { createMockData } = require('../utils/createMockData');
 const { initGlobalSetting } = require('../nodeCache/globalSetting');
+const { initScheduleBookingTime } = require('../schedule_booking_time/schedule_booking_time.service');
 
 (async () => {
   try {
@@ -65,11 +66,15 @@ const { initGlobalSetting } = require('../nodeCache/globalSetting');
       const re_examination = xlsx.parse(__dirname + '/data/re_examination.xlsx');
       await models.re_examination.bulkCreate(createMockData(re_examination[0].data));
 
+      logger.info('----------------- SCHEDULE_BOOKING_TIME ------------------');
+      await initScheduleBookingTime();
+
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
 
     // init cache default from db
     await initGlobalSetting();
+    logger.info('------------------- INIT GLOBAL SETTING -------------------');
   } catch (e) {
     logger.error(e.message);
   }
