@@ -7,8 +7,8 @@ const initScheduleBookingTime = async () => {
   });
   const listData = [];
   for (let i = 0; i < listExpertise.length; i++) {
-    let current_ordinal_number_online = 1;
-    let current_ordinal_number_offline = 1;
+    let start_ordinal_number_online = 1;
+    let start_ordinal_number_offline = 1;
     for (let j = 0; j < listTimeSchedule.length; j++) {
       const total_online = 4; // total booking online - online
       const total_offline = 6; // total booking offline - offline
@@ -19,11 +19,11 @@ const initScheduleBookingTime = async () => {
         total_online,
         total_offline,
         total_offline_booking_online,
-        current_ordinal_number_online,
-        current_ordinal_number_offline,
+        start_ordinal_number_online,
+        start_ordinal_number_offline,
       });
-      current_ordinal_number_online += total_online;
-      current_ordinal_number_offline += total_offline;
+      start_ordinal_number_online += total_online;
+      start_ordinal_number_offline += total_offline;
     }
   }
   return await models.schedule_booking_time.bulkCreate(listData);
