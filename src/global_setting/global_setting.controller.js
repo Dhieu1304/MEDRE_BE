@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
-const { getGlobalSetting, initGlobalSetting } = require('../nodeCache/globalSetting');
+const { getGlobalSetting, initGlobalSetting } = require('../nodeCache/global_setting');
 const { responseData, responseMessage } = require('../utils/responseFormat');
 const globalSettingService = require('./global_setting.service');
 

@@ -4,7 +4,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Op } = require('sequelize');
 const moment = require('moment');
-const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
+const { getGlobalSettingByName } = require('../nodeCache/global_setting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 
 const findOneByFilter = async (filter) => {
