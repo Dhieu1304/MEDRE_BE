@@ -7,14 +7,23 @@ const initScheduleBookingTime = async () => {
   });
   const listData = [];
   for (let i = 0; i < listExpertise.length; i++) {
+    let current_ordinal_number_online = 1;
+    let current_ordinal_number_offline = 1;
     for (let j = 0; j < listTimeSchedule.length; j++) {
+      const total_online = 4; // total booking online - online
+      const total_offline = 6; // total booking offline - offline
+      const total_offline_booking_online = 3; // total booking online - offline
       listData.push({
         id_expertise: listExpertise[i].id,
         id_time_schedule: listTimeSchedule[j].id,
-        total_online: 4,
-        total_offline: 6,
-        total_offline_booking_online: 3,
+        total_online,
+        total_offline,
+        total_offline_booking_online,
+        current_ordinal_number_online,
+        current_ordinal_number_offline,
       });
+      current_ordinal_number_online += total_online;
+      current_ordinal_number_offline += total_offline;
     }
   }
   return await models.schedule_booking_time.bulkCreate(listData);

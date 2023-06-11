@@ -6,4 +6,5 @@ const validate = require('../middlewares/validate');
 const router = express.Router();
 
 router.get('/list', validate(scheduleBookingTimeValidation.getList), scheduleBookingTimeController.getList);
+
 module.exports = router;
