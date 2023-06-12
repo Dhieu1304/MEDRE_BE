@@ -250,6 +250,11 @@ const editStaff = async (staffId, id, data) => {
     }
   }
 
+  if (data.expertise)
+  {
+    editStaffExpertise(id, data.expertise);
+  }
+
   const result = Object.assign(staff, data);
   return await result.save();
 };
