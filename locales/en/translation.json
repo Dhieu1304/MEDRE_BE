@@ -45,7 +45,8 @@
     "invalidTimeSession": "Invalid time schedule session.",
     "missingUserInfo": "Please update your personal information.",
     "invalidScheduleId": "Invalid schedule id.",
-    "invalidDate": "You need to adhere to the prescribed number of booking days."
+    "invalidDate": "You need to adhere to the prescribed number of booking days.",
+    "fullSlot": "This time slot is full, please choose other one."
   },
   "patient": {
     "notFound": "Patient not found."

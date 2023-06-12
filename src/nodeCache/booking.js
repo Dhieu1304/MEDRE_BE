@@ -2,7 +2,7 @@ const nodeCache = require('../config/nodeCache');
 const logger = require('../config/logger');
 const models = require('../models');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
-const { getGlobalSettingByName } = require('./globalSetting');
+const { getGlobalSettingByName } = require('./global_setting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 
 const waitingBooking = (id) => {

@@ -4,7 +4,9 @@ const db = require('../config/database');
 const models = require('./index');
 const xlsx = require('node-xlsx');
 const { createMockData } = require('../utils/createMockData');
-const { initGlobalSetting } = require('../nodeCache/globalSetting');
+const { initGlobalSetting } = require('../nodeCache/global_setting');
+const { initScheduleBookingTime } = require('../schedule_booking_time/schedule_booking_time.service');
+const { initTimeScheduleCache } = require('../nodeCache/time_shedule');
 
 (async () => {
   try {
@@ -65,11 +67,17 @@ const { initGlobalSetting } = require('../nodeCache/globalSetting');
       const re_examination = xlsx.parse(__dirname + '/data/re_examination.xlsx');
       await models.re_examination.bulkCreate(createMockData(re_examination[0].data));
 
+      logger.info('----------------- SCHEDULE_BOOKING_TIME ------------------');
+      await initScheduleBookingTime();
+
       logger.info('----------------------- END SYNC DATABASE -----------------------');
     }
 
     // init cache default from db
     await initGlobalSetting();
+    logger.info('--------------- INIT GLOBAL SETTING CACHE ---------------'); // init cache default from db
+    await initTimeScheduleCache();
+    logger.info('--------------- INIT TIME SCHEDULE CACHE ---------------');
   } catch (e) {
     logger.error(e.message);
   }

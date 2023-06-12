@@ -14,7 +14,7 @@ const moment = require('moment');
 const scheduleService = require('../schedule/schedule.service');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const { BOOKING_STATUS } = require('./booking.constant');
-const { getGlobalSettingByName } = require('../nodeCache/globalSetting');
+const { getGlobalSettingByName } = require('../nodeCache/global_setting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
 const { waitingBooking } = require('../nodeCache/booking');
 const notificationUserService = require('../notification_user/notification_user.service');
@@ -262,7 +262,6 @@ const booking = catchAsync(async (req, res) => {
   ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
-  //a6819437-95a5-4492-b682-cb13916d00ee
   data.id_user = req.user.id;
 
   // check book for other people
