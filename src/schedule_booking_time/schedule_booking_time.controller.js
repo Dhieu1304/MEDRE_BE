@@ -12,6 +12,7 @@ const getList = catchAsync(async (req, res) => {
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
+    attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
   };
 
   const listScheduleBookingTime = await scheduleBookingTimeService.findAndCountAllByCondition(condition);

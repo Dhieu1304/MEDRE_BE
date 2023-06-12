@@ -7,7 +7,8 @@ const i18next = require('i18next');
 const userService = require('../user/user.service');
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
-const { SCHEDULE_SESSION } = require('../schedule/schedule.constant');
+const { SCHEDULE_SESSION, SCHEDULE_TYPE } = require('../schedule/schedule.constant');
+const scheduleBooingTimeService = require('../schedule_booking_time/schedule_booking_time.service');
 
 const createNewBooking = async (data) => {
   // check user info
@@ -46,7 +47,7 @@ const createNewBooking = async (data) => {
   }
 
   // check is any booking at this time
-  const booking = await models.booking.findOne({
+  const countBooking = await models.booking.count({
     where: {
       date: data.date,
       id_schedule: data.id_schedule,
@@ -54,11 +55,23 @@ const createNewBooking = async (data) => {
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     },
   });
-  if (booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
+  const scheduleBookingTime = await scheduleBooingTimeService.findOneByScheduleAndTime();
+  if (!scheduleBookingTime) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
+  }
+
+  let totalBooking = scheduleBookingTime.total_offline_booking_online;
+  let ordinal_number = scheduleBookingTime.start_ordinal_number_offline + 2;
+  if (schedule.type === SCHEDULE_TYPE.ONLINE) {
+    totalBooking = scheduleBookingTime.total_online;
+    ordinal_number = scheduleBookingTime.start_ordinal_number_online + 1;
+  }
+  if (countBooking >= totalBooking) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.fullSlot'));
   }
 
   data.id = uuidv4();
+  data.ordinal_number = ordinal_number;
   return models.booking.create(data);
 };
 

@@ -45,7 +45,8 @@
     "invalidTimeSession": "Phiên thời gian đặt lịch không đúng.",
     "missingUserInfo": "Vui lòng cập nhật thông tin cá nhân.",
     "invalidScheduleId": "Mã định danh lịch biểu của bác sĩ không đúng.",
-    "invalidDateAdvance": "Bạn cần tuân thủ số ngày đặt lịch theo quy định."
+    "invalidDateAdvance": "Bạn cần tuân thủ số ngày đặt lịch theo quy định.",
+    "fullSlot": "Khung giờ này đã hết chỗ, vui lòng chọn khung giờ khác."
   },
   "patient": {
     "notFound": "Không tìm thấy người bệnh."

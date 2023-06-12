@@ -1,4 +1,5 @@
 const models = require('../models');
+const logger = require('../config/logger');
 
 const initScheduleBookingTime = async () => {
   const listExpertise = await models.expertise.findAll();
@@ -33,7 +34,34 @@ const findAndCountAllByCondition = async (condition) => {
   return await models.schedule_booking_time.findAndCountAll(condition);
 };
 
+const findOneByScheduleAndTime = async (id_schedule, id_time_schedule) => {
+  try {
+    const data = await models.schedule.findOne({
+      where: { id: id_schedule },
+      include: [
+        {
+          model: models.expertise,
+          as: 'schedule_expertise',
+          include: [
+            {
+              model: models.schedule_booking_time,
+              as: 'expertise_booking_time',
+              where: { id_time_schedule },
+              raw: true,
+            },
+          ],
+        },
+      ],
+    });
+    return data.schedule_expertise?.expertise_booking_time[0]?.dataValues || false;
+  } catch (e) {
+    logger.error('Error findOneByScheduleAndTime: ', e.message);
+    return false;
+  }
+};
+
 module.exports = {
   findAndCountAllByCondition,
   initScheduleBookingTime,
+  findOneByScheduleAndTime,
 };
