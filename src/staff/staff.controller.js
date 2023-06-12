@@ -284,6 +284,9 @@ const editAccountInfo = catchAsync(async (req, res) => {
 
 const editProfile = catchAsync(async (req, res) => {
   const data = pick(req.body, [
+    'username',
+    'phone_number',
+    'email',
     'name',
     'image',
     'address',

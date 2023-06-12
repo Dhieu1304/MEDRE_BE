@@ -102,6 +102,9 @@ const editStaff = {
 
 const editProfile = {
   body: Joi.object().keys({
+    username: Joi.string(),
+    phone_number: Joi.string().custom(phoneNumberFormat),
+    email: Joi.string().email().lowercase(),
     name: Joi.string().trim(),
     image: Joi.string().trim(),
     address: Joi.string().trim(),
