@@ -112,6 +112,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     'id_staff_booking',
     'id_staff_update',
     'order',
+      'patient_phone_number'
   ]);
 
   // convert filter from to
@@ -163,7 +164,11 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     delete filter.type;
   }
   include.push({ model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } });
-  include.push({ model: models.patient, as: 'booking_of_patient' });
+  include.push({ model: models.patient, as: 'booking_of_patient', where: {} });
+  if (filter.patient_phone_number) {
+    include[include.length - 1].where.phone_number = filter.patient_phone_number;
+    delete filter.patient_phone_number;
+  }
 
   const order = [];
 
