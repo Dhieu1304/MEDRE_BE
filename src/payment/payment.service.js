@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 const randomString = require('../utils/randomString');
 const { rmWaitingBooking } = require('../nodeCache/booking');
+const scheduleBooingTimeService = require('../schedule_booking_time/schedule_booking_time.service');
 
 const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   const booking = await models.booking.findOne({
@@ -28,11 +29,39 @@ const checkBookingPayment = async (id_booking, id_user, txn_ref) => {
   return await models.booking_payment.create({ id: uuidv4(), id_booking, id_user, txn_ref });
 };
 
+const getPriceBooking = async (id) => {
+  let result = -1;
+  const booking = await models.booking.findOne({
+    where: { id },
+    include: [
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        include: [
+          {
+            model: models.expertise,
+            as: 'schedule_expertise',
+          },
+        ],
+      },
+    ],
+  });
+
+  if (booking.booking_schedule.type === SCHEDULE_TYPE.ONLINE) {
+    result = booking.booking_schedule.schedule_expertise.price_online;
+  } else {
+    result = booking.booking_schedule.schedule_expertise.price_offline;
+  }
+
+  // return string
+  return +result;
+};
+
 const handlePaymentSuccess = async (txn_ref) => {
   const transaction = await models.sequelize.transaction();
   try {
     const booking_payment = await models.booking_payment.findOne({ where: { txn_ref } }, { transaction });
-    if (booking_payment.handle) {
+    if (booking_payment.handle && booking_payment.status === PAYMENT_STATUS.SUCCESS) {
       throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('payment.handleBefore'));
     }
     booking_payment.handle = true;
@@ -45,11 +74,36 @@ const handlePaymentSuccess = async (txn_ref) => {
       },
       { transaction }
     );
-    booking.is_payment = true;
-    booking.booking_status = BOOKING_STATUS.BOOKED;
+
+    const scheduleBookingTime = await scheduleBooingTimeService.findOneByScheduleAndTime(
+      booking.id_schedule,
+      booking.id_time
+    );
+    if (!scheduleBookingTime) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
+    }
+
+    const listBooking = await models.booking.findAll({
+      where: {
+        date: booking.date,
+        id_schedule: booking.id_schedule,
+        id_time: booking.id_time,
+        booking_status: BOOKING_STATUS.BOOKED,
+      },
+    });
+
+    let startNum = scheduleBookingTime.start_num_off;
+    let jump = 2;
+
     if (booking.booking_schedule.type === SCHEDULE_TYPE.ONLINE) {
+      startNum = scheduleBookingTime.start_num_onl;
+      jump = 1;
       booking.code = `${booking.id}-${randomString(5)}`;
     }
+
+    booking.is_payment = true;
+    booking.booking_status = BOOKING_STATUS.BOOKED;
+    booking.ordinal_number = scheduleBooingTimeService.getOrdinalNumberFromListBooking(listBooking, +startNum, +jump);
 
     await booking_payment.save({ transaction });
     await booking.save({ transaction });
@@ -109,4 +163,5 @@ module.exports = {
   handlePaymentSuccess,
   handlePaymentFail,
   cashPayment,
+  getPriceBooking,
 };

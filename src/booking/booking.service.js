@@ -47,7 +47,7 @@ const createNewBooking = async (data) => {
   }
 
   // check is any booking at this time
-  const countBooking = await models.booking.count({
+  const listBooking = await models.booking.findAll({
     where: {
       date: data.date,
       id_schedule: data.id_schedule,
@@ -55,23 +55,27 @@ const createNewBooking = async (data) => {
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     },
   });
-  const scheduleBookingTime = await scheduleBooingTimeService.findOneByScheduleAndTime();
+
+  for (let i = 0; i < listBooking.length; i++) {
+    if (listBooking[i].id_user === data.id_user) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.booked'));
+    }
+  }
+
+  const scheduleBookingTime = await scheduleBooingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
   if (!scheduleBookingTime) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
   }
 
-  let totalBooking = scheduleBookingTime.total_offline_booking_online;
-  let ordinal_number = scheduleBookingTime.start_ordinal_number_offline + 2;
+  let totalBooking = scheduleBookingTime.tt_off_book_onl;
   if (schedule.type === SCHEDULE_TYPE.ONLINE) {
     totalBooking = scheduleBookingTime.total_online;
-    ordinal_number = scheduleBookingTime.start_ordinal_number_online + 1;
   }
-  if (countBooking >= totalBooking) {
+  if (listBooking.length >= totalBooking) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.fullSlot'));
   }
 
   data.id = uuidv4();
-  data.ordinal_number = ordinal_number;
   return models.booking.create(data);
 };
 

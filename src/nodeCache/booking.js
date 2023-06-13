@@ -11,7 +11,7 @@ const waitingBooking = (id) => {
 
 nodeCache.on('expired', async function (key) {
   if (key.startsWith('wait_book_')) {
-    console.log(key);
+    logger.info('Expire booking waiting: ', key);
     try {
       const id_booking = key.split('wait_book_')[1];
       const booking = await models.booking.findOne({ where: { id: id_booking } });

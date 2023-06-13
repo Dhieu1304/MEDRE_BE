@@ -30,17 +30,17 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         defaultValue: 6,
       },
-      total_offline_booking_online: {
+      tt_off_book_onl: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 3,
       },
-      start_ordinal_number_online: {
+      start_num_onl: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: -1,
       },
-      start_ordinal_number_offline: {
+      start_num_off: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: -1,
