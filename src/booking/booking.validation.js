@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const { BOOKING_STATUS } = require('./booking.constant');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
+const {phoneNumberFormat} = require("../utils/messageCustom");
 
 const list = {
   query: Joi.object().keys({
@@ -29,6 +30,7 @@ const listForStaff = {
     is_payment: Joi.boolean(),
     from: Joi.date(),
     to: Joi.date(),
+    patient_phone_number: Joi.string().custom(phoneNumberFormat).trim(),
     order: Joi.string()
       .valid('createdAt:asc', 'createdAt:desc', 'updatedAt:asc', 'updatedAt:desc', 'date:asc', 'date:desc')
       .default('createdAt:desc'),

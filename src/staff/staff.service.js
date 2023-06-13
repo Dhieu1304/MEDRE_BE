@@ -250,8 +250,7 @@ const editStaff = async (staffId, id, data) => {
     }
   }
 
-  if (data.expertise)
-  {
+  if (data.expertise) {
     editStaffExpertise(id, data.expertise);
   }
 

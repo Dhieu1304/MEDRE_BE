@@ -55,7 +55,6 @@ module.exports = function (sequelize, DataTypes) {
       },
       ordinal_number: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
       id_time: {
         type: DataTypes.UUID,

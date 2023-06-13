@@ -34,7 +34,7 @@ const createPaymentUrl = catchAsync(async (req, res) => {
   // create booking payment
   await paymentService.checkBookingPayment(id_booking, req.user.id, orderId);
 
-  const amount = '199000';
+  const amount = await paymentService.getPriceBooking(id_booking);
 
   let vnp_Params = {};
   vnp_Params['vnp_Version'] = '2.1.0';
@@ -43,7 +43,10 @@ const createPaymentUrl = catchAsync(async (req, res) => {
   vnp_Params['vnp_Locale'] = locale;
   vnp_Params['vnp_CurrCode'] = 'VND';
   vnp_Params['vnp_TxnRef'] = orderId;
-  vnp_Params['vnp_OrderInfo'] = 'Thanh toan hoa don dat lich kham benh. So tien 199,000 VND';
+  vnp_Params['vnp_OrderInfo'] = `Thanh toan hoa don dat lich kham benh. So tien ${amount.toLocaleString('it-IT', {
+    style: 'currency',
+    currency: 'VND',
+  })}`;
   vnp_Params['vnp_OrderType'] = 'other';
   vnp_Params['vnp_Amount'] = amount * 100;
   vnp_Params['vnp_ReturnUrl'] = vn_pay.returnUrl;

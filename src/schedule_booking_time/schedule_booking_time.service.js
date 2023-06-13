@@ -8,23 +8,23 @@ const initScheduleBookingTime = async () => {
   });
   const listData = [];
   for (let i = 0; i < listExpertise.length; i++) {
-    let start_ordinal_number_online = 1;
-    let start_ordinal_number_offline = 1;
+    let start_num_onl = 1;
+    let start_num_off = 1;
     for (let j = 0; j < listTimeSchedule.length; j++) {
       const total_online = 4; // total booking online - online
       const total_offline = 6; // total booking offline - offline
-      const total_offline_booking_online = 3; // total booking online - offline
+      const tt_off_book_onl = 3; // total booking online - offline
       listData.push({
         id_expertise: listExpertise[i].id,
         id_time_schedule: listTimeSchedule[j].id,
         total_online,
         total_offline,
-        total_offline_booking_online,
-        start_ordinal_number_online,
-        start_ordinal_number_offline,
+        tt_off_book_onl,
+        start_num_onl,
+        start_num_off,
       });
-      start_ordinal_number_online += total_online;
-      start_ordinal_number_offline += total_offline;
+      start_num_onl += total_online;
+      start_num_off += total_offline;
     }
   }
   return await models.schedule_booking_time.bulkCreate(listData);
@@ -47,7 +47,6 @@ const findOneByScheduleAndTime = async (id_schedule, id_time_schedule) => {
               model: models.schedule_booking_time,
               as: 'expertise_booking_time',
               where: { id_time_schedule },
-              raw: true,
             },
           ],
         },
@@ -55,13 +54,29 @@ const findOneByScheduleAndTime = async (id_schedule, id_time_schedule) => {
     });
     return data.schedule_expertise?.expertise_booking_time[0]?.dataValues || false;
   } catch (e) {
-    logger.error('Error findOneByScheduleAndTime: ', e.message);
+    logger.error('Error findOneByScheduleAndTime: ', e);
     return false;
   }
+};
+
+// start, jump: number; booking: list
+const getOrdinalNumberFromListBooking = (bookings, start, jump) => {
+  let result = start;
+  const listExistNumber = [];
+  for (let i = 0; i < bookings.length; i++) {
+    listExistNumber.push(+bookings[i].ordinal_number);
+  }
+
+  while (listExistNumber.includes(result)) {
+    result += jump;
+  }
+
+  return result;
 };
 
 module.exports = {
   findAndCountAllByCondition,
   initScheduleBookingTime,
   findOneByScheduleAndTime,
+  getOrdinalNumberFromListBooking,
 };
