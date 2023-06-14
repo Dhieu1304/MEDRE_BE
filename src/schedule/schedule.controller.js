@@ -16,6 +16,12 @@ const listByDay = catchAsync(async (req, res) => {
     repeat_on: { [Op.substring]: moment(date).day() },
     apply_to: { [Op.gte]: date },
   };
+
+  const filterBooking = { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date };
+  if (req.user.role === 'User') {
+    filterBooking.id_user = req.user.id;
+  }
+
   const options = {
     where: filter,
     include: [
@@ -24,7 +30,7 @@ const listByDay = catchAsync(async (req, res) => {
         model: models.booking,
         as: 'bookings',
         required: false,
-        where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date },
+        where: filterBooking,
       },
     ],
   };
@@ -47,6 +53,14 @@ const listAll = catchAsync(async (req, res) => {
     filter.repeat_on = { [Op.regexp]: regexpRepeatOn.data };
   }
 
+  const filterBooking = {
+    booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+    date: { [Op.between]: [from, to] },
+  }
+  if (req.user.role === 'User') {
+    filterBooking.id_user = req.user.id;
+  }
+
   const options = {
     where: filter,
     include: [
@@ -55,10 +69,7 @@ const listAll = catchAsync(async (req, res) => {
         model: models.booking,
         as: 'bookings',
         required: false,
-        where: {
-          booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
-          date: { [Op.between]: [from, to] },
-        },
+        where: filterBooking,
       },
     ],
   };
