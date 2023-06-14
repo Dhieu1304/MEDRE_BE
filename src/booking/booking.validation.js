@@ -98,7 +98,7 @@ const bookingForStaff = {
 const scheduleBookingTime = {
   query: Joi.object().keys({
     id_expertise: Joi.array().items(Joi.string().uuid().required()).required(),
-    id_doctor: Joi.string().uuid(),
+    id_doctor: Joi.string().uuid().required(),
     from: Joi.date().required(),
     to: Joi.date().required(),
     bookingMethod: Joi.string().valid('remote', 'redirect').default('remote'),
