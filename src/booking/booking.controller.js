@@ -112,7 +112,7 @@ const listBookingsForStaff = catchAsync(async (req, res) => {
     'id_staff_booking',
     'id_staff_update',
     'order',
-      'patient_phone_number'
+    'patient_phone_number',
   ]);
 
   // convert filter from to
@@ -365,12 +365,14 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   const data = req.body;
 
   // check booking date ( > 1 day)
+  /*
   if (
     data.date < moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_ADVANCE_DAY), 'd') ||
     data.date > moment().add(getGlobalSettingByName(GLOBAL_SETTING.BOOK_AFTER_DAY), 'd')
   ) {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.invalidDate'), false));
   }
+  */
 
   // check schedule is offline
   const schedule = await scheduleService.findOneByFilter({ id: data.id_schedule });
@@ -379,7 +381,7 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   }
 
   data.id_staff_booking = req.user.id;
-  data.booking_status = BOOKING_STATUS.WAITING;
+  data.booking_status = BOOKING_STATUS.BOOKED;
   data.bookedAt = new Date();
 
   if (!data.id_user && !data.id_patient) {
@@ -392,9 +394,41 @@ const staffCreateBooking = catchAsync(async (req, res) => {
     data.id_patient = patient.id;
   }
 
-  const newBooking = await bookingService.createNewBooking(data);
+  const newBooking = await bookingService.createNewBookingForStaff(data);
 
   return res.status(httpStatus.OK).json(responseData(newBooking, i18next.t('booking.booking')));
+});
+
+const scheduleBookingTimeCount = catchAsync(async (req, res) => {
+  const { id_expertise, id_doctor, from, to, bookingMethod } = pick(req.query, [
+    'id_expertise',
+    'id_doctor',
+    'from',
+    'to',
+    'bookingMethod',
+  ]);
+  if (from > to) {
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date'));
+  }
+  const filter = {
+    date: { [Op.between]: [from, to] },
+    booking_status: [BOOKING_STATUS.BOOKED, BOOKING_STATUS.WAITING],
+  };
+  switch (bookingMethod) {
+    case 'remote': {
+      filter.id_staff_booking = null;
+      break;
+    }
+    case 'redirect': {
+      filter.id_staff_booking = { [Op.ne]: null };
+      break;
+    }
+    default:
+      break;
+  }
+
+  const data = await bookingService.countScheduleBookingTime(id_expertise, id_doctor, filter);
+  return res.status(httpStatus.OK).json(responseData(data));
 });
 
 module.exports = {
@@ -407,4 +441,5 @@ module.exports = {
   cancelBooking,
   updateBookingDoctor,
   staffCreateBooking,
+  scheduleBookingTimeCount,
 };

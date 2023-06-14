@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { BOOKING_STATUS } = require('./booking.constant');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
-const {phoneNumberFormat} = require("../utils/messageCustom");
+const { phoneNumberFormat } = require('../utils/messageCustom');
 
 const list = {
   query: Joi.object().keys({
@@ -95,6 +95,16 @@ const bookingForStaff = {
   }),
 };
 
+const scheduleBookingTime = {
+  query: Joi.object().keys({
+    id_expertise: Joi.array().items(Joi.string().uuid().required()).required(),
+    id_doctor: Joi.string().uuid(),
+    from: Joi.date().required(),
+    to: Joi.date().required(),
+    bookingMethod: Joi.string().valid('remote', 'redirect').default('remote'),
+  }),
+};
+
 module.exports = {
   list,
   listForStaff,
@@ -104,4 +114,5 @@ module.exports = {
   detailBooking,
   updateBookingDoctor,
   bookingForStaff,
+  scheduleBookingTime,
 };

@@ -10,6 +10,11 @@ const router = express.Router();
 router.use(auth());
 
 router.get('/list', validate(bookingValidation.list), bookingController.listBookings);
+router.get(
+  '/schedule-booking-count',
+  validate(bookingValidation.scheduleBookingTime),
+  bookingController.scheduleBookingTimeCount
+);
 router.post('/new-booking', validate(bookingValidation.booking), bookingController.booking);
 router.get('/detail/:id', validate(bookingValidation.detailBooking), bookingController.getDetailBooking);
 router.post('/cancel', validate(bookingValidation.cancelBooking), bookingController.cancelBooking);
