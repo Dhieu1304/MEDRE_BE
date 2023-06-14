@@ -103,6 +103,7 @@ const handlePaymentSuccess = async (txn_ref) => {
 
     booking.is_payment = true;
     booking.booking_status = BOOKING_STATUS.BOOKED;
+    booking.bookedAt = new Date();
     booking.ordinal_number = scheduleBooingTimeService.getOrdinalNumberFromListBooking(listBooking, +startNum, +jump);
 
     await booking_payment.save({ transaction });
