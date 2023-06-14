@@ -7,6 +7,7 @@ const auth = require('../middlewares/auth');
 const { STAFF_ROLES } = require('../staff/staff.constant');
 
 const router = express.Router();
+router.use(auth());
 
 router.get('/list-by-date', validate(scheduleValidation.listByDay), scheduleController.listByDay);
 router.get('/list-all', validate(scheduleValidation.listAll), scheduleController.listAll);
