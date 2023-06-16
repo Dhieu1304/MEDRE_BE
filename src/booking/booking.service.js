@@ -8,7 +8,7 @@ const userService = require('../user/user.service');
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
 const { SCHEDULE_SESSION, SCHEDULE_TYPE } = require('../schedule/schedule.constant');
-const scheduleBooingTimeService = require('../schedule_booking_time/schedule_booking_time.service');
+const scheduleBookingTimeService = require('../schedule_booking_time/schedule_booking_time.service');
 const sequelize = require('../config/database');
 
 const createNewBooking = async (data) => {
@@ -63,7 +63,7 @@ const createNewBooking = async (data) => {
     }
   }
 
-  const scheduleBookingTime = await scheduleBooingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
+  const scheduleBookingTime = await scheduleBookingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
   if (!scheduleBookingTime) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
   }
@@ -134,7 +134,7 @@ const createNewBookingForStaff = async (data) => {
     }
   }
 
-  const scheduleBookingTime = await scheduleBooingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
+  const scheduleBookingTime = await scheduleBookingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
   if (!scheduleBookingTime) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
   }
@@ -146,7 +146,7 @@ const createNewBookingForStaff = async (data) => {
 
   const startNum = scheduleBookingTime.start_num_off + 1; // redirect
   const jump = 2;
-  data.ordinal_number = scheduleBooingTimeService.getOrdinalNumberFromListBooking(listBooking, +startNum, +jump);
+  data.ordinal_number = scheduleBookingTimeService.getOrdinalNumberFromListBooking(listBooking, +startNum, +jump);
   data.id = uuidv4();
   return models.booking.create(data);
 };
