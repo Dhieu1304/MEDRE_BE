@@ -56,7 +56,7 @@ const listAll = catchAsync(async (req, res) => {
   const filterBooking = {
     booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     date: { [Op.between]: [from, to] },
-  }
+  };
   if (req.user.role === 'User') {
     filterBooking.id_user = req.user.id;
   }
