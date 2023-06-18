@@ -9,10 +9,12 @@ const SocketServer = (io) => {
     socket.emit(SOCKET_EVENT.SUCCESS, 'Connect socket successfully');
 
     socket.on(SOCKET_EVENT.JOIN_ROOM, async (token) => {
+      logger.info(`New socket join room ${socket.id}`);
       const user = await validateToken(token);
       if (!user) {
         return socket.emit(SOCKET_EVENT.ERROR, 'Incorrect token!');
       }
+      logger.info(`New socket join room ${user.id}, ${user.email}`);
       socket.join(user.id);
       socket.join(user.role);
       socket.join(NOTIFICATION_FOR.ALL_SYSTEM);
