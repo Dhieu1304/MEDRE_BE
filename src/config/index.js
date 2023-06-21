@@ -80,7 +80,7 @@ module.exports = {
     tmnCode: envVars.VNP_TMN_CODE,
     hashSecret: envVars.VNP_HASH_SECRET,
     url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
-    returnUrl: `https://edda-2405-4800-5715-17fe-a98c-eebd-a3ad-314f.ngrok-free.app/payment/vnpay-return`,
+    returnUrl: `${envVars.BE_URL}/payment/vnpay-return`,
   },
   sms: {
     apiKey: envVars.SMS_API_KEY,
