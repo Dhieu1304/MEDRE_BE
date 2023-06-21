@@ -30,9 +30,6 @@ const register = catchAsync(async (req, res) => {
   if (mail) {
     await authService.sendMailVerification(mail, 1);
   }
-  if (phone) {
-    // await sendSMS();
-  }
 });
 
 const loginEmailPassword = catchAsync(async (req, res) => {
