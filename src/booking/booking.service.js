@@ -54,6 +54,7 @@ const createNewBooking = async (data) => {
       id_schedule: data.id_schedule,
       id_time: data.id_time,
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
+      id_staff_booking: null,
     },
   });
 
