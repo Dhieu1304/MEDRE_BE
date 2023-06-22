@@ -15,6 +15,11 @@ router.get(
   validate(bookingValidation.scheduleBookingTime),
   bookingController.scheduleBookingTimeCount
 );
+router.get(
+  '/schedule-booking-count-many-staff',
+  validate(bookingValidation.scheduleBookingTimeManyStaff),
+  bookingController.scheduleBookingTimeCount
+);
 router.post('/new-booking', validate(bookingValidation.booking), bookingController.booking);
 router.get('/detail/:id', validate(bookingValidation.detailBooking), bookingController.getDetailBooking);
 router.post('/cancel', validate(bookingValidation.cancelBooking), bookingController.cancelBooking);

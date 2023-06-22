@@ -105,6 +105,16 @@ const scheduleBookingTime = {
   }),
 };
 
+const scheduleBookingTimeManyStaff = {
+  query: Joi.object().keys({
+    id_expertise: Joi.array().items(Joi.string().uuid().required()).required(),
+    id_doctor: Joi.array().items(Joi.string().uuid().required()).required(),
+    from: Joi.date().required(),
+    to: Joi.date().required(),
+    bookingMethod: Joi.string().valid('remote', 'redirect').default('remote'),
+  }),
+};
+
 module.exports = {
   list,
   listForStaff,
@@ -115,4 +125,5 @@ module.exports = {
   updateBookingDoctor,
   bookingForStaff,
   scheduleBookingTime,
+  scheduleBookingTimeManyStaff,
 };
