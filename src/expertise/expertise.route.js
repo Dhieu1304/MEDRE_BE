@@ -34,4 +34,12 @@ router.delete(
   expertiseController.deleteExpertise
 );
 
+router.post(
+  '/update-price',
+  auth(),
+  staffPermission([STAFF_ROLES.ADMIN]),
+  validate(expertiseValidation.updatePrice),
+  expertiseController.updatePrice
+);
+
 module.exports = router;

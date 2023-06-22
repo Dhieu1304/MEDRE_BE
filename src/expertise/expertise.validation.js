@@ -13,7 +13,16 @@ const updateExpertise = {
   }),
 };
 
+const updatePrice = {
+  body: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+    price_offline: Joi.number().integer().min(0),
+    price_online: Joi.number().integer().min(0),
+  }),
+};
+
 module.exports = {
   createExpertise,
   updateExpertise,
+  updatePrice,
 };

@@ -31,6 +31,16 @@ const updateExpertise = async (data) => {
   return await expertise.save();
 };
 
+const updatePrice = async (data) => {
+  // check expertise
+  let expertise = await models.expertise.findOne({ where: { id: data.id } });
+  if (!expertise) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid expertise');
+  }
+  expertise = Object.assign(expertise, data);
+  return await expertise.save();
+};
+
 const deleteExpertise = async (data) => {
   // get expertise
   const expertise = await findOneByFilter({ name: data.name });
@@ -61,4 +71,5 @@ module.exports = {
   findOneByFilter,
   findAllByFilter,
   findAndCountAllByCondition,
+  updatePrice,
 };
