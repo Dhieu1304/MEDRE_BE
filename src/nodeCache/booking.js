@@ -4,9 +4,11 @@ const models = require('../models');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const { getGlobalSettingByName } = require('./global_setting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
+const { redisClient } = require('../config/redis');
 
-const waitingBooking = (id) => {
+const waitingBooking = async (id) => {
   nodeCache.set(`wait_book_${id}`, 1, getGlobalSettingByName(GLOBAL_SETTING.CANCEL_ONLINE_BOOKING_AFTER_MINUTE) * 60);
+  await redisClient.set(`wait_book_${id}`, new Date().getTime());
 };
 
 nodeCache.on('expired', async function (key) {
@@ -15,6 +17,7 @@ nodeCache.on('expired', async function (key) {
     try {
       const id_booking = key.split('wait_book_')[1];
       const booking = await models.booking.findOne({ where: { id: id_booking } });
+      await redisClient.del(key);
       if (booking.booking_status !== BOOKING_STATUS.WAITING) {
         return logger.info(`Booking id: ${id_booking} status: ${booking.booking_status}`);
       }
@@ -31,8 +34,9 @@ nodeCache.on('expired', async function (key) {
   }
 });
 
-const rmWaitingBooking = (id) => {
+const rmWaitingBooking = async (id) => {
   nodeCache.del(`wait_book_${id}`);
+  await redisClient.del(`wait_book_${id}`);
 };
 
 module.exports = {

@@ -19,6 +19,7 @@ const { jwtStrategy } = require('./src/config/passport');
 const { getLocale } = require('./src/utils/locale');
 
 require('./src/models/mockup-data');
+require('./src/cron');
 
 const app = express();
 
