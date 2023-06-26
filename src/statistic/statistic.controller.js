@@ -70,7 +70,24 @@ const statisticUser = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(data));
 });
 
+const statisticPatient = catchAsync(async (req, res) => {
+  const { time } = req.query;
+  const startDay = convertTimeToStartEnd(time);
+  const condition = {
+    where: { createdAt: { [Op.gte]: startDay } },
+    attributes: [
+      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('createdAt')), 'time'],
+      [sequelize.fn('count', sequelize.col('id')), 'total'],
+    ],
+    group: ['time'],
+    order: [['time', 'asc']],
+  };
+  const data = await statisticService.findAllStatisticByCondition('patient', condition);
+  return res.status(httpStatus.OK).json(responseData(data));
+});
+
 module.exports = {
   statisticBooking,
   statisticUser,
+  statisticPatient,
 };
