@@ -23,7 +23,7 @@ const updateExpertise = async (data) => {
   if (!expertise) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid expertise');
   }
-  if (data.name) {
+  if (data.name && expertise.name !== data.name) {
     // check if expertise's new name is exists
     const expertiseName = await findOneByFilter({ name: data.name });
     if (expertiseName) {
