@@ -7,6 +7,8 @@ const statisticService = require('./statistic.service');
 const { Op } = require('sequelize');
 const sequelize = require('../config/database');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
+const models = require('../models');
+const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
 
 const convertTimeToStartEnd = (time) => {
   const currentDay = moment();
@@ -86,8 +88,48 @@ const statisticPatient = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(data));
 });
 
+const statisticRevenue = catchAsync(async (req, res) => {
+  const { time, type } = req.query;
+  const startDay = convertTimeToStartEnd(time);
+  let colSum = 'price_offline';
+  if (type === SCHEDULE_TYPE.ONLINE) {
+    colSum = 'price_online';
+  }
+
+  const condition = {
+    where: {
+      is_payment: true,
+      createdAt: { [Op.gte]: startDay },
+    },
+    include: [
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        where: { type },
+        include: [
+          {
+            model: models.expertise,
+            as: 'schedule_expertise',
+            attributes: [],
+          },
+        ],
+        attributes: [],
+      },
+    ],
+    attributes: [
+      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('booking.createdAt')), 'time'],
+      [sequelize.fn('sum', sequelize.col(`booking_schedule.schedule_expertise.${colSum}`)), 'total'],
+    ],
+    group: ['time'],
+    order: [['time', 'asc']],
+  };
+  const data = await statisticService.findAllStatisticByCondition('booking', condition);
+  return res.status(httpStatus.OK).json(responseData(data));
+});
+
 module.exports = {
   statisticBooking,
   statisticUser,
   statisticPatient,
+  statisticRevenue,
 };
