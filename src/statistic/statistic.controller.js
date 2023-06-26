@@ -40,11 +40,11 @@ const statisticBooking = catchAsync(async (req, res) => {
   const startDay = convertTimeToStartEnd(time);
   const condition = {
     where: {
-      date: { [Op.gte]: startDay },
+      createdAt: { [Op.gte]: startDay },
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     },
     attributes: [
-      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('date')), 'time'],
+      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('createdAt')), 'time'],
       [sequelize.fn('count', sequelize.col('booking.id')), 'total'],
     ],
     group: ['time'],
@@ -54,6 +54,23 @@ const statisticBooking = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseData(data));
 });
 
+const statisticUser = catchAsync(async (req, res) => {
+  const { time } = req.query;
+  const startDay = convertTimeToStartEnd(time);
+  const condition = {
+    where: { createdAt: { [Op.gte]: startDay } },
+    attributes: [
+      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('createdAt')), 'time'],
+      [sequelize.fn('count', sequelize.col('id')), 'total'],
+    ],
+    group: ['time'],
+    order: [['time', 'asc']],
+  };
+  const data = await statisticService.findAllStatisticByCondition('user', condition);
+  return res.status(httpStatus.OK).json(responseData(data));
+});
+
 module.exports = {
   statisticBooking,
+  statisticUser,
 };

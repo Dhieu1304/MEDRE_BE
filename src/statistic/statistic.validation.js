@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { STATISTIC_TIME } = require('./statistic.constant');
 
-const statisticBooking = {
+const statisticBy = {
   query: Joi.object().keys({
     time: Joi.string()
       .valid(...Object.values(STATISTIC_TIME))
@@ -10,5 +10,5 @@ const statisticBooking = {
 };
 
 module.exports = {
-  statisticBooking,
+  statisticBy,
 };
