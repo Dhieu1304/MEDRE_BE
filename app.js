@@ -54,7 +54,7 @@ app.use(
 initRouter(app);
 
 //config i18next
-const lang = getLocale();
+const lang = 'vi';
 
 i18next
   .use(Backend)

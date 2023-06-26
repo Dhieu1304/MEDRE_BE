@@ -135,15 +135,5 @@
       "99": "Unknown error."
     },
     "invalidBookingType": "Can not pay later for online booking."
-  },
-  "mobileNotification": {
-    "test": "Mobile notification testing."
-  },
-  "checkupPackage": {
-    "notFound": "Checkup package not found.",
-    "success": "Update checkup package successfully.",
-    "cannotUpdate": "Checkup package is being used. Cannot update.",
-    "delete": "Delete checkup package successfully.",
-    "cannotDelete": "Checkup package is being used. Cannot delete."
   }
 }
