@@ -21,13 +21,8 @@ const createExpertise = catchAsync(async (req, res) => {
 });
 
 const updateExpertise = catchAsync(async (req, res) => {
-  const expertise = await expertiseService.updateExpertise(req.body);
-  return res.status(httpStatus.OK).json(responseData(expertise, i18next.t('expertise.update')));
-});
-
-const updatePrice = catchAsync(async (req, res) => {
-  const updateObject = pick(req.body, ['id', 'price_offline', 'price_online']);
-  const expertise = await expertiseService.updatePrice(updateObject);
+  const updateObject = pick(req.body, ['id', 'name', 'price_offline', 'price_online']);
+  const expertise = await expertiseService.updateExpertise(updateObject);
   return res.status(httpStatus.OK).json(responseData(expertise, i18next.t('expertise.update')));
 });
 
@@ -42,5 +37,4 @@ module.exports = {
   createExpertise,
   updateExpertise,
   deleteExpertise,
-  updatePrice,
 };

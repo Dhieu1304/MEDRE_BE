@@ -30,16 +30,8 @@ router.delete(
   '/delete-expertise',
   auth(),
   staffPermission([STAFF_ROLES.ADMIN]),
-  validate(expertiseValidation.createExpertise),
+  validate(expertiseValidation.deleteExpertise),
   expertiseController.deleteExpertise
-);
-
-router.post(
-  '/update-price',
-  auth(),
-  staffPermission([STAFF_ROLES.ADMIN]),
-  validate(expertiseValidation.updatePrice),
-  expertiseController.updatePrice
 );
 
 module.exports = router;
