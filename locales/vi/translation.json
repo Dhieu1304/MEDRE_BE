@@ -135,15 +135,5 @@
       "99": "Lỗi không xác định."
     },
     "invalidBookingType": "Không thể thanh toán sau cho  lịch khám online."
-  },
-  "mobileNotification": {
-    "test": "Thử nghiệm gửi thông báo cho điện thoại."
-  },
-  "checkupPackage": {
-    "notFound": "Không tìm thấy gói khám.",
-    "success": "Thay đổi thông tin thành công.",
-    "cannotUpdate": "Gói khám đang được sử dụng. Không thể thay đổi thông tin.",
-    "delete": "Xóa gói khám thành công.",
-    "cannotDelete": "Gói khám đang được sử dụng. Không thể xóa."
   }
 }
