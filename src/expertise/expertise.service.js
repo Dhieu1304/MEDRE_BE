@@ -19,23 +19,16 @@ const createExpertise = async (data) => {
 };
 
 const updateExpertise = async (data) => {
-  // check if expertise's new name is exists
-  const expertiseName = await findOneByFilter({ name: data.new_name });
-  if (expertiseName) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('expertise.existed'));
-  }
-
-  // update expertise's name
-  const expertise = await findOneByFilter({ name: data.old_name });
-  expertise.name = data.new_name;
-  return await expertise.save();
-};
-
-const updatePrice = async (data) => {
-  // check expertise
   let expertise = await models.expertise.findOne({ where: { id: data.id } });
   if (!expertise) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid expertise');
+  }
+  if (data.name) {
+    // check if expertise's new name is exists
+    const expertiseName = await findOneByFilter({ name: data.name });
+    if (expertiseName) {
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('expertise.existed'));
+    }
   }
   expertise = Object.assign(expertise, data);
   return await expertise.save();
@@ -71,5 +64,4 @@ module.exports = {
   findOneByFilter,
   findAllByFilter,
   findAndCountAllByCondition,
-  updatePrice,
 };

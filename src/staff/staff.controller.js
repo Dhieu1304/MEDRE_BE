@@ -126,6 +126,10 @@ const getListStaffSchedule = catchAsync(async (req, res) => {
             include: [{ model: models.patient, as: 'booking_of_patient' }],
             where: { booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED }, date },
           },
+          {
+            model: models.expertise,
+            as: 'schedule_expertise',
+          },
         ],
       },
       {
