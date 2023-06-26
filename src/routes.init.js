@@ -15,7 +15,7 @@ const notificationRouter = require('./notification_user/notification_user.route'
 const globalSettingRouter = require('./global_setting/global_setting.route');
 const reExaminationRouter = require('./re_examination/re_examination.route');
 const scheduleBookingTimeRouter = require('./schedule_booking_time/schedule_booking_time.route');
-const analyticRouter = require('./analytic/analytic.route');
+const statisticRouter = require('./statistic/statistic.route');
 
 module.exports.initRouter = (app) => {
   app.use('/auth', authRouter);
@@ -34,7 +34,7 @@ module.exports.initRouter = (app) => {
   app.use('/setting', globalSettingRouter);
   app.use('/re-examination', reExaminationRouter);
   app.use('/schedule-booking-time', scheduleBookingTimeRouter);
-  app.use('/analytic', analyticRouter);
+  app.use('/statistic', statisticRouter);
 
   app.use(express.Router().get('/'), (req, res) => {
     return res.status(200).send('MEDRE_API');
