@@ -10,6 +10,7 @@ const httpStatus = require('http-status');
 const i18next = require('i18next');
 const i18nextMiddleware = require('i18next-http-middleware');
 const Backend = require('i18next-fs-backend');
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 require('dotenv').config();
 
 const { initRouter } = require('./src/routes.init');
@@ -17,6 +18,7 @@ const ApiError = require('./src/utils/ApiError');
 const passport = require('passport');
 const { jwtStrategy } = require('./src/config/passport');
 const { getLocale } = require('./src/utils/locale');
+const config = require('./src/config');
 
 require('./src/models/mockup-data');
 require('./src/cron');
@@ -41,6 +43,11 @@ app.use(xss());
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
+passport.use(
+  new GoogleStrategy(config.Oauth, function (request, accessToken, refreshToken, profile, done) {
+    return done(null, profile);
+  })
+);
 
 // enable cors
 app.use(

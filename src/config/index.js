@@ -34,6 +34,8 @@ const envVarsSchema = Joi.object()
     OS_API_KEY: Joi.string().required().description('One signal api key'),
     REDIS_URL: Joi.string().description('One signal api key'),
     REDIS_PASSWORD: Joi.string().description('One signal api key'),
+    GOOGLE_CLIENT_ID: Joi.string().description('google client id'),
+    GOOGLE_CLIENT_SECRET: Joi.string().description('google client secret'),
   })
   .unknown();
 
@@ -93,5 +95,11 @@ module.exports = {
   redis: {
     url: envVars.REDIS_URL,
     password: envVars.REDIS_PASSWORD,
+  },
+  Oauth: {
+    clientID: envVars.GOOGLE_CLIENT_ID,
+    clientSecret: envVars.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${envVars.BE_URL}/auth/google/callback`,
+    passReqToCallback: true,
   },
 };
