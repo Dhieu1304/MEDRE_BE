@@ -9,6 +9,7 @@ const sequelize = require('../config/database');
 const { BOOKING_STATUS } = require('../booking/booking.constant');
 const models = require('../models');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
+const _ = require('lodash');
 
 const convertTimeToStartEnd = (time) => {
   const currentDay = moment();
@@ -38,29 +39,40 @@ const convertTimeToStartEnd = (time) => {
 };
 
 const statisticBooking = catchAsync(async (req, res) => {
-  const { time } = req.query;
-  const startDay = convertTimeToStartEnd(time);
+  const { time, from, to } = req.query;
   const condition = {
+    raw: true,
     where: {
-      createdAt: { [Op.gte]: startDay },
+      [Op.and]: [{ createdAt: { [Op.gte]: from } }, { createdAt: { [Op.lte]: to } }],
       booking_status: { [Op.ne]: BOOKING_STATUS.CANCELED },
     },
+    include: [
+      {
+        model: models.schedule,
+        as: 'booking_schedule',
+        where: { type: SCHEDULE_TYPE.OFFLINE },
+        attributes: [],
+      },
+    ],
     attributes: [
-      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('createdAt')), 'time'],
-      [sequelize.fn('count', sequelize.col('booking.id')), 'total'],
+      [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('booking.createdAt')), 'time'],
+      [sequelize.fn('count', sequelize.col('booking.id')), 'totalOff'],
     ],
     group: ['time'],
     order: [['time', 'asc']],
   };
-  const data = await statisticService.findAllStatisticByCondition('booking', condition);
+  const dataOffline = await statisticService.findAllStatisticByCondition('booking', condition);
+  condition.include[0].where.type = SCHEDULE_TYPE.ONLINE;
+  condition.attributes[1][1] = 'totalOnl';
+  const dataOnline = await statisticService.findAllStatisticByCondition('booking', condition);
+  const data = _(dataOnline).concat(dataOffline).groupBy('time').map(_.spread(_.merge)).value();
   return res.status(httpStatus.OK).json(responseData(data));
 });
 
 const statisticUser = catchAsync(async (req, res) => {
-  const { time } = req.query;
-  const startDay = convertTimeToStartEnd(time);
+  const { time, from, to } = req.query;
   const condition = {
-    where: { createdAt: { [Op.gte]: startDay } },
+    where: { [Op.and]: [{ createdAt: { [Op.gte]: from } }, { createdAt: { [Op.lte]: to } }] },
     attributes: [
       [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('createdAt')), 'time'],
       [sequelize.fn('count', sequelize.col('id')), 'total'],
@@ -73,10 +85,9 @@ const statisticUser = catchAsync(async (req, res) => {
 });
 
 const statisticPatient = catchAsync(async (req, res) => {
-  const { time } = req.query;
-  const startDay = convertTimeToStartEnd(time);
+  const { time, from, to } = req.query;
   const condition = {
-    where: { createdAt: { [Op.gte]: startDay } },
+    where: { [Op.and]: [{ createdAt: { [Op.gte]: from } }, { createdAt: { [Op.lte]: to } }] },
     attributes: [
       [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('createdAt')), 'time'],
       [sequelize.fn('count', sequelize.col('id')), 'total'],
@@ -89,23 +100,19 @@ const statisticPatient = catchAsync(async (req, res) => {
 });
 
 const statisticRevenue = catchAsync(async (req, res) => {
-  const { time, type } = req.query;
-  const startDay = convertTimeToStartEnd(time);
-  let colSum = 'price_offline';
-  if (type === SCHEDULE_TYPE.ONLINE) {
-    colSum = 'price_online';
-  }
+  const { time, from, to } = req.query;
 
   const condition = {
+    raw: true,
     where: {
       is_payment: true,
-      createdAt: { [Op.gte]: startDay },
+      [Op.and]: [{ createdAt: { [Op.gte]: from } }, { createdAt: { [Op.lte]: to } }],
     },
     include: [
       {
         model: models.schedule,
         as: 'booking_schedule',
-        where: { type },
+        where: { type: SCHEDULE_TYPE.OFFLINE },
         include: [
           {
             model: models.expertise,
@@ -118,12 +125,19 @@ const statisticRevenue = catchAsync(async (req, res) => {
     ],
     attributes: [
       [sequelize.fn('date_trunc', time.toLowerCase(), sequelize.col('booking.createdAt')), 'time'],
-      [sequelize.fn('sum', sequelize.col(`booking_schedule.schedule_expertise.${colSum}`)), 'total'],
+      [sequelize.fn('sum', sequelize.col(`booking_schedule.schedule_expertise.price_offline`)), 'totalOff'],
     ],
     group: ['time'],
     order: [['time', 'asc']],
   };
-  const data = await statisticService.findAllStatisticByCondition('booking', condition);
+  const dataOffline = await statisticService.findAllStatisticByCondition('booking', condition);
+  condition.include[0].where.type = SCHEDULE_TYPE.ONLINE;
+  condition.attributes[1] = [
+    sequelize.fn('sum', sequelize.col(`booking_schedule.schedule_expertise.price_online`)),
+    'totalOnl',
+  ];
+  const dataOnline = await statisticService.findAllStatisticByCondition('booking', condition);
+  const data = _(dataOnline).concat(dataOffline).groupBy('time').map(_.spread(_.merge)).value();
   return res.status(httpStatus.OK).json(responseData(data));
 });
 
@@ -132,4 +146,5 @@ module.exports = {
   statisticUser,
   statisticPatient,
   statisticRevenue,
+  convertTimeToStartEnd,
 };
