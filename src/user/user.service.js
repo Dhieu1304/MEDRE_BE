@@ -111,6 +111,25 @@ const resetPassword = async (email, new_password) => {
   return await user.save();
 };
 
+const findOrCreateUserFromLoginGoogle = async (data) => {
+  const existUser = await models.user.findOne({ where: { email: data.email } });
+  if (existUser) {
+    return existUser;
+  }
+
+  const user = {
+    id: uuidv4(),
+    password: data.provider,
+    email: data.email,
+    email_verified: data.email_verified,
+    name: data.displayName,
+    image: data.picture,
+  };
+
+  // create new user
+  return await models.user.create(user);
+};
+
 module.exports = {
   createUser,
   findOneByFilter,
@@ -121,4 +140,5 @@ module.exports = {
   getUserInfo,
   checkUserInfo,
   resetPassword,
+  findOrCreateUserFromLoginGoogle,
 };

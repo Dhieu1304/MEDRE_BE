@@ -195,6 +195,19 @@ const resetPasswordForm = catchAsync(async (req, res) => {
   res.sendFile('reset_password.html', { root: path.join(__dirname, '../reset_password') });
 });
 
+const failureLoginGoogle = catchAsync(async (req, res) => {
+  return res.status(httpStatus.OK).json(responseMessage('Oops... Please try again or contact support', false));
+});
+
+const loginOauth = catchAsync(async (req, res) => {
+  const user = await userService.findOrCreateUserFromLoginGoogle(req.user);
+
+  // generate token
+  const tokens = await authService.generateAuthTokens(user);
+
+  return res.status(httpStatus.OK).json(responseData({ user: toResponseObject(user), tokens }));
+});
+
 module.exports = {
   register,
   loginEmailPassword,
@@ -211,4 +224,8 @@ module.exports = {
   staffLoginPhonePassword,
   staffLoginUsernamePassword,
   staffRefreshTokens,
+
+  // oauth
+  failureLoginGoogle,
+  loginOauth,
 };
