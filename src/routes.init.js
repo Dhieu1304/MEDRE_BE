@@ -36,6 +36,16 @@ module.exports.initRouter = (app) => {
   app.use('/schedule-booking-time', scheduleBookingTimeRouter);
   app.use('/statistic', statisticRouter);
 
+  app.use(express.Router().get('/test'), (req, res) => {
+    const result = [];
+    function generateRandomDate(from, to) {
+      return new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
+    }
+    for (let i = 0; i < 70; i++) {
+      result.push(generateRandomDate(new Date('2023-06-05'), new Date('2023-06-15')));
+    }
+    return res.status(200).json({ result });
+  });
   app.use(express.Router().get('/'), (req, res) => {
     return res.status(200).send('MEDRE_API');
   });
