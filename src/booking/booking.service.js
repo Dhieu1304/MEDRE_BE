@@ -245,12 +245,13 @@ const updateBookingDoctor = async (data) => {
   if (!booking) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.invalidID'));
   }
-  delete data.id;
+  /*delete data.id;
   Object.keys(data).forEach((key) => {
     if (!booking[key]) {
       booking[key] = data[key];
     }
-  });
+  });*/
+  booking = Object.assign(booking, data);
   return await booking.save();
 };
 
