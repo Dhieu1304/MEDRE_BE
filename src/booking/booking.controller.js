@@ -219,6 +219,7 @@ const getDetailBooking = catchAsync(async (req, res) => {
         ],
       },
       { model: models.patient, as: 'booking_of_patient' },
+      { model: models.re_examination, as: 'booking_re_exam' },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
@@ -252,6 +253,7 @@ const getDetailBookingForStaff = catchAsync(async (req, res) => {
       },
       { model: models.user, as: 'booking_of_user', attributes: { exclude: ['password'] } },
       { model: models.patient, as: 'booking_of_patient' },
+      { model: models.re_examination, as: 'booking_re_exam' },
     ],
   });
   return res.status(httpStatus.OK).json(responseData(booking));
