@@ -16,6 +16,8 @@ const _notification = require('../notification/notification.model');
 const _notification_user = require('../notification_user/notification_user.model');
 const _re_examination = require('../re_examination/re_examination.model');
 const _schedule_booking_time = require('../schedule_booking_time/schedule_booking_time.model');
+const _ticket = require('../ticket/ticket.model');
+const _ticket_detail = require('../ticket_detail/ticket_detail.model');
 
 function initModels(sequelize) {
   const staff = _staff(sequelize, DataTypes);
@@ -35,6 +37,8 @@ function initModels(sequelize) {
   const notification_user = _notification_user(sequelize, DataTypes);
   const re_examination = _re_examination(sequelize, DataTypes);
   const schedule_booking_time = _schedule_booking_time(sequelize, DataTypes);
+  const ticket = _ticket(sequelize, DataTypes);
+  const ticket_detail = _ticket_detail(sequelize, DataTypes);
 
   expertise.belongsToMany(staff, {
     as: 'id_staff_staffs',
@@ -96,6 +100,8 @@ function initModels(sequelize) {
   expertise.hasMany(schedule_booking_time, { as: 'expertise_booking_time', foreignKey: 'id_expertise' });
   schedule_booking_time.belongsTo(time_schedule, { as: 'id_time_schedule_booking', foreignKey: 'id_time_schedule' });
   time_schedule.hasMany(schedule_booking_time, { as: 'time_schedule_booking_time', foreignKey: 'id_time_schedule' });
+  ticket.hasMany(ticket_detail, { as: 'ticket_details', foreignKey: 'id_ticket' });
+  ticket_detail.belongsTo(ticket, { as: 'detail_of_ticket', foreignKey: 'id_ticket' });
 
   return {
     sequelize,
@@ -116,6 +122,8 @@ function initModels(sequelize) {
     notification_user,
     re_examination,
     schedule_booking_time,
+    ticket,
+    ticket_detail,
   };
 }
 
