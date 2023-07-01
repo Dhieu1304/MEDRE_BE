@@ -12,6 +12,9 @@ const { BOOKING_STATUS } = require('../booking/booking.constant');
 const i18next = require('i18next');
 const authService = require('../auth/auth.service');
 const { regexpRepeatOnFromTo } = require('../utils/regexpRepeatOnFromTo');
+const { STAFF_ROLES } = require('./staff.constant');
+const { setList, getList } = require('../nodeCache/cache_api');
+const _ = require('lodash');
 
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
@@ -29,7 +32,7 @@ const getInfo = catchAsync(async (req, res) => {
 
 const getAll = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, [
+  let filter = pick(req.query, [
     'phone_number',
     'email',
     'name',
@@ -42,6 +45,19 @@ const getAll = catchAsync(async (req, res) => {
     'to',
     'expertise',
   ]);
+
+  const filterCache = _.clone(filter);
+  const cacheValue = getList(page, limit, filterCache, 'staff');
+  if (cacheValue) {
+    return res.status(httpStatus.OK).json(responseData(paginationFormat(cacheValue, page, limit)));
+  }
+
+  if (filter.role) {
+    filter = Object.assign(filter, { [Op.and]: [{ role: filter.role }, { role: { [Op.ne]: STAFF_ROLES.ADMIN } }] });
+    delete filter.role;
+  } else {
+    filter.role = { [Op.ne]: STAFF_ROLES.ADMIN };
+  }
 
   const filterLike = ['phone_number', 'email', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
@@ -100,9 +116,12 @@ const getAll = catchAsync(async (req, res) => {
     distinct: true,
     ...pageLimit2Offset(page, limit),
     attributes: { exclude: ['password'] },
+    order: [['name', 'asc']],
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
+
+  setList(page, limit, filterCache, 'staff', staffs, 10 * 60);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
