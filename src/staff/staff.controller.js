@@ -44,6 +44,7 @@ const getAll = catchAsync(async (req, res) => {
     'from',
     'to',
     'expertise',
+    'order',
   ]);
 
   const filterCache = _.clone(filter);
@@ -110,13 +111,19 @@ const getAll = catchAsync(async (req, res) => {
     delete filter.expertise;
   }
 
+  const order = [];
+  if (filter.order) {
+    order.push(filter.order.split(':'));
+    delete filter.order;
+  }
+
   const condition = {
     where: filter,
     include,
     distinct: true,
     ...pageLimit2Offset(page, limit),
     attributes: { exclude: ['password'] },
-    order: [['name', 'asc']],
+    order,
   };
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
