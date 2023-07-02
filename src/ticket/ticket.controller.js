@@ -49,7 +49,7 @@ const detailTicket = catchAsync(async (req, res) => {
   const condition = {
     where: filter,
     include: [{ model: models.ticket_detail, as: 'ticket_details' }],
-    order: [[{ model: models.ticket_detail, as: 'ticket_details' }, 'createdAt', 'desc']],
+    order: [[{ model: models.ticket_detail, as: 'ticket_details' }, 'createdAt', 'asc']],
   };
 
   const ticket = await ticketService.findOneByOption(condition);
