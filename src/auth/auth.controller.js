@@ -110,6 +110,24 @@ const verifySuccess = catchAsync(async (req, res) => {
   }
 });
 
+const verifyOTPSuccess = catchAsync(async (req, res) => {
+  const data = req.body;
+  const result = await authService.verifyOTP(data);
+  if (result === true) {
+    res.send(
+      `<h1 style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+      ${i18next.t('auth.verifySuccess')}
+      </h1>`
+    );
+  } else {
+    res.send(
+      `<h1 style="overflow: hidden;display: flex;justify-content: center;align-items: center;">
+      ${i18next.t('auth.verifyFailure')}
+      </h1>`
+    );
+  }
+});
+
 const resendMail = catchAsync(async (req, res) => {
   const { email, type } = req.body;
   if (type == 1) {
@@ -218,6 +236,7 @@ module.exports = {
   sendResetPasswordMail,
   resetPasswordForm,
   resetPassword,
+  verifyOTPSuccess,
 
   // staff
   staffLoginEmailPassword,
