@@ -12,6 +12,9 @@ const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const models = require('../models');
 const { NOTIFICATION_EVENT } = require('../socket/socket.constant');
 const logger = require('../config/logger');
+const userService = require('../user/user.service');
+const { Op } = require('sequelize');
+const staffService = require('../staff/staff.service');
 
 const sendPushNotification = catchAsync(async (req, res, next) => {
   const message = {
@@ -95,11 +98,39 @@ const listNotification = catchAsync(async (req, res) => {
 
 const createNotification = catchAsync(async (req, res) => {
   const data = pick(req.body, ['type', 'notification_for', 'title', 'content', 'description', 'id_redirect']);
-  const notificationUser = pick(req.body, ['id_user', 'id_staff']);
+  const notificationUserData = pick(req.body, [
+    'id_user',
+    'id_staff',
+    'email_user',
+    'phone_number_user',
+    'email_staff',
+    'phone_number_staff',
+  ]);
   data.created_by = req.user.id;
+  let notificationUser = {};
   if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
-    if (Object.keys(notificationUser).length === 0) {
+    if (Object.keys(notificationUserData).length === 0) {
       return res.status(httpStatus.BAD_REQUEST).json(responseMessage('id_user or id_staff is required', false));
+    }
+    if (notificationUserData.id_user || notificationUserData.id_staff) {
+      notificationUser.id_user = notificationUserData.id_user;
+      notificationUser.id_staff = notificationUserData.id_staff;
+    } else if (notificationUserData.email_user || notificationUserData.phone_number_user) {
+      const user = await userService.findOneByFilter({
+        [Op.or]: [{ email: notificationUserData.email_user || '' }, { phone_number: notificationUserData.phone_number_user || '' }],
+      });
+      if (!user) {
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid', false));
+      }
+      notificationUser.id_user = user.id;
+    } else if (notificationUserData.email_staff || notificationUserData.phone_number_staff) {
+      const staff = await staffService.findOneByFilter({
+        [Op.or]: [{ email: notificationUserData.email_staff || '' }, { phone_number: notificationUserData.phone_number_staff || '' }],
+      });
+      if (!staff) {
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid', false));
+      }
+      notificationUser.id_staff = staff.id;
     }
   }
   await notificationUserService.createNotification(data, notificationUser);

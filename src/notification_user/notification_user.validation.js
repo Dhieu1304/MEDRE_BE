@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { NOTIFICATION_TYPE, NOTIFICATION_FOR } = require('../notification/notification.constant');
+const { phoneNumberFormat } = require('../utils/messageCustom');
 
 const testNotification = {
   body: Joi.object().keys({
@@ -31,6 +32,10 @@ const createNotification = {
     notification_for: Joi.string()
       .valid(...Object.values(NOTIFICATION_FOR))
       .required(),
+    email_user: Joi.string().email().lowercase().trim(),
+    email_staff: Joi.string().email().lowercase().trim(),
+    phone_number_user: Joi.string().custom(phoneNumberFormat).trim(),
+    phone_number_staff: Joi.string().custom(phoneNumberFormat).trim(),
     id_user: Joi.string().uuid(),
     id_staff: Joi.string().uuid(),
     title: Joi.string().trim().required(),
