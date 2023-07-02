@@ -117,7 +117,10 @@ const createNotification = catchAsync(async (req, res) => {
       notificationUser.id_staff = notificationUserData.id_staff;
     } else if (notificationUserData.email_user || notificationUserData.phone_number_user) {
       const user = await userService.findOneByFilter({
-        [Op.or]: [{ email: notificationUserData.email_user || '' }, { phone_number: notificationUserData.phone_number_user || '' }],
+        [Op.or]: [
+          { email: notificationUserData.email_user || '' },
+          { phone_number: notificationUserData.phone_number_user || '' },
+        ],
       });
       if (!user) {
         return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid', false));
@@ -125,7 +128,10 @@ const createNotification = catchAsync(async (req, res) => {
       notificationUser.id_user = user.id;
     } else if (notificationUserData.email_staff || notificationUserData.phone_number_staff) {
       const staff = await staffService.findOneByFilter({
-        [Op.or]: [{ email: notificationUserData.email_staff || '' }, { phone_number: notificationUserData.phone_number_staff || '' }],
+        [Op.or]: [
+          { email: notificationUserData.email_staff || '' },
+          { phone_number: notificationUserData.phone_number_staff || '' },
+        ],
       });
       if (!staff) {
         return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid', false));

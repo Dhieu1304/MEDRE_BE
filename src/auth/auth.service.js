@@ -287,26 +287,19 @@ const verifyEmail = async (token) => {
 
 const verifyOTP = async (data) => {
   try {
-    if (data.type == 1)
-    {
-      const user = await userService.findOneByFilter({phone_number: data.phone_number });
-      if(user)
-      {
+    if (data.type == 1) {
+      const user = await userService.findOneByFilter({ phone_number: data.phone_number });
+      if (user) {
         await user.update({ phone_verified: true });
         return true;
       } else return false;
-      
-    }
-    else if (data.type == 2)
-    {
-      const staff = await staffService.findOneByFilter({phone_number: data.phone_number });
-      if(staff)
-      {
+    } else if (data.type == 2) {
+      const staff = await staffService.findOneByFilter({ phone_number: data.phone_number });
+      if (staff) {
         await staff.update({ phone_verified: true });
         return true;
       } else return false;
-    }
-    else {
+    } else {
       return false;
     }
   } catch (error) {
