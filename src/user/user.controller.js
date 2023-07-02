@@ -31,7 +31,7 @@ const editUser = catchAsync(async (req, res) => {
 
 const getAll = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked', 'gender', 'order']);
+  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked', 'gender', 'order', 'id']);
   const filterLike = ['phone_number', 'email', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {

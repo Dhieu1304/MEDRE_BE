@@ -39,6 +39,7 @@ const list = {
 
 const listForStaff = {
   query: Joi.object().keys({
+    id: Joi.string().uuid(),
     id_user: Joi.string().uuid(),
     phone_number: Joi.string().custom(phoneNumberFormat),
     name: Joi.string().lowercase().trim(),

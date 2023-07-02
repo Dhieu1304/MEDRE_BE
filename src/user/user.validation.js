@@ -26,6 +26,7 @@ const changePassword = {
 
 const listUser = {
   query: Joi.object().keys({
+    id: Joi.string().uuid(),
     phone_number: Joi.string().custom(phoneNumberFormat),
     email: Joi.string().email().lowercase(),
     name: Joi.string().trim().lowercase(),

@@ -52,7 +52,7 @@ const listPatient = catchAsync(async (req, res) => {
 
 const listPatientForStaff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, ['id_user', 'phone_number', 'name', 'dob', 'gender', 'order']);
+  const filter = pick(req.query, ['id_user', 'phone_number', 'name', 'dob', 'gender', 'order', 'id']);
   if (filter.phone_number) {
     filter.phone_number = { [Op.substring]: filter.phone_number };
   }
