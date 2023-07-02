@@ -285,6 +285,36 @@ const verifyEmail = async (token) => {
   }
 };
 
+const verifyOTP = async (data) => {
+  try {
+    if (data.type == 1)
+    {
+      const user = await userService.findOneByFilter({phone_number: data.phone_number });
+      if(user)
+      {
+        await user.update({ phone_verified: true });
+        return true;
+      } else return false;
+      
+    }
+    else if (data.type == 2)
+    {
+      const staff = await staffService.findOneByFilter({phone_number: data.phone_number });
+      if(staff)
+      {
+        await staff.update({ phone_verified: true });
+        return true;
+      } else return false;
+    }
+    else {
+      return false;
+    }
+  } catch (error) {
+    logger.error(error.message);
+    //return false;
+  }
+};
+
 const resetPassEmailTemplate = (link) => {
   return `
 	    <!DOCTYPE html>
@@ -408,6 +438,7 @@ module.exports = {
   sendMailResetPassword,
   resetPassword,
   checkAccount,
+  verifyOTP,
   // admin
   staffLoginUserWithEmailAndPassword,
   staffLoginUserWithPhoneNumberAndPassword,

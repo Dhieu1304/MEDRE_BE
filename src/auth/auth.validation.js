@@ -52,6 +52,15 @@ const resendMail = {
   }),
 };
 
+const verifyOTP = {
+  body: Joi.object().keys({
+    phone_number: Joi.string().custom(phoneNumberFormat).trim(),
+    type: Joi.number()
+      .required()
+      .valid(...Object.values(ACCOUNT_TYPES)),
+  }),
+};
+
 module.exports = {
   register,
   loginByEmail,
@@ -59,4 +68,5 @@ module.exports = {
   loginByUsername,
   refreshTokens,
   resendMail,
+  verifyOTP,
 };
