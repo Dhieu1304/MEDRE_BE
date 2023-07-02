@@ -22,7 +22,8 @@ const list = {
     name: Joi.string().lowercase().trim(),
     dob: Joi.date(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
-    order: Joi.string().valid(
+    order: Joi.string()
+      .valid(
         'phone_number:asc',
         'phone_number:desc',
         'name:asc',
@@ -30,8 +31,9 @@ const list = {
         'dob:asc',
         'dob:desc',
         'gender:asc',
-        'gender:desc',
-    ).default('createdAt:desc'),
+        'gender:desc'
+      )
+      .default('createdAt:desc'),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),
@@ -46,14 +48,14 @@ const listForStaff = {
     dob: Joi.date(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     order: Joi.string().valid(
-        'phone_number:asc',
-        'phone_number:desc',
-        'name:asc',
-        'name:desc',
-        'dob:asc',
-        'dob:desc',
-        'gender:asc',
-        'gender:desc',
+      'phone_number:asc',
+      'phone_number:desc',
+      'name:asc',
+      'name:desc',
+      'dob:asc',
+      'dob:desc',
+      'gender:asc',
+      'gender:desc'
     ),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),

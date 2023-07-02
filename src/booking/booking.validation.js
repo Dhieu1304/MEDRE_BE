@@ -32,7 +32,20 @@ const listForStaff = {
     to: Joi.date(),
     patient_phone_number: Joi.string().custom(phoneNumberFormat).trim(),
     order: Joi.string()
-      .valid('createdAt:asc', 'createdAt:desc', 'updatedAt:asc', 'updatedAt:desc', 'date:asc', 'date:desc')
+      .valid(
+        'createdAt:asc',
+        'createdAt:desc',
+        'updatedAt:asc',
+        'updatedAt:desc',
+        'date:asc',
+        'date:desc',
+        'ordinal_number:asc',
+        'ordinal_number:desc',
+        'booking_status:asc',
+        'booking_status:desc',
+        'is_payment:asc',
+        'is_payment:desc'
+      )
       .default('createdAt:desc'),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
