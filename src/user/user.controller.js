@@ -31,7 +31,7 @@ const editUser = catchAsync(async (req, res) => {
 
 const getAll = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked', 'gender']);
+  const filter = pick(req.query, ['phone_number', 'email', 'name', 'address', 'blocked', 'gender', 'order']);
   const filterLike = ['phone_number', 'email', 'address'];
   for (let i = 0; i < filterLike.length; i++) {
     if (filter[filterLike[i]]) {
@@ -42,9 +42,16 @@ const getAll = catchAsync(async (req, res) => {
     filter.name = sequelize.where(sequelize.fn('LOWER', sequelize.col('name')), 'LIKE', `%${filter.name}%`);
   }
 
+  const order = [];
+  if (filter.order) {
+    order.push(filter.order.split(':'));
+    delete filter.order;
+  }
+
   const condition = {
     where: filter,
     attributes: { exclude: ['password'] },
+    order,
     ...pageLimit2Offset(page, limit),
   };
   const users = await userService.findAndCountAllByCondition(condition);

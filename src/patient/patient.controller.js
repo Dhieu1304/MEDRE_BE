@@ -26,7 +26,7 @@ const getDetailPatientForStaff = catchAsync(async (req, res) => {
 
 const listPatient = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, ['phone_number', 'name', 'dob', 'gender']);
+  const filter = pick(req.query, ['phone_number', 'name', 'dob', 'gender', 'order']);
   filter.id_user = req.user.id;
   if (filter.phone_number) {
     filter.phone_number = { [Op.substring]: filter.phone_number };
@@ -34,10 +34,17 @@ const listPatient = catchAsync(async (req, res) => {
   if (filter.name) {
     filter.name = sequelize.where(sequelize.fn('LOWER', sequelize.col('name')), 'LIKE', '%' + filter.name + '%');
   }
+
+  const order = [];
+  if (filter.order) {
+    order.push(filter.order.split(':'));
+    delete filter.order;
+  }
+
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
-    order: [['createdAt', 'desc']],
+    order,
   };
   const patients = await patientService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(patients, page, limit)));
@@ -45,16 +52,24 @@ const listPatient = catchAsync(async (req, res) => {
 
 const listPatientForStaff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
-  const filter = pick(req.query, ['id_user', 'phone_number', 'name', 'dob', 'gender']);
+  const filter = pick(req.query, ['id_user', 'phone_number', 'name', 'dob', 'gender', 'order']);
   if (filter.phone_number) {
     filter.phone_number = { [Op.substring]: filter.phone_number };
   }
   if (filter.name) {
     filter.name = sequelize.where(sequelize.fn('LOWER', sequelize.col('name')), 'LIKE', '%' + filter.name + '%');
   }
+
+  const order = [];
+  if (filter.order) {
+    order.push(filter.order.split(':'));
+    delete filter.order;
+  }
+
   const condition = {
     where: filter,
     ...pageLimit2Offset(page, limit),
+    order,
   };
   const patients = await patientService.findAndCountAllByCondition(condition);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(patients, page, limit)));
