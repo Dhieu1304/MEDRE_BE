@@ -21,6 +21,7 @@ const listForStaff = catchAsync(async (req, res) => {
   const order = [];
   if (filter.order) {
     const parts = filter.order.split(':');
+    order.push(parts);
     // same date => sort by createdAt
     if (filter.date_re_exam) {
       order.push(['createdAt', parts[1]]);
