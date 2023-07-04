@@ -26,6 +26,13 @@ const listTicket = catchAsync(async (req, res) => {
 
   const condition = {
     where: filter,
+    include: [
+      {
+        model: models.user,
+        as: 'ticket_of_user',
+        attributes: { exclude: ['password'] },
+      },
+    ],
     ...pageLimit2Offset(page, limit),
     order,
   };
@@ -63,7 +70,19 @@ const detailTicket = catchAsync(async (req, res) => {
 
   const condition = {
     where: filter,
-    include: [{ model: models.ticket_detail, as: 'ticket_details' }],
+    include: [
+      {
+        model: models.ticket_detail,
+        as: 'ticket_details',
+        include: [
+          {
+            model: models.staff,
+            as: 'ticket_detail_of_staff',
+            attributes: { exclude: ['password'] },
+          },
+        ],
+      },
+    ],
     order: [[{ model: models.ticket_detail, as: 'ticket_details' }, 'createdAt', 'asc']],
   };
 

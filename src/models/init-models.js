@@ -102,6 +102,12 @@ function initModels(sequelize) {
   time_schedule.hasMany(schedule_booking_time, { as: 'time_schedule_booking_time', foreignKey: 'id_time_schedule' });
   ticket.hasMany(ticket_detail, { as: 'ticket_details', foreignKey: 'id_ticket' });
   ticket_detail.belongsTo(ticket, { as: 'detail_of_ticket', foreignKey: 'id_ticket' });
+  user.hasMany(ticket, { as: 'user_tickets', foreignKey: 'id_user' });
+  ticket.belongsTo(user, { as: 'ticket_of_user', foreignKey: 'id_user' });
+  user.hasMany(ticket_detail, { as: 'user_detail_tickets', foreignKey: 'id_user' });
+  ticket.belongsTo(user, { as: 'ticket_detail_of_user', foreignKey: 'id_user' });
+  staff.hasMany(ticket_detail, { as: 'staff_detail_tickets', foreignKey: 'id_staff' });
+  ticket_detail.belongsTo(staff, { as: 'ticket_detail_of_staff', foreignKey: 'id_staff' });
 
   return {
     sequelize,
