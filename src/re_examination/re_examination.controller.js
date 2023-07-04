@@ -23,7 +23,7 @@ const listForStaff = catchAsync(async (req, res) => {
     const parts = filter.order.split(':');
     order.push(parts);
     // same date => sort by createdAt
-    if (filter.date_re_exam) {
+    if (parts[0] === 'date_re_exam') {
       order.push(['createdAt', parts[1]]);
     }
     delete filter.order;

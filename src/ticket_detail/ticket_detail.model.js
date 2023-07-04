@@ -7,7 +7,6 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         primaryKey: true,
       },
-
       id_ticket: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -24,7 +23,6 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id',
         },
       },
-
       id_staff: {
         type: DataTypes.UUID,
         allowNull: true,
