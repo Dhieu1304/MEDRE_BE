@@ -2,12 +2,12 @@ const Joi = require('joi');
 const { password } = require('../utils/validateCustom');
 const { GENDERS } = require('../user/user.constant');
 const { ACCOUNT_TYPES } = require('./auth.constant');
-const { phoneNumberFormat } = require('../utils/messageCustom');
+const { phoneNumberFormat, emailFormat } = require('../utils/messageCustom');
 
 const register = {
   body: Joi.object().keys({
     phone_number: Joi.string().custom(phoneNumberFormat).trim(),
-    email: Joi.string().email().lowercase().trim(),
+    email: Joi.string().custom(emailFormat).lowercase().trim(),
     password: Joi.string().required().trim().custom(password),
     name: Joi.string().trim(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
@@ -18,7 +18,7 @@ const register = {
 
 const loginByEmail = {
   body: Joi.object().keys({
-    email: Joi.string().required().email().lowercase(),
+    email: Joi.string().required().custom(emailFormat).lowercase(),
     password: Joi.string().required(),
   }),
 };
@@ -45,7 +45,7 @@ const refreshTokens = {
 
 const resendMail = {
   body: Joi.object().keys({
-    email: Joi.string().email().lowercase().required(),
+    email: Joi.string().custom(emailFormat).lowercase().required(),
     type: Joi.number()
       .required()
       .valid(...Object.values(ACCOUNT_TYPES)),

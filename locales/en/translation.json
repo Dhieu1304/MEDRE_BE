@@ -12,7 +12,8 @@
     "emailExisted": "Email address already exists.",
     "emailNotFound": "Email address not found.",
     "success": "Email sent successfully.",
-    "fail": "An error occurred, cannot send email."
+    "fail": "An error occurred, cannot send email.",
+    "emailFormatInvalid": "Invalid email address format."
   },
   "phoneNumber": {
     "phoneFormatInvalid": "Invalid phone number format.",

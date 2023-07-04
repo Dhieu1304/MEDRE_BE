@@ -1,12 +1,12 @@
 const Joi = require('joi');
 const { GENDERS } = require('../user/user.constant');
-const { phoneNumberFormat } = require('../utils/messageCustom');
+const { phoneNumberFormat, emailFormat } = require('../utils/messageCustom');
 const { password } = require('../utils/validateCustom');
 
 const editUser = {
   body: Joi.object().keys({
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
+    email: Joi.string().custom(emailFormat).lowercase(),
     name: Joi.string().trim(),
     image: Joi.string().trim(),
     address: Joi.string().trim(),
@@ -28,7 +28,7 @@ const listUser = {
   query: Joi.object().keys({
     id: Joi.string().uuid(),
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
+    email: Joi.string().custom(emailFormat).lowercase(),
     name: Joi.string().trim().lowercase(),
     gender: Joi.string().valid(...Object.values(GENDERS)),
     address: Joi.string(),

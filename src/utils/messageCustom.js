@@ -1,5 +1,5 @@
 const i18next = require('i18next');
-const { phoneNumberRegex, timeScheduleRegex } = require('./validateCustom');
+const { phoneNumberRegex, timeScheduleRegex, emailRegex } = require('./validateCustom');
 
 const phoneNumberFormat = (value, helpers) => {
   let result = value;
@@ -19,6 +19,16 @@ const phoneNumberFormat = (value, helpers) => {
   return result;
 };
 
+const emailFormat = (value, helpers) => {
+  let result = value;
+  if (!result.match(emailRegex)) {
+    return helpers.message(i18next.t('email.emailFormatInvalid'));
+  }
+
+  return result;
+};
+
+
 const timeScheduleFormat = (value, helpers) => {
   if (!value.match(timeScheduleRegex)) {
     return helpers.message(i18next.t('timeSchedule.timeFormatInvalid'));
@@ -29,4 +39,5 @@ const timeScheduleFormat = (value, helpers) => {
 module.exports = {
   phoneNumberFormat,
   timeScheduleFormat,
+  emailFormat,
 };

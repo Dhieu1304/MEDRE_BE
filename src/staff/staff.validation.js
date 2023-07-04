@@ -3,13 +3,13 @@ const { GENDERS } = require('../user/user.constant');
 const { STAFF_ROLES } = require('./staff.constant');
 const moment = require('moment');
 const { SCHEDULE_TYPE } = require('../schedule/schedule.constant');
-const { phoneNumberFormat } = require('../utils/messageCustom');
+const { phoneNumberFormat, emailFormat } = require('../utils/messageCustom');
 const { password } = require('../utils/validateCustom');
 
 const getAllStaff = {
   query: Joi.object().keys({
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
+    email: Joi.string().custom(emailFormat).lowercase(),
     name: Joi.string().trim().lowercase(),
     address: Joi.string(),
     blocked: Joi.boolean(),
@@ -54,7 +54,7 @@ const createStaff = {
   body: Joi.object().keys({
     username: Joi.string().required(),
     phone_number: Joi.string().required().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
+    email: Joi.string().custom(emailFormat).lowercase(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     image: Joi.string(),
@@ -103,7 +103,7 @@ const editStaff = {
   body: Joi.object().keys({
     username: Joi.string(),
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
+    email: Joi.string().custom(emailFormat).lowercase(),
     name: Joi.string(),
     image: Joi.string(),
     address: Joi.string(),
@@ -122,7 +122,7 @@ const editProfile = {
   body: Joi.object().keys({
     username: Joi.string(),
     phone_number: Joi.string().custom(phoneNumberFormat),
-    email: Joi.string().email().lowercase(),
+    email: Joi.string().custom(emailFormat).lowercase(),
     name: Joi.string().trim(),
     image: Joi.string().trim(),
     address: Joi.string().trim(),
