@@ -12,7 +12,8 @@
     "emailExisted": "Địa chỉ email đã tồn tại trong hệ thống.",
     "emailNotFound": "Không tìm thấy địa chỉ email trong hệ thống.",
     "success": "Email đã được gửi thành công.",
-    "fail": "Đã có lỗi xảy ra, không thể gửi được email."
+    "fail": "Đã có lỗi xảy ra, không thể gửi được email.",
+    "emailFormatInvalid": "Định dạng địa chỉ email không hợp lệ."
   },
   "phoneNumber": {
     "phoneFormatInvalid": "Định dạng số điện thoại không hợp lệ.",
