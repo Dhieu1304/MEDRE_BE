@@ -65,12 +65,12 @@ const updateTimeOff = async (data) => {
     where: { id: data.id },
   });
   if (!timeOff) {
-    throw new ApiError(BAD_REQUEST, 'Invalid time off id');
+    throw new ApiError(BAD_REQUEST, i18next.t('timeSchedule.invalidID'));
   }
 
   timeOff = Object.assign(timeOff, data);
   if (timeOff.from > timeOff.to) {
-    throw new ApiError(BAD_REQUEST, 'Invalid date');
+    throw new ApiError(BAD_REQUEST, i18next.t('timeSchedule.invalidDate'));
   }
 
   // check time is have any booking

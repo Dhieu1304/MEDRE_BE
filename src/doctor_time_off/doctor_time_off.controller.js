@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const moment = require('moment');
+const i18next = require('i18next');
 
 const getDoctorTimeOff = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
@@ -27,22 +28,22 @@ const getDoctorTimeOff = catchAsync(async (req, res) => {
 const createTimeOff = catchAsync(async (req, res) => {
   const data = req.body;
   if (data.from > data.to || data.from < moment()) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date', false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('timeSchedule.invalidDate'), false));
   }
   data.id = uuidv4();
-  data.id_doctor = req.user.id;
+  data.id_doctor = "353066b6-4bb7-4df8-8f46-88f71bf6a182";
   const timeOff = await doctorTimeOffService.createTimeOff(data);
-  return res.status(httpStatus.OK).json(responseData(timeOff, 'Create time off successfully'));
+  return res.status(httpStatus.OK).json(responseData(timeOff, i18next.t('timeSchedule.create')));
 });
 
 const editTimeOff = catchAsync(async (req, res) => {
   const updateTimeOff = await doctorTimeOffService.updateTimeOff(req.body);
-  return res.status(httpStatus.OK).json(responseData(updateTimeOff, 'Update time off successfully'));
+  return res.status(httpStatus.OK).json(responseData(updateTimeOff, i18next.t('timeSchedule.update')));
 });
 
 const deleteTimeOff = catchAsync(async (req, res) => {
   await doctorTimeOffService.deleteTimeOff(req.body.id);
-  return res.status(httpStatus.OK).json(responseMessage('Delete time off successfully'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('timeSchedule.delete')));
 });
 
 module.exports = {
