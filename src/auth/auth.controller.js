@@ -232,6 +232,14 @@ const loginOauth = catchAsync(async (req, res) => {
     `
   <html>
   <head>
+  <script src="ajax-call.js"></script>
+  <meta http-equiv="Content-Security-Policy"
+  content="default-src 'self' data:gap: https://medre.site 
+  https://ssl.gstatic.com 'unsafe-eval';
+  style-src 'self' 'unsafe-inline';
+  media-src *;
+  script-src 'a256-X3Kr3P9MSEwB6sef2WOeAoAExwH/XMbTbzId6Bhxwo4=')'
+">
   <script>
   window.setTimeout(function(){
         window.location.href = "${config.base_url.fe_user_url}/auth/google/data/${data.user.id}";
