@@ -31,7 +31,7 @@ const createTimeOff = catchAsync(async (req, res) => {
     return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('timeSchedule.invalidDate'), false));
   }
   data.id = uuidv4();
-  data.id_doctor = '353066b6-4bb7-4df8-8f46-88f71bf6a182';
+  data.id_doctor = req.user.id;
   const timeOff = await doctorTimeOffService.createTimeOff(data);
   return res.status(httpStatus.OK).json(responseData(timeOff, i18next.t('timeSchedule.create')));
 });

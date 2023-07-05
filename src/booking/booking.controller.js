@@ -298,7 +298,7 @@ const booking = catchAsync(async (req, res) => {
       content,
       id_redirect: newBooking.id,
     };
-    const { notification } = await notificationUserService.createNotification(notificationData, notificationForUser);
+    await notificationUserService.createNotification(notificationData, notificationForUser);
 
     // send notification to user
     const payload = {
@@ -313,17 +313,29 @@ const booking = catchAsync(async (req, res) => {
     await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
 
     // create notification for CS
-    const notificationUserData = {
-      id_notification: notification.id,
+    const contentForCS = `Người dùng ${req.user.name} vừa đặt lịch mới.`;
+    const notificationDataForCS = {
+      type: NOTIFICATION_TYPE.BOOKING,
       notification_for: NOTIFICATION_FOR.CUSTOMER_SERVICE,
+      title: 'Đặt lịch',
+      content: contentForCS,
+      id_redirect: newBooking.id,
     };
-    await notificationUserService.createNotificationUser(notificationUserData, null);
+    await notificationUserService.createNotification(notificationDataForCS, null);
 
+    const payloadForCS = {
+      notification: {
+        title: 'Đặt lịch',
+        body: contentForCS,
+        type: NOTIFICATION_TYPE.BOOKING,
+        id_redirect: newBooking.id,
+      },
+    };
     // send notification to user customer service
-    _io.in(NOTIFICATION_FOR.CUSTOMER_SERVICE).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
-    await notificationUserService.sendNotificationTopicFCM(NOTIFICATION_FOR.CUSTOMER_SERVICE, payload);
+    _io.in(NOTIFICATION_FOR.CUSTOMER_SERVICE).emit(NOTIFICATION_EVENT.NOTIFICATION, payloadForCS);
+    await notificationUserService.sendNotificationTopicFCM(NOTIFICATION_FOR.CUSTOMER_SERVICE, payloadForCS);
   } catch (e) {
-    logger.error('Error create notification of new booking: ', e);
+    logger.error('Error create notification of new booking: ', e.message);
   }
 });
 

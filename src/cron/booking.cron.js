@@ -31,7 +31,7 @@ const cronBookingWaiting = async () => {
       }
     }
   } catch (e) {
-    logger.error('Error cron booking waiting: ', e);
+    console.error('Error cron booking waiting: ', e);
   }
 };
 

@@ -13,8 +13,8 @@ const i18next = require('i18next');
 const authService = require('../auth/auth.service');
 const { regexpRepeatOnFromTo } = require('../utils/regexpRepeatOnFromTo');
 const { STAFF_ROLES } = require('./staff.constant');
-const { setList, getList } = require('../nodeCache/cache_api');
-const _ = require('lodash');
+// const { setList, getList } = require('../nodeCache/cache_api');
+// const _ = require('lodash');
 
 const toResponseObject = (staff) => {
   const result = staff.toJSON();
@@ -47,11 +47,11 @@ const getAll = catchAsync(async (req, res) => {
     'order',
   ]);
 
-  const filterCache = _.clone(filter);
-  const cacheValue = getList(page, limit, filterCache, 'staff');
-  if (cacheValue) {
-    return res.status(httpStatus.OK).json(responseData(paginationFormat(cacheValue, page, limit)));
-  }
+  // const filterCache = _.clone(filter);
+  // const cacheValue = getList(page, limit, filterCache, 'staff');
+  // if (cacheValue) {
+  //   return res.status(httpStatus.OK).json(responseData(paginationFormat(cacheValue, page, limit)));
+  // }
 
   if (filter.role) {
     filter = Object.assign(filter, { [Op.and]: [{ role: filter.role }, { role: { [Op.ne]: STAFF_ROLES.ADMIN } }] });
@@ -128,7 +128,7 @@ const getAll = catchAsync(async (req, res) => {
 
   const staffs = await staffService.findAndCountAllByCondition(condition);
 
-  setList(page, limit, filterCache, 'staff', staffs, 10 * 60);
+  // setList(page, limit, filterCache, 'staff', staffs, 10 * 60);
   return res.status(httpStatus.OK).json(responseData(paginationFormat(staffs, page, limit)));
 });
 
