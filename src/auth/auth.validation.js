@@ -61,6 +61,12 @@ const verifyOTP = {
   }),
 };
 
+const getDataLoginGoogle = {
+  params: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+};
+
 module.exports = {
   register,
   loginByEmail,
@@ -69,4 +75,5 @@ module.exports = {
   refreshTokens,
   resendMail,
   verifyOTP,
+  getDataLoginGoogle,
 };

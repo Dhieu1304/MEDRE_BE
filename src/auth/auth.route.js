@@ -6,7 +6,7 @@ const authController = require('./auth.controller');
 const { authLimiter } = require('../middlewares/rateLimit');
 
 const router = express.Router();
-router.use(authLimiter);
+// router.use(authLimiter);
 
 router.post('/register', validate(authValidation.register), authController.register);
 router.get('/verify/:token', authController.verifySuccess);
@@ -40,5 +40,6 @@ router.get(
   authController.loginOauth
 );
 router.get('/google/failure', authController.failureLoginGoogle);
+router.get('/google/data/:id', validate(authValidation.getDataLoginGoogle), authController.getDataLoginGoogle);
 
 module.exports = router;

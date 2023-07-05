@@ -8,6 +8,8 @@ const i18next = require('i18next');
 const historyLoginService = require('../history_login/history_login.service');
 const { LOGIN_TYPE } = require('../history_login/history_login.constant');
 const path = require('path');
+const config = require('../config');
+const { getGoogleDataAfterLogin, delGoogleDataAfterLogin, setGoogleDataAfterLogin } = require('../nodeCache/account');
 // const sendSMS = require('../otp/sms');
 
 const toResponseObject = (account) => {
@@ -222,8 +224,33 @@ const loginOauth = catchAsync(async (req, res) => {
 
   // generate token
   const tokens = await authService.generateAuthTokens(user);
+  const data = { user: toResponseObject(user), tokens };
 
-  return res.status(httpStatus.OK).json(responseData({ user: toResponseObject(user), tokens }));
+  setGoogleDataAfterLogin(data.user.id, data);
+
+  return res.send(
+    `
+  <html>
+  <head>
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script> 
+  $(window).on( "load", function() {
+        window.location.href = '${config.base_url.fe_user_url}/auth/google/data/${data.user.id}';
+    });
+    </script>
+  </head>
+  </html>
+  `
+  );
+});
+
+const getDataLoginGoogle = catchAsync(async (req, res) => {
+  const data = getGoogleDataAfterLogin(req.params.id);
+  if (data) {
+    delGoogleDataAfterLogin(req.params.id);
+    return res.status(httpStatus.OK).json(responseData(data));
+  }
+  return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Something wrong, please login again', false));
 });
 
 module.exports = {
@@ -247,4 +274,5 @@ module.exports = {
   // oauth
   failureLoginGoogle,
   loginOauth,
+  getDataLoginGoogle,
 };

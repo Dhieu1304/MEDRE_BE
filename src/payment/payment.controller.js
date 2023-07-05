@@ -6,6 +6,7 @@ const querystring = require('qs');
 const crypto = require('crypto');
 const moment = require('moment');
 const paymentService = require('./payment.service');
+const i18next = require('i18next');
 const statusPage = require('../view/statusPage');
 
 const sortObject = (obj) => {

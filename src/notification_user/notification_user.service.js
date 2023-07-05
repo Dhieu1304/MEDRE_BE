@@ -1,5 +1,3 @@
-const config = require('../config');
-const https = require('https');
 const { getMessaging } = require('firebase-admin/messaging');
 const firebaseAdmin = require('../config/firebaseAdmin');
 const models = require('../models');
@@ -100,7 +98,7 @@ const createNotification = async (data, notificationUser) => {
 const markReadNotification = async (filter) => {
   const userNotification = await models.notification_user.findOne({ where: filter });
   if (!userNotification) {
-    throw new ApiError(httpStatus.BAD_REQUEST,i18next.t('notification.invalidNoti'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('notification.invalidNoti'));
   }
   userNotification.read = true;
   return await userNotification.save();

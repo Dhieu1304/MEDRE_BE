@@ -26,7 +26,10 @@ const createSchedule = async (body) => {
 
   const dateCreateAdvance = parseInt(getGlobalSettingByName(GLOBAL_SETTING.CREATE_SCHEDULE_ADVANCE_DAY), 10);
   if (moment().add(dateCreateAdvance, 'days') >= apply_from) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.createInAdvance', {dateCreateAdvance: `${dateCreateAdvance}`}));
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      i18next.t('schedule.createInAdvance', { dateCreateAdvance: `${dateCreateAdvance}` })
+    );
   }
 
   // check apply_date
@@ -35,7 +38,7 @@ const createSchedule = async (body) => {
   });
   if (checkSchedule) {
     const date = moment(apply_from).format('DD-MM-YYYY');
-    throw new ApiError(httpStatus.BAD_REQUEST,i18next.t('schedule.greater', {date: date}));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.greater', { date: date }));
   }
 
   // check data: [{expertise, type, session, repeat_on: [number]}]
@@ -45,7 +48,7 @@ const createSchedule = async (body) => {
     listExpertiseId.add(data[i].id_expertise);
 
     if (new Set(data[i].repeat_on).size !== data[i].repeat_on.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('schedule.inappropriate'));
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.inappropriate'));
     }
     const checkRepeatOn = data[i].repeat_on.sort((a, b) => {
       return a - b;
@@ -53,11 +56,19 @@ const createSchedule = async (body) => {
 
     for (let j = 0; j < checkRepeatOn.length; j++) {
       const key = `${data[i].session}_${checkRepeatOn[j]}`;
-      const days = [i18next.t('weekDays.sunday'),i18next.t('weekDays.monday'),i18next.t('weekDays.tuesday'),i18next.t('weekDays.wednesday'),i18next.t('weekDays.thursday'),i18next.t('weekDays.friday'),i18next.t('weekDays.saturday')]
+      const days = [
+        i18next.t('weekDays.sunday'),
+        i18next.t('weekDays.monday'),
+        i18next.t('weekDays.tuesday'),
+        i18next.t('weekDays.wednesday'),
+        i18next.t('weekDays.thursday'),
+        i18next.t('weekDays.friday'),
+        i18next.t('weekDays.saturday'),
+      ];
       if (Object.prototype.hasOwnProperty.call(sessionRepeat, key)) {
         const day = days[key];
         console.log(day);
-        throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.repeat', {day: `${day}`}));
+        throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.repeat', { day: `${day}` }));
       } else {
         sessionRepeat[key] = 1;
       }

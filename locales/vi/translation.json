@@ -78,13 +78,13 @@
   "schedule": {
     "success": "Tải dữ liệu thành công.",
     "create": "Tạo lịch biểu mới thành công.",
-    "updateAll":"Cập nhật thành công cho tất cả các lịch biểu.",
-    "updateOne":"Cập nhật thành công cho lịch biểu đã chọn.",
+    "updateAll": "Cập nhật thành công cho tất cả các lịch biểu.",
+    "updateOne": "Cập nhật thành công cho lịch biểu đã chọn.",
     "delete": "Xóa lịch biểu thành công.",
-    "createInAdvance":"Lịch mới phải được tạo trước {{dateCreateAdvance}} ngày trước ngày bắt đầu áp dụng.",
-    "greater":"Tồn tại lịch trình cũ có ngày áp dụng (apply_to) lớn hơn {{date}}.",
+    "createInAdvance": "Lịch mới phải được tạo trước {{dateCreateAdvance}} ngày trước ngày bắt đầu áp dụng.",
+    "greater": "Tồn tại lịch trình cũ có ngày áp dụng (apply_to) lớn hơn {{date}}.",
     "inappropriate": "Dữ liệu không phù hợp. Vui lòng kiểm tra lại.",
-    "repeat":"Lịch biểu bị trùng vào {{day}}.",
+    "repeat": "Lịch biểu bị trùng vào {{day}}.",
     "checkExpertise": "Vui lòng kiểm tra lại chuyên khoa của nhân viên.",
     "cannotDelete": "Không thể xóa lịch biểu (đã có lịch hẹn)."
   },
@@ -95,9 +95,9 @@
     "haveBooking": "Đã có người đặt lịch khung giờ này.",
     "haveTimeOff": "Đã có lịch nghỉ khác khung giờ này.",
     "invalidDate": "Ngày chọn không hợp lệ.",
-    "create":"Tạo lịch nghỉ thành công.",
-    "update":"Cập nhật lịch nghỉ thành công.",
-    "delete":"Xóa lịch nghỉ thành công.",
+    "create": "Tạo lịch nghỉ thành công.",
+    "update": "Cập nhật lịch nghỉ thành công.",
+    "delete": "Xóa lịch nghỉ thành công.",
     "invalidID": "ID lịch nghỉ không hợp lệ."
   },
   "account": {
@@ -157,11 +157,10 @@
       "99": "Lỗi không xác định."
     },
     "invalidBookingType": "Không thể thanh toán sau cho  lịch khám online.",
-    "successTitle":"Giao dịch thành công.",
-    "successMsg":"Cảm ơn quý khách đã sử dụng dịch vụ.",
-    "failureTitle":"Giao dịch thất bại.",
-    "failureMsg":"Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ."
-  
+    "successTitle": "Giao dịch thành công.",
+    "successMsg": "Cảm ơn quý khách đã sử dụng dịch vụ.",
+    "failureTitle": "Giao dịch thất bại.",
+    "failureMsg": "Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ."
   },
   "notification": {
     "fcm": "FCM thành công.",
@@ -172,11 +171,11 @@
     "invalidNoti": "Thông báo không hợp lệ."
   },
   "reExamination": {
-    "create":"Tạo lịch tái khám thành công.",
-    "update":"Cập nhật lịch tái khám thành công.",
-    "invalidID":"ID lịch tái khám không hợp lệ."
+    "create": "Tạo lịch tái khám thành công.",
+    "update": "Cập nhật lịch tái khám thành công.",
+    "invalidID": "ID lịch tái khám không hợp lệ."
   },
-  "weekDays" : {
+  "weekDays": {
     "monday": "Thứ hai",
     "tuesday": "Thứ ba",
     "wednesday": "Thứ tư",

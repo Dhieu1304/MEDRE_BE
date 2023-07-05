@@ -55,7 +55,7 @@ const listForStaff = catchAsync(async (req, res) => {
 
 const create = catchAsync(async (req, res) => {
   const newReExamination = await reExaminationService.createReExam(req.body);
-  return res.status(httpStatus.OK).json(responseData(newReExamination,  i18next.t('reExamination.create')));
+  return res.status(httpStatus.OK).json(responseData(newReExamination, i18next.t('reExamination.create')));
 });
 
 const update = catchAsync(async (req, res) => {

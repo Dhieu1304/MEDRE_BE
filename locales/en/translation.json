@@ -78,13 +78,13 @@
   "schedule": {
     "success": "Successful.",
     "create": "Create schedule successfully.",
-    "updateAll":"Update apply to all schedule successfully.",
-    "updateOne":"Update apply to schedule successfully.",
+    "updateAll": "Update apply to all schedule successfully.",
+    "updateOne": "Update apply to schedule successfully.",
     "delete": "Delete schedule successfully.",
-    "createInAdvance":"The new schedule must be created {{dateCreateAdvance}} days before the beginning of the application.",
-    "greater":"Existing an old schedule has application date (apply_to) greater than {{date}}.",
+    "createInAdvance": "The new schedule must be created {{dateCreateAdvance}} days before the beginning of the application.",
+    "greater": "Existing an old schedule has application date (apply_to) greater than {{date}}.",
     "inappropriate": "Data inappropriate. Please check the data again.",
-    "repeat":"Schedule is overlapped on {{day}}.",
+    "repeat": "Schedule is overlapped on {{day}}.",
     "checkExpertise": "Please check expertise of staff again.",
     "cannotDelete": "Cannot delete this schedule (already had booking)."
   },
@@ -95,9 +95,9 @@
     "haveBooking": "This time is booked.",
     "haveTimeOff": "This time has another time off.",
     "invalidDate": "Invalid date.",
-    "create":"Create time off successfully.",
-    "update":"Update time off successfully.",
-    "delete":"Delete time off successfully.",
+    "create": "Create time off successfully.",
+    "update": "Update time off successfully.",
+    "delete": "Delete time off successfully.",
     "invalidID": "Invalid time off ID."
   },
   "account": {
@@ -157,10 +157,10 @@
       "99": "Unknown error."
     },
     "invalidBookingType": "Can not pay later for online booking.",
-    "successTitle":"Payment success.",
-    "successMsg":"Thank you for using our services.",
-    "failureTitle":"Payment failed.",
-    "failureMsg":"Please try again or contact 0123456789 for support."
+    "successTitle": "Payment success.",
+    "successMsg": "Thank you for using our services.",
+    "failureTitle": "Payment failed.",
+    "failureMsg": "Please try again or contact 0123456789 for support."
   },
   "notification": {
     "fcm": "Successfully FCM.",
@@ -171,11 +171,11 @@
     "invalidNoti": "Invalid notification."
   },
   "reExamination": {
-    "create":"Create Re-Examination successfully.",
-    "update":"Update Re-Examination successfully.",
-    "invalidID":"Invalid Re-Examination ID."
+    "create": "Create Re-Examination successfully.",
+    "update": "Update Re-Examination successfully.",
+    "invalidID": "Invalid Re-Examination ID."
   },
-  "weekDays" : {
+  "weekDays": {
     "sunday": "Sunday",
     "monday": "Monday",
     "tuesday": "Tuesday",

@@ -28,7 +28,6 @@ const emailFormat = (value, helpers) => {
   return result;
 };
 
-
 const timeScheduleFormat = (value, helpers) => {
   if (!value.match(timeScheduleRegex)) {
     return helpers.message(i18next.t('timeSchedule.timeFormatInvalid'));

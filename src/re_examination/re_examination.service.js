@@ -28,7 +28,7 @@ const createReExam = async (data) => {
 const updateReExam = async (data) => {
   let reExam = await models.re_examination.findOne({ where: { id: data.id } });
   if (!reExam) {
-    throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('reExamination.invalidID'));
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('reExamination.invalidID'));
   }
   reExam = Object.assign(reExam, data);
   return await reExam.save();

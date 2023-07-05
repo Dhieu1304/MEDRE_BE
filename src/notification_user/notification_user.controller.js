@@ -1,6 +1,5 @@
 /*global _io*/
 /*eslint no-undef: "error"*/
-const config = require('../config');
 const notificationUserService = require('./notification_user.service');
 const catchAsync = require('../utils/catchAsync');
 const httpStatus = require('http-status');
