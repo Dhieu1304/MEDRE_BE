@@ -80,7 +80,7 @@ const handlePaymentSuccess = async (txn_ref) => {
       booking.id_time
     );
     if (!scheduleBookingTime) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
+      throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.somethingWrong'));
     }
 
     const listBooking = await models.booking.findAll({

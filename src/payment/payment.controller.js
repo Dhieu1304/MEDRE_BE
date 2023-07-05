@@ -85,15 +85,15 @@ const returnData = catchAsync(async (req, res) => {
     if (rsp_code === '00') {
       await paymentService.handlePaymentSuccess(txn_ref);
       // return res.status(httpStatus.OK).json(responseMessage(i18next.t('payment.paymentSuccess')));
-      return res.send(statusPage('Giao dịch thành công', 'Cảm ơn quý khách đã sử dụng dịch vụ'));
+      return res.send(statusPage(i18next.t('payment.successTitle'), i18next.t('payment.successMsg')));
     } else {
       await paymentService.handlePaymentFail(txn_ref, rsp_code);
       // return res.status(httpStatus.OK).json(responseMessage(i18next.t(`payment.paymentFail.${rsp_code}`)));
-      return res.send(statusPage('Giao dịch thất bại', 'Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ', false));
+      return res.send(statusPage(i18next.t('payment.failureTitle'), i18next.t('payment.failureMsg'), false));
     }
   }
   // return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('payment.invalidSignature'), false));
-  return res.send(statusPage('Giao dịch thất bại', 'Vui lòng thử lại hoặc liên hệ 0123456789 để được hỗ trợ', false));
+  return res.send(statusPage(i18next.t('payment.failureTitle'), i18next.t('payment.failureMsg'), false));
 });
 
 const cashPayment = catchAsync(async (req, res) => {
