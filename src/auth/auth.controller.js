@@ -41,7 +41,7 @@ const loginEmailPassword = catchAsync(async (req, res) => {
   await historyLoginService.createNew(user.id, null, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
   return res
     .status(httpStatus.OK)
-    .json(responseData({ user: toResponseObject(user), tokens }, i18next.t('auth.loginSuccess')));
+    .json(responseData({ user: toResponseObject(user), tokens })); // i18next.t('auth.loginSuccess')
 });
 
 const staffLoginEmailPassword = catchAsync(async (req, res) => {
@@ -51,7 +51,7 @@ const staffLoginEmailPassword = catchAsync(async (req, res) => {
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
   return res
     .status(httpStatus.OK)
-    .json(responseData({ staff: toResponseObject(staff), tokens }, i18next.t('auth.loginSuccess')));
+    .json(responseData({ staff: toResponseObject(staff), tokens } )); // i18next.t('auth.loginSuccess')
 });
 
 const loginPhonePassword = catchAsync(async (req, res) => {
@@ -61,7 +61,7 @@ const loginPhonePassword = catchAsync(async (req, res) => {
   await historyLoginService.createNew(user.id, null, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
   return res
     .status(httpStatus.OK)
-    .json(responseData({ user: toResponseObject(user), tokens }, i18next.t('auth.loginSuccess')));
+    .json(responseData({ user: toResponseObject(user), tokens } )); // i18next.t('auth.loginSuccess')
 });
 
 const staffLoginPhonePassword = catchAsync(async (req, res) => {
@@ -71,7 +71,7 @@ const staffLoginPhonePassword = catchAsync(async (req, res) => {
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
   return res
     .status(httpStatus.OK)
-    .json(responseData({ staff: toResponseObject(staff), tokens }, i18next.t('auth.loginSuccess')));
+    .json(responseData({ staff: toResponseObject(staff), tokens } )); // i18next.t('auth.loginSuccess')
 });
 
 const staffLoginUsernamePassword = catchAsync(async (req, res) => {
@@ -81,17 +81,17 @@ const staffLoginUsernamePassword = catchAsync(async (req, res) => {
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.USERNAME, tokens.refresh.token, tokens.refresh.expires);
   return res
     .status(httpStatus.OK)
-    .json(responseData({ staff: toResponseObject(staff), tokens }, i18next.t('auth.loginSuccess')));
+    .json(responseData({ staff: toResponseObject(staff), tokens } )); // i18next.t('auth.loginSuccess')
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.refreshAuth(req.body.refresh_token);
-  return res.status(httpStatus.OK).json(responseData(tokens, i18next.t('refreshToken.refreshTokenSuccess')));
+  return res.status(httpStatus.OK).json(responseData(tokens)); // i18next.t('refreshToken.refreshTokenSuccess')
 });
 
 const staffRefreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.staffRefreshAuth(req.body.refresh_token);
-  return res.status(httpStatus.OK).json(responseData(tokens, i18next.t('refreshToken.refreshTokenSuccess')));
+  return res.status(httpStatus.OK).json(responseData(tokens)); // i18next.t('refreshToken.refreshTokenSuccess')
 });
 
 const verifySuccess = catchAsync(async (req, res) => {
