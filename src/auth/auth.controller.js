@@ -232,10 +232,11 @@ const loginOauth = catchAsync(async (req, res) => {
     `
   <html>
   <head>
-    <script>
-     window.location.replace('${config.base_url.fe_user_url}/auth/google/data/${data.user.id}');
-    </script>
   </head>
+  <body>
+    <div>login successfully</div>
+    <a href="window.location.replace(${config.base_url.fe_user_url}/auth/google/data/${data.user.id})"> Return home page </a>
+</body>
   </html>
   `
   );
