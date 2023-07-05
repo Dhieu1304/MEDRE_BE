@@ -313,7 +313,7 @@ const booking = catchAsync(async (req, res) => {
     await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
 
     // create notification for CS
-    const contentForCS = `Người dùng ${req.user.name} vừa đặt lịch mới.`;
+    const contentForCS = `Vừa có người dùng đặt lịch mới`;
     const notificationDataForCS = {
       type: NOTIFICATION_TYPE.BOOKING,
       notification_for: NOTIFICATION_FOR.CUSTOMER_SERVICE,
