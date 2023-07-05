@@ -2,6 +2,7 @@ const models = require('../models');
 const { v4: uuidv4 } = require('uuid');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
+const i18next = require('i18next');
 
 // data: { id_user, title, content }
 const createTicket = async (data) => {
@@ -52,7 +53,7 @@ const createTicketDetail = async (data) => {
 const updateTicket = async (data) => {
   let ticket = await models.ticket.findOne({ where: { id: data.id } });
   if (!ticket) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ticket');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('"unCategory.invalidID'));
   }
   ticket = Object.assign(ticket, data);
   return await ticket.save();
