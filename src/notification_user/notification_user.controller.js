@@ -16,47 +16,6 @@ const userService = require('../user/user.service');
 const { Op } = require('sequelize');
 const staffService = require('../staff/staff.service');
 
-const sendPushNotification = catchAsync(async (req, res, next) => {
-  const message = {
-    app_id: config.one_signal.app_id,
-    contents: { en: i18next.t('mobileNotification.test'), vi: i18next.t('mobileNotification.test') },
-    included_segments: ['All'],
-    content_available: true,
-    small_icon: 'ic_notification_icon',
-    data: {
-      PushTitle: 'CUSTOM NOTIFICATION',
-    },
-  };
-
-  notificationUserService.sendPushNotification(message, (error, result) => {
-    if (error) {
-      return next(error);
-    }
-    return res.status(httpStatus.OK).json(responseData(result, 'success'));
-  });
-});
-
-const sendPushNotificationToDevice = catchAsync(async (req, res, next) => {
-  const message = {
-    app_id: config.one_signal.app_id,
-    contents: i18next.t('mobileNotification.test'),
-    included_segments: ['included_player_ids'],
-    included_player_ids: req.body.devices,
-    content_available: true,
-    small_icon: 'ic_notification_icon',
-    data: {
-      PushTitle: 'CUSTOM NOTIFICATION',
-    },
-  };
-
-  notificationUserService.sendPushNotification(message, (error, result) => {
-    if (error) {
-      return next(error);
-    }
-    return res.status(httpStatus.OK).json(responseData(result, 'success'));
-  });
-});
-
 const subscribeTopic = catchAsync(async (req, res) => {
   await notificationUserService.subscribeTopic(req.body.registrationToken, req.user.id);
   await notificationUserService.subscribeTopic(req.body.registrationToken, req.user.role);
@@ -78,7 +37,7 @@ const testNotification = catchAsync(async (req, res) => {
   };
   _io.in(req.user.id).emit(NOTIFICATION_EVENT.NOTIFICATION, payload);
   await notificationUserService.sendNotificationTopicFCM(req.user.id, payload);
-  return res.status(httpStatus.OK).json(responseMessage('Successfully FCM'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('notification.fcm')));
 });
 
 const listNotification = catchAsync(async (req, res) => {
@@ -110,7 +69,7 @@ const createNotification = catchAsync(async (req, res) => {
   let notificationUser = {};
   if (data.notification_for === NOTIFICATION_FOR.PERSONAL) {
     if (Object.keys(notificationUserData).length === 0) {
-      return res.status(httpStatus.BAD_REQUEST).json(responseMessage('id_user or id_staff is required', false));
+      return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('notification.idRequired'), false));
     }
     if (notificationUserData.id_user || notificationUserData.id_staff) {
       notificationUser.id_user = notificationUserData.id_user;
@@ -123,7 +82,7 @@ const createNotification = catchAsync(async (req, res) => {
         ],
       });
       if (!user) {
-        return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid', false));
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('notification.invalid'), false));
       }
       notificationUser.id_user = user.id;
     } else if (notificationUserData.email_staff || notificationUserData.phone_number_staff) {
@@ -134,13 +93,13 @@ const createNotification = catchAsync(async (req, res) => {
         ],
       });
       if (!staff) {
-        return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid', false));
+        return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('notification.idRequired'), false));
       }
       notificationUser.id_staff = staff.id;
     }
   }
   await notificationUserService.createNotification(data, notificationUser);
-  res.status(httpStatus.OK).json(responseMessage('Create notification successfully'));
+  res.status(httpStatus.OK).json(responseMessage(i18next.t('notification.create')));
 
   try {
     // send notification
@@ -169,7 +128,7 @@ const markReadNotification = catchAsync(async (req, res) => {
   const data = { id: req.body.id };
   req.user.role === NOTIFICATION_FOR.USER ? (data.id_user = req.user.id) : (data.id_staff = req.user.id);
   await notificationUserService.markReadNotification(data);
-  return res.status(httpStatus.OK).json(responseMessage('Read notification successfully'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('notification.read')));
 });
 
 const countUnReadNotification = catchAsync(async (req, res) => {
@@ -203,8 +162,6 @@ const detailNotificationForStaff = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  sendPushNotification,
-  sendPushNotificationToDevice,
   subscribeTopic,
   unSubscribeTopic,
   testNotification,

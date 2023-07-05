@@ -9,34 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const { NOTIFICATION_FOR } = require('../notification/notification.constant');
 const logger = require('../config/logger');
 const _ = require('lodash');
-
-const sendPushNotification = (data, callback) => {
-  const headers = {
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: 'Basic ' + config.one_signal.api_key,
-  };
-  const options = {
-    host: 'onesignal.com',
-    port: 443,
-    path: '/api/v1/notifications',
-    method: 'POST',
-    headers: headers,
-  };
-
-  const req = https.request(options, function (res) {
-    res.on('data', function (data) {
-      console.log(JSON.parse(data));
-      return callback(null, JSON.parse(data));
-    });
-  });
-
-  req.on('error', function (e) {
-    return callback({ message: e });
-  });
-
-  req.write(JSON.stringify(data));
-  req.end();
-};
+const i18next = require('i18next');
 
 const sendNotificationTopicFCM = async (topic, payload) => {
   payload.notification = _.omitBy(payload.notification, _.isNil);
@@ -127,7 +100,7 @@ const createNotification = async (data, notificationUser) => {
 const markReadNotification = async (filter) => {
   const userNotification = await models.notification_user.findOne({ where: filter });
   if (!userNotification) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid notification');
+    throw new ApiError(httpStatus.BAD_REQUEST,i18next.t('notification.invalidNoti'));
   }
   userNotification.read = true;
   return await userNotification.save();
@@ -174,7 +147,7 @@ const createNotificationUser = async (data, notificationUser) => {
       }
     }
   } catch (e) {
-    logger.error('Error create notification user', e.message);
+    logger.error('Error create notification user:', e.message);
   }
 };
 
@@ -183,7 +156,6 @@ const findOneByCondition = async (condition) => {
 };
 
 module.exports = {
-  sendPushNotification,
   sendNotificationTopicFCM,
   subscribeTopic,
   unSubscribeTopic,
