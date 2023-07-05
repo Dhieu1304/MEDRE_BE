@@ -232,7 +232,7 @@ const loginOauth = catchAsync(async (req, res) => {
     `
   <html>
   <head>
-  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
   <script> 
   $(window).on( "load", function() {
         window.location.href = '${config.base_url.fe_user_url}/auth/google/data/${data.user.id}';
