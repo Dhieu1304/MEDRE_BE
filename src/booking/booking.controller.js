@@ -387,7 +387,7 @@ const staffCreateBooking = catchAsync(async (req, res) => {
   data.bookedAt = new Date();
 
   if (!data.id_user && !data.id_patient) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('id_user or id_patient is required', false));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.idRequired'), false));
   }
 
   // check book for other people
@@ -410,7 +410,7 @@ const scheduleBookingTimeCount = catchAsync(async (req, res) => {
     'bookingMethod',
   ]);
   if (from > to) {
-    return res.status(httpStatus.BAD_REQUEST).json(responseMessage('Invalid date'));
+    return res.status(httpStatus.BAD_REQUEST).json(responseMessage(i18next.t('booking.dateInvalid')));
   }
   const filter = {
     date: { [Op.between]: [from, to] },

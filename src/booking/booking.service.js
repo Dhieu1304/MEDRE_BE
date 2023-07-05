@@ -66,7 +66,7 @@ const createNewBooking = async (data) => {
 
   const scheduleBookingTime = await scheduleBookingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
   if (!scheduleBookingTime) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.somethingWrong'));
   }
 
   let totalBooking = scheduleBookingTime.tt_off_book_onl;
@@ -137,7 +137,7 @@ const createNewBookingForStaff = async (data) => {
 
   const scheduleBookingTime = await scheduleBookingTimeService.findOneByScheduleAndTime(data.id_schedule, data.id_time);
   if (!scheduleBookingTime) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Something wrong, please contact support!!');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.somethingWrong'));
   }
 
   const totalBooking = scheduleBookingTime.total_offline - scheduleBookingTime.tt_off_book_onl;
@@ -232,7 +232,7 @@ const cancelBooking = async (id_user, id) => {
 
   // check time
   if (booking.date < new Date()) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'This is old booking');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('booking.oldBooking'));
   }
 
   booking.booking_status = BOOKING_STATUS.CANCELED;
