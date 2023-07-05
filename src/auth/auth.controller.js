@@ -214,7 +214,7 @@ const resetPasswordForm = catchAsync(async (req, res) => {
 });
 
 const failureLoginGoogle = catchAsync(async (req, res) => {
-  return res.status(httpStatus.OK).json(responseMessage('Oops... Please try again or contact support', false));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('auth.ggFailure'), false));
 });
 
 const loginOauth = catchAsync(async (req, res) => {

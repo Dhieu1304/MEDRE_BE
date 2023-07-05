@@ -33,7 +33,8 @@
     "loginSuccess": "Login successfully.",
     "verifySuccess": "Verify successfully.",
     "verifyFailure": "Cannot verify.",
-    "missingInput": "PhoneNumber or Email is required."
+    "missingInput": "PhoneNumber or Email is required.",
+    "ggFailure": "Oops... Please try again or contact support."
   },
   "booking": {
     "success": "Successful.",
@@ -41,14 +42,18 @@
     "update": "Update booking successfully.",
     "notFound": "Not found.",
     "cancel": "Cancel booking successful.",
-    "invalidID": "Invalid booking id.",
-    "invalidTimeID": "Invalid time schedule id.",
+    "invalidID": "Invalid booking ID.",
+    "invalidTimeID": "Invalid time schedule ID.",
     "invalidTimeSession": "Invalid time schedule session.",
     "missingUserInfo": "Please update your personal information.",
     "invalidScheduleId": "Invalid schedule id.",
     "invalidDate": "You need to adhere to the prescribed number of booking days.",
     "fullSlot": "This time slot is full, please choose other one.",
-    "booked": "You booked in this time slot."
+    "booked": "You booked in this time slot.",
+    "idRequired": "ID user/ID patient is required.",
+    "dateInvalid": "Invalid date.",
+    "somethingWrong": "Something wrong, please contact support!!!",
+    "oldBooking": "Cannot cancel old booking."
   },
   "patient": {
     "notFound": "Patient not found."
@@ -66,18 +71,34 @@
   },
   "unCategory": {
     "permission": "You do not have this permission.",
-    "fileInvalid": "Invalid file."
+    "fileInvalid": "Invalid file.",
+    "globalSettingEdit": "Edit global setting successfully.",
+    "invalidID": "Invalid ID."
   },
   "schedule": {
     "success": "Successful.",
-    "create": "Create schedule successfully."
+    "create": "Create schedule successfully.",
+    "updateAll":"Update apply to all schedule successfully.",
+    "updateOne":"Update apply to schedule successfully.",
+    "delete": "Delete schedule successfully.",
+    "createInAdvance":"The new schedule must be created {{dateCreateAdvance}} days before the beginning of the application.",
+    "greater":"Existing an old schedule has application date (apply_to) greater than {{date}}.",
+    "inappropriate": "Data inappropriate. Please check the data again.",
+    "repeat":"Schedule is overlapped on {{day}}.",
+    "checkExpertise": "Please check expertise of staff again.",
+    "cannotDelete": "Cannot delete this schedule (already had booking)."
   },
   "timeSchedule": {
     "success": "Successful.",
     "timeFormatInvalid": "Invalid time format.",
     "invalidTime": "Invalid time.",
     "haveBooking": "This time is booked.",
-    "haveTimeOff": "This time has another time off."
+    "haveTimeOff": "This time has another time off.",
+    "invalidDate": "Invalid date.",
+    "create":"Create time off successfully.",
+    "update":"Update time off successfully.",
+    "delete":"Delete time off successfully.",
+    "invalidID": "Invalid time off ID."
   },
   "account": {
     "create": "Create new account successfully.",
@@ -135,6 +156,32 @@
       "79": "Wrong password to pay more than the specified number of times. Please repeat the transaction.",
       "99": "Unknown error."
     },
-    "invalidBookingType": "Can not pay later for online booking."
+    "invalidBookingType": "Can not pay later for online booking.",
+    "successTitle":"Payment success.",
+    "successMsg":"Thank you for using our services.",
+    "failureTitle":"Payment failed.",
+    "failureMsg":"Please try again or contact 0123456789 for support."
+  },
+  "notification": {
+    "fcm": "Successfully FCM.",
+    "idRequired": "ID user/ID staff is required.",
+    "invalid": "Invalid.",
+    "create": "Create notification successfully.",
+    "read": "Read notification successfully.",
+    "invalidNoti": "Invalid notification."
+  },
+  "reExamination": {
+    "create":"Create Re-Examination successfully.",
+    "update":"Update Re-Examination successfully.",
+    "invalidID":"Invalid Re-Examination ID."
+  },
+  "weekDays" : {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }
