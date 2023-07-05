@@ -21,7 +21,7 @@ const createExpertise = async (data) => {
 const updateExpertise = async (data) => {
   let expertise = await models.expertise.findOne({ where: { id: data.id } });
   if (!expertise) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid expertise');
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('expertise.notExisted'));
   }
   if (data.name && expertise.name !== data.name) {
     // check if expertise's new name is exists
