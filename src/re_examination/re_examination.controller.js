@@ -5,6 +5,7 @@ const reExaminationService = require('./re_examination.service');
 const models = require('../models');
 const pageLimit2Offset = require('../utils/pageLimit2Offset');
 const pick = require('../utils/pick');
+const i18next = require('i18next');
 
 const list = catchAsync(async (req, res) => {
   const option = {
@@ -54,7 +55,7 @@ const listForStaff = catchAsync(async (req, res) => {
 
 const create = catchAsync(async (req, res) => {
   const newReExamination = await reExaminationService.createReExam(req.body);
-  return res.status(httpStatus.OK).json(responseData(newReExamination, 'Create Re-Examination successfully'));
+  return res.status(httpStatus.OK).json(responseData(newReExamination,  i18next.t('reExamination.create')));
 });
 
 const update = catchAsync(async (req, res) => {
@@ -64,7 +65,7 @@ const update = catchAsync(async (req, res) => {
     data.date_remind = new Date();
   }
   const updateReExam = await reExaminationService.updateReExam(data);
-  return res.status(httpStatus.OK).json(responseData(updateReExam, 'Update Re-Examination successfully'));
+  return res.status(httpStatus.OK).json(responseData(updateReExam, i18next.t('reExamination.update')));
 });
 
 module.exports = {

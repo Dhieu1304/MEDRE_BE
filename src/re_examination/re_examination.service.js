@@ -2,6 +2,7 @@ const models = require('../models');
 const { v4: uuidv4 } = require('uuid');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
+const i18next = require('i18next');
 
 const findOneByFilter = async (filter) => {
   return await models.re_examination.findOne({ where: filter });
@@ -27,7 +28,7 @@ const createReExam = async (data) => {
 const updateReExam = async (data) => {
   let reExam = await models.re_examination.findOne({ where: { id: data.id } });
   if (!reExam) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid id');
+    throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('reExamination.invalidID'));
   }
   reExam = Object.assign(reExam, data);
   return await reExam.save();
