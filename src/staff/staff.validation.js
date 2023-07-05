@@ -36,7 +36,7 @@ const getAllStaff = {
       'role:desc',
       'blocked:asc',
       'blocked:desc'
-    ),
+    ).default('name:asc'),
     page: Joi.number().integer().default(1).min(1),
     limit: Joi.number().integer().default(10).min(1),
   }),
