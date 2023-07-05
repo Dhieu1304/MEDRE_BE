@@ -87,18 +87,18 @@ const createSchedule = catchAsync(async (req, res) => {
 const changeApplyToAllSchedule = catchAsync(async (req, res) => {
   const { id_doctor, apply_to } = req.body;
   await scheduleService.changeApplyToAllSchedule(id_doctor, apply_to);
-  return res.status(httpStatus.OK).json(responseMessage('Update apply to all schedule successfully'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('schedule.updateAll')));
 });
 
 const changeApplyToSchedule = catchAsync(async (req, res) => {
   const { id, apply_to } = req.body;
   await scheduleService.changeApplyToSchedule(id, apply_to);
-  return res.status(httpStatus.OK).json(responseMessage('Update apply to schedule successfully'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('schedule.updateOne')));
 });
 
 const deleteSchedule = catchAsync(async (req, res) => {
   await scheduleService.deleteSchedule(req.body.id);
-  return res.status(httpStatus.OK).json(responseMessage('Delete schedule successfully'));
+  return res.status(httpStatus.OK).json(responseMessage(i18next.t('schedule.delete')));
 });
 
 module.exports = {

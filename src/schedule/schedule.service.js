@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const moment = require('moment');
 const { getGlobalSettingByName } = require('../nodeCache/global_setting');
 const { GLOBAL_SETTING } = require('../global_setting/global_setting.constant');
+const i18next = require('i18next');
 
 const findOneByFilter = async (filter) => {
   return await models.schedule.findOne({ where: filter });
@@ -25,7 +26,7 @@ const createSchedule = async (body) => {
 
   const dateCreateAdvance = parseInt(getGlobalSettingByName(GLOBAL_SETTING.CREATE_SCHEDULE_ADVANCE_DAY), 10);
   if (moment().add(dateCreateAdvance, 'days') >= apply_from) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `New schedule must create ${dateCreateAdvance} days in advance`);
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.createInAdvance', {dateCreateAdvance: `${dateCreateAdvance}`}));
   }
 
   // check apply_date
@@ -33,7 +34,8 @@ const createSchedule = async (body) => {
     where: { id_doctor, apply_to: { [Op.gte]: apply_from } },
   });
   if (checkSchedule) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Old schedule apply_to greater ${moment(apply_from).format('DD/MM/YYYY')}`);
+    const date = moment(apply_from).format('DD-MM-YYYY');
+    throw new ApiError(httpStatus.BAD_REQUEST,i18next.t('schedule.greater', {date: date}));
   }
 
   // check data: [{expertise, type, session, repeat_on: [number]}]
@@ -43,7 +45,7 @@ const createSchedule = async (body) => {
     listExpertiseId.add(data[i].id_expertise);
 
     if (new Set(data[i].repeat_on).size !== data[i].repeat_on.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST, `Invalid repeat_on at index ${i} of data`);
+      throw new ApiError(httpStatus.BAD_REQUEST,  i18next.t('schedule.inappropriate'));
     }
     const checkRepeatOn = data[i].repeat_on.sort((a, b) => {
       return a - b;
@@ -51,8 +53,11 @@ const createSchedule = async (body) => {
 
     for (let j = 0; j < checkRepeatOn.length; j++) {
       const key = `${data[i].session}_${checkRepeatOn[j]}`;
+      const days = [i18next.t('weekDays.sunday'),i18next.t('weekDays.monday'),i18next.t('weekDays.tuesday'),i18next.t('weekDays.wednesday'),i18next.t('weekDays.thursday'),i18next.t('weekDays.friday'),i18next.t('weekDays.saturday')]
       if (Object.prototype.hasOwnProperty.call(sessionRepeat, key)) {
-        throw new ApiError(httpStatus.BAD_REQUEST, `Invalid repeat_on ${key}`);
+        const day = days[key];
+        console.log(day);
+        throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.repeat', {day: `${day}`}));
       } else {
         sessionRepeat[key] = 1;
       }
@@ -68,7 +73,7 @@ const createSchedule = async (body) => {
     raw: true,
   });
   if (!doctorExpertise || doctorExpertise.length < listExpertiseId.size) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Please check expertise of staff again`);
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.checkExpertise'));
   }
   const schedules = data.map((item) => {
     return {
@@ -97,7 +102,7 @@ const changeApplyToSchedule = async (id, apply_to) => {
 const deleteSchedule = async (id) => {
   const booking = await models.booking.findOne({ where: { id_schedule: id } });
   if (booking) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Can not delete this schedule (has booking)`);
+    throw new ApiError(httpStatus.BAD_REQUEST, i18next.t('schedule.cannotDelete'));
   }
   return await models.schedule.destroy({ where: { id } });
 };
