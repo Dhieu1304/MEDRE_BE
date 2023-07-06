@@ -396,6 +396,7 @@ const staffCreateBooking = catchAsync(async (req, res) => {
 
   data.id_staff_booking = req.user.id;
   data.booking_status = BOOKING_STATUS.BOOKED;
+  data.is_payment = true;
   data.bookedAt = new Date();
 
   if (!data.id_user && !data.id_patient) {
