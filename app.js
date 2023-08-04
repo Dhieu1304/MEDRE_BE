@@ -22,6 +22,10 @@ const config = require('./src/config');
 
 require('./src/models/mockup-data');
 require('./src/cron');
+const userService = require('./src/user/user.service');
+const authService = require('./src/auth/auth.service');
+const { setGoogleDataAfterLogin } = require('./src/nodeCache/account');
+const { toResponseObject } = require('./src/auth/auth.controller');
 
 const app = express();
 
@@ -44,8 +48,15 @@ app.use(xss());
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 passport.use(
-  new GoogleStrategy(config.Oauth, function (request, accessToken, refreshToken, profile, done) {
-    return done(null, profile);
+  new GoogleStrategy(config.Oauth, async function (request, accessToken, refreshToken, profile, done) {
+    const user = await userService.findOrCreateUserFromLoginGoogle(profile);
+    // generate token
+    const tokens = await authService.generateAuthTokens(user);
+    const data = { user: toResponseObject(user), tokens };
+
+    setGoogleDataAfterLogin(data.user.id, data);
+
+    return done(null, data.user);
   })
 );
 

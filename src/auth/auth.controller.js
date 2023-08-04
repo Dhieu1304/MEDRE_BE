@@ -8,8 +8,7 @@ const i18next = require('i18next');
 const historyLoginService = require('../history_login/history_login.service');
 const { LOGIN_TYPE } = require('../history_login/history_login.constant');
 const path = require('path');
-const config = require('../config');
-const { getGoogleDataAfterLogin, delGoogleDataAfterLogin, setGoogleDataAfterLogin } = require('../nodeCache/account');
+const { getGoogleDataAfterLogin, delGoogleDataAfterLogin } = require('../nodeCache/account');
 // const sendSMS = require('../otp/sms');
 
 const toResponseObject = (account) => {
@@ -39,9 +38,7 @@ const loginEmailPassword = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(user);
   await historyLoginService.createNew(user.id, null, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
-  return res
-    .status(httpStatus.OK)
-    .json(responseData({ user: toResponseObject(user), tokens })); // i18next.t('auth.loginSuccess')
+  return res.status(httpStatus.OK).json(responseData({ user: toResponseObject(user), tokens })); // i18next.t('auth.loginSuccess')
 });
 
 const staffLoginEmailPassword = catchAsync(async (req, res) => {
@@ -49,9 +46,7 @@ const staffLoginEmailPassword = catchAsync(async (req, res) => {
   const staff = await authService.staffLoginUserWithEmailAndPassword(email, password);
   const tokens = await authService.generateAuthTokens(staff);
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.EMAIL, tokens.refresh.token, tokens.refresh.expires);
-  return res
-    .status(httpStatus.OK)
-    .json(responseData({ staff: toResponseObject(staff), tokens } )); // i18next.t('auth.loginSuccess')
+  return res.status(httpStatus.OK).json(responseData({ staff: toResponseObject(staff), tokens })); // i18next.t('auth.loginSuccess')
 });
 
 const loginPhonePassword = catchAsync(async (req, res) => {
@@ -59,9 +54,7 @@ const loginPhonePassword = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithPhoneNumberAndPassword(phone_number, password);
   const tokens = await authService.generateAuthTokens(user);
   await historyLoginService.createNew(user.id, null, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
-  return res
-    .status(httpStatus.OK)
-    .json(responseData({ user: toResponseObject(user), tokens } )); // i18next.t('auth.loginSuccess')
+  return res.status(httpStatus.OK).json(responseData({ user: toResponseObject(user), tokens })); // i18next.t('auth.loginSuccess')
 });
 
 const staffLoginPhonePassword = catchAsync(async (req, res) => {
@@ -69,9 +62,7 @@ const staffLoginPhonePassword = catchAsync(async (req, res) => {
   const staff = await authService.staffLoginUserWithPhoneNumberAndPassword(phone_number, password);
   const tokens = await authService.generateAuthTokens(staff);
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.PHONE_NUMBER, tokens.refresh.token, tokens.refresh.expires);
-  return res
-    .status(httpStatus.OK)
-    .json(responseData({ staff: toResponseObject(staff), tokens } )); // i18next.t('auth.loginSuccess')
+  return res.status(httpStatus.OK).json(responseData({ staff: toResponseObject(staff), tokens })); // i18next.t('auth.loginSuccess')
 });
 
 const staffLoginUsernamePassword = catchAsync(async (req, res) => {
@@ -79,9 +70,7 @@ const staffLoginUsernamePassword = catchAsync(async (req, res) => {
   const staff = await authService.staffLoginUserWithUsernameAndPassword(username, password);
   const tokens = await authService.generateAuthTokens(staff);
   await historyLoginService.createNew(null, staff.id, LOGIN_TYPE.USERNAME, tokens.refresh.token, tokens.refresh.expires);
-  return res
-    .status(httpStatus.OK)
-    .json(responseData({ staff: toResponseObject(staff), tokens } )); // i18next.t('auth.loginSuccess')
+  return res.status(httpStatus.OK).json(responseData({ staff: toResponseObject(staff), tokens })); // i18next.t('auth.loginSuccess')
 });
 
 const refreshTokens = catchAsync(async (req, res) => {
@@ -219,42 +208,6 @@ const failureLoginGoogle = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json(responseMessage(i18next.t('auth.ggFailure'), false));
 });
 
-const loginOauth = catchAsync(async (req, res) => {
-  const user = await userService.findOrCreateUserFromLoginGoogle(req.user);
-
-  // generate token
-  const tokens = await authService.generateAuthTokens(user);
-  const data = { user: toResponseObject(user), tokens };
-
-  setGoogleDataAfterLogin(data.user.id, data);
-
-  return res.send(
-    `
-  <html>
-  <head>
-  <script src="ajax-call.js"></script>
-  <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self' data:gap: https://medre.site 
-  https://ssl.gstatic.com 'unsafe-eval';
-  style-src 'self' 'unsafe-inline';
-  media-src *;
-  script-src 'a256-X3Kr3P9MSEwB6sef2WOeAoAExwH/XMbTbzId6Bhxwo4=')'
-">
-  <script>
-  window.setTimeout(function(){
-        window.location.href = "${config.base_url.fe_user_url}/auth/google/data/${data.user.id}";
-    }, 1000);
-</script>
-  </head>
-  <body>
-    <div>login successfully</div>
-    <a href="${config.base_url.fe_user_url}/auth/google/data/${data.user.id}"> Return home page </a>
-</body>
-  </html>
-  `
-  );
-});
-
 const getDataLoginGoogle = catchAsync(async (req, res) => {
   const data = getGoogleDataAfterLogin(req.params.id);
   if (data) {
@@ -284,6 +237,7 @@ module.exports = {
 
   // oauth
   failureLoginGoogle,
-  loginOauth,
   getDataLoginGoogle,
+
+  toResponseObject,
 };

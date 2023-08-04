@@ -37,7 +37,9 @@ router.get(
     session: false,
     failureRedirect: '/auth/google/failure',
   }),
-  authController.loginOauth
+  (req, res) => {
+    res.redirect(`http://localhost:3456?id=${req.user.id}`);
+  }
 );
 router.get('/google/failure', authController.failureLoginGoogle);
 router.get('/google/data/:id', validate(authValidation.getDataLoginGoogle), authController.getDataLoginGoogle);

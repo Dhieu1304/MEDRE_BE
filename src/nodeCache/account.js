@@ -17,7 +17,9 @@ const delGoogleDataAfterLogin = (id) => {
   nodeCache.del(`user_${id}`);
 };
 const getGoogleDataAfterLogin = (id) => {
-  return nodeCache.get(`user_${id}`);
+  const result = nodeCache.get(`user_${id}`);
+  if (!result) return false;
+  return JSON.parse(result);
 };
 
 const setGoogleDataAfterLogin = (id, data) => {
