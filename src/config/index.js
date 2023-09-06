@@ -32,7 +32,8 @@ const envVarsSchema = Joi.object()
     SMS_SECRET_KEY: Joi.string().required().description('SMS secret key'),
     OS_APP_ID: Joi.string().required().description('One signal app id'),
     OS_API_KEY: Joi.string().required().description('One signal api key'),
-    REDIS_URL: Joi.string().description('One signal api key'),
+    REDIS_HOST: Joi.string().description('One signal api key'),
+    REDIS_PORT: Joi.number().description('One signal api key'),
     REDIS_PASSWORD: Joi.string().description('One signal api key'),
     GOOGLE_CLIENT_ID: Joi.string().description('google client id'),
     GOOGLE_CLIENT_SECRET: Joi.string().description('google client secret'),
@@ -93,7 +94,8 @@ module.exports = {
     api_key: envVars.OS_API_KEY,
   },
   redis: {
-    url: envVars.REDIS_URL,
+    host: envVars.REDIS_HOST,
+    port: envVars.REDIS_PORT,
     password: envVars.REDIS_PASSWORD,
   },
   Oauth: {

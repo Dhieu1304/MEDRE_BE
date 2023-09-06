@@ -4,7 +4,7 @@ const config = require('../config');
 const logger = require('../config/logger');
 
 const redisClient = redis.createClient({
-  url: config.redis.url,
+  url: `redis://${config.redis.host}:${config.redis.port}`,
   password: config.redis.password,
 });
 bluebird.promisifyAll(redis);
